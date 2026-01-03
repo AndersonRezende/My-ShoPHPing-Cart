@@ -420,3 +420,5 @@ FodyWeavers.xsd
 
 composer.phar
 /vendor/
+/nbproject/private/
+nbproject/
