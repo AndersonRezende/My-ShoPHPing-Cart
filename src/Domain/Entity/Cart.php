@@ -20,6 +20,7 @@ class Cart {
         return $total;
     }
 
+    /** @var CartItem[] */
     public function items(): array {
         return $this->items;
     }
