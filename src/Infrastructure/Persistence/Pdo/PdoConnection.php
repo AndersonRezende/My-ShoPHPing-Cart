@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Persistence\Pdo;
+namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
 final class PdoConnection {
     
