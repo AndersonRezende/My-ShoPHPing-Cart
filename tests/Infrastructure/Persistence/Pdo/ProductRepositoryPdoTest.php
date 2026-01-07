@@ -56,4 +56,33 @@ class ProductRepositoryPdoTest extends TestCase {
         $this->assertEquals('Pasta', $product->name());
         $this->assertSame($product::class, Product::class);
     }
+
+    public function testSaveNewProduct(): void {
+        $pdo = SqliteTestHelper::createConnection();
+        $repository = new ProductRepositoryPdo($pdo);
+        $product = new Product('p1', 'Pasta');
+        $result = $repository->save($product);
+
+        $stmt = $pdo->query("SELECT * FROM products WHERE id = 'p1'");
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $this->assertTrue($result);
+        $this->assertEquals('p1', $row['id']);
+        $this->assertEquals('Pasta', $row['name']);
+    }
+
+    public function testUpdateExistingProduct(): void {
+        $pdo = SqliteTestHelper::createConnection();
+        $pdo->exec("INSERT INTO products (id, name) VALUES ('p1', 'Pasta')");
+        $repository = new ProductRepositoryPdo($pdo);
+        $updatedProduct = new Product('p1', 'Spaghetti');
+        $result = $repository->save($updatedProduct);
+
+        $stmt = $pdo->query("SELECT * FROM products WHERE id = 'p1'");
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $this->assertTrue($result);
+        $this->assertEquals('p1', $row['id']);
+        $this->assertEquals('Spaghetti', $row['name']);
+    }
 }

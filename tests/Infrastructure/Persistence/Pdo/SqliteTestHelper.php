@@ -24,6 +24,13 @@ class SqliteTestHelper {
         ");
 
         $pdo->exec("
+            CREATE TABLE carts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_at TEXT NOT NULL
+            );
+        ");
+
+        $pdo->exec("
             CREATE TABLE cart_items (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 cart_id INTEGER NOT NULL,

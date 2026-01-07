@@ -34,4 +34,16 @@ final class ProductRepositoryPdo implements ProductRepository {
 
         return new Product($row['id'], $row['name']);   
     }
+
+    public function save(Product $product): bool {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO products (id, name) VALUES (:id, :name)
+             ON CONFLICT(id) DO UPDATE SET name = :name'
+        );
+
+        return $stmt->execute([
+            'id' => $product->id(),
+            'name' => $product->name(),
+        ]);
+    }
 }
