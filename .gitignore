@@ -422,4 +422,4 @@ composer.phar
 /vendor/
 /nbproject/private/
 nbproject/
-/database/database.db
+/database/database.db.sqlite3
