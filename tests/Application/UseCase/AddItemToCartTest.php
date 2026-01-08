@@ -14,7 +14,8 @@ class AddItemToCartTest extends TestCase {
     public function testExecuteWithOneProduct(): void {
         $cartRepository = new InMemoryCartRepositoryMock();
         $productRepository = $this->createMock(ProductRepository::class);
-        $productRepository->method('getById')
+        $productRepository->expects($this->once())
+            ->method('getById')
             ->willReturn(new Product('prod-1', 'Product 1'));
         
         $input = new AddItemInput('prod-1', 'Product 1', 2, 1500);
@@ -28,7 +29,8 @@ class AddItemToCartTest extends TestCase {
     public function testExecuteWithMultipleProducts(): void {
         $cartRepository = new InMemoryCartRepositoryMock();
         $productRepository = $this->createMock(ProductRepository::class);
-        $productRepository->method('getById')
+        $productRepository->expects($this->exactly(2))
+            ->method('getById')
             ->willReturnCallback(function ($id) {
                 return new Product($id, 'Product ' . substr($id, -1));
             });
@@ -48,10 +50,11 @@ class AddItemToCartTest extends TestCase {
     public function testExecutingWithZeroQuantityMustThrowInvalidArgumentException(): void {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Quantity must be greater than zero');
-
+        
         $cartRepository = new InMemoryCartRepositoryMock();
         $productRepository = $this->createMock(ProductRepository::class);
-        $productRepository->method('getById')
+        $productRepository->expects($this->once())
+            ->method('getById')
             ->willReturn(new Product('prod-1', 'Product 1'));
         
         $input = new AddItemInput('prod-1', 'Product 1', 0, 1500);
