@@ -19,6 +19,7 @@ final class CreateCategoriesTable extends AbstractMigration {
     public function change(): void {
         $table = $this->table('categories');
         $table->addColumn('name', 'string', ['limit' => 255])
-              ->create();
+            ->addTimestamps()
+            ->create();
     }
 }

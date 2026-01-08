@@ -17,10 +17,11 @@ final class CreateProductsTable extends AbstractMigration {
      * with the Table class.
      */
     public function change(): void {
-            $this->table('products')
-                 ->addColumn('name', 'string', ['limit' => 255])
-                 ->addColumn('category_id', 'integer', ['null' => true])
-                 ->addForeignKey('category_id', 'categories', 'id', ['delete'=> 'SET_NULL', 'update'=> 'NO_ACTION'])
-                 ->create();
+        $this->table('products')
+            ->addColumn('name', 'string', ['limit' => 255])
+            ->addColumn('category_id', 'integer', ['null' => true])
+            ->addTimestamps()
+            ->addForeignKey('category_id', 'categories', 'id', ['delete'=> 'SET_NULL', 'update'=> 'NO_ACTION'])
+            ->create();
     }
 }
