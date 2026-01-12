@@ -4,7 +4,7 @@
     "type": "project",
     "license": "GNU General Public License v3.0",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "robmorgan/phinx": "^0.16.10"
     },
     "autoload": {
