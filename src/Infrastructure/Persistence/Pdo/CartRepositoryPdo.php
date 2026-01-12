@@ -3,6 +3,8 @@
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Enum\CartStatus;
+use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;
@@ -13,44 +15,75 @@ final class CartRepositoryPdo implements CartRepository {
 
     public function __construct(private PDO $pdo) {}
 
-    public function get(): Cart {
-        $cart = new Cart();
+    public function save(Cart $cart): void {
 
-        $stmt = $this->pdo->query(
-            'SELECT product_id, description, quantity, unit_price
-             FROM cart_items WHERE cart_id = 1'
-        );
+        
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO carts (id, status) 
+                VALUES (:id, :status)
+                ON CONFLICT(id) DO UPDATE SET status = :status'
+            );
+            $stmt->execute([
+                'id' => $cart->id(),
+                'status' => $cart->status()->value
+            ]);
 
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $product = new Product($row['product_id'], $row['description']);
-            $cartItem = new CartItem(
-                $product,
-                (int) $row['quantity'],
-                new Money((int) $row['unit_price'])
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO cart_items 
+                (cart_id, product_id, quantity, unit_price)
+                VALUES (:cart_id, :product_id, :quantity, :unit_price)'
             );
 
-            $cart->addItem($cartItem);
+            foreach ($cart->items() as $item) {
+                $stmt->execute([
+                    'cart_id' => $cart->id(),
+                    'product_id' => $item->product()->id(),
+                    'quantity' => $item->quantity(),
+                    'unit_price' => $item->unitPrice()->amount()
+                ]);
+            }
+        } catch (\PDOException $e) {
+            $this->pdo->rollBack();
+            throw $e;
         }
-
-        return $cart;
+        $this->pdo->commit();
     }
 
-    public function save(Cart $cart): void {
-        $this->pdo->exec('DELETE FROM cart_items WHERE cart_id = 1');
-
+    public function findById(string $id): ?Cart {
         $stmt = $this->pdo->prepare(
-            'INSERT INTO cart_items 
-             (cart_id, product_id, description, quantity, unit_price)
-             VALUES (1, :product_id, :description, :quantity, :unit_price)'
+            'SELECT c.id as c_id, c.status as c_status,
+                    ci.id as ci_id, ci.cart_id as ci_cart_id, ci.product_id as ci_product_id, ci.quantity as ci_quantity, ci.unit_price as ci_unit_price,
+                    p.id as p_id, p.name as p_name
+            FROM carts as c 
+            JOIN cart_items as ci ON c.id = ci.cart_id
+            JOIN products as p ON ci.product_id = p.id
+            WHERE c.id = :cart_id'
         );
+        $stmt->execute(['cart_id' => $id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($cart->items() as $item) {
-            $stmt->execute([
-                'product_id' => null,
-                'description' => $item->description ?? '',
-                'quantity' => $item->quantity ?? 0,
-                'unit_price' => $item->subtotal()->amount()
-            ]);
+        if ($rows) {
+            $cartItems = [];
+            foreach ($rows as $row) {
+                $product = new Product(strval($row['p_id']), $row['p_name']);
+                $cartItem = new CartItem(
+                    strval($row['ci_id']),
+                    $product,
+                    (int) $row['ci_quantity'],
+                    new Money((int) $row['ci_unit_price'])
+                );
+                $cartItems[] = $cartItem;
+            }
+
+            return (new CartBuilder())
+                ->withId($id)
+                ->withStatus(CartStatus::from($rows[0]['c_status']))
+                ->withCartItems($cartItems)
+                ->build();
         }
+        
+        return null;
     }
 }

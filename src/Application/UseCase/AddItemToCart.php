@@ -17,11 +17,11 @@ class AddItemToCart {
     ) {}
     
     public function execute(AddItemInput $input): CartOutput {
-        $cart = $this->cartRepository->get();
+        $cart = $this->cartRepository->findById($input->cartId);
         
         $product = $this->productRepository->getById($input->productId);
         $unitPrice = new Money($input->unitPrice);
-        $cartItem = new CartItem($product, $input->quantity, $unitPrice);
+        $cartItem = new CartItem(null, $product, $input->quantity, $unitPrice);
         
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);

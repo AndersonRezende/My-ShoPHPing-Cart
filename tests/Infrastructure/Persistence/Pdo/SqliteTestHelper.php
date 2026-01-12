@@ -10,35 +10,27 @@ class SqliteTestHelper {
         $pdo = new PDO('sqlite::memory:');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        self::createSchema($pdo);
+        self::runMigrations($pdo);
 
         return $pdo;
     }
 
-    private static function createSchema(PDO $pdo): void {
-        $pdo->exec("
-            CREATE TABLE products (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL
-            );
-        ");
+    private static function runMigrations(PDO $pdo): void {
+        $adapter = new \Phinx\Db\Adapter\SQLiteAdapter(['name' => ':memory:']);
+        $adapter->setConnection($pdo);
 
-        $pdo->exec("
-            CREATE TABLE carts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                created_at TEXT NOT NULL
-            );
-        ");
-
-        $pdo->exec("
-            CREATE TABLE cart_items (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                cart_id INTEGER NOT NULL,
-                product_id TEXT,
-                description TEXT,
-                quantity INTEGER NOT NULL,
-                unit_price INTEGER NOT NULL
-            );
-        ");
+        $migrationDir = dirname(__DIR__, 4) . '/database/migrations';
+        $files = glob($migrationDir . '/*.php');
+        sort($files);
+        foreach ($files as $file) {
+            require_once $file;
+            $base = basename($file, '.php');
+            $parts = explode('_', $base);
+            $version = array_shift($parts);
+            $className = implode('', array_map('ucfirst', $parts));
+            $migration = new $className('testing', (int)$version);
+            $migration->setAdapter($adapter);
+            $migration->change();
+        }
     }
 }

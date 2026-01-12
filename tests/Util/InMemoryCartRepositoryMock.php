@@ -13,7 +13,7 @@ class InMemoryCartRepositoryMock implements CartRepository {
         $this->cart = new Cart();
     }
     
-    public function get(): Cart {
+    public function findById(string $id): ?Cart {
         return $this->cart;
     }
     

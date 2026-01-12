@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use MyShoppingCart\Domain\Enum\CartStatus;
 use Phinx\Migration\AbstractMigration;
 
 final class CreateCartsTable extends AbstractMigration {
@@ -18,9 +19,10 @@ final class CreateCartsTable extends AbstractMigration {
      */
     public function change(): void {
         $this->table('carts')
-            ->addColumn('status', 'enum', [
+            ->addColumn('status', 'string', ['limit' => 20])
+            /*->addColumn('status', 'enum', [
                  'values' => array_map(fn($case) => $case->value, CartStatus::cases())
-             ])
+             ])*/
             ->addTimestamps()
             ->create();
     }

@@ -7,6 +7,7 @@ use MyShoppingCart\Domain\ValueObject\Money;
 
 class CartItem {
     public function __construct(
+        private ?string $id,
         private Product $product, 
         private int $quantity,
         private Money $unitPrice
@@ -18,5 +19,21 @@ class CartItem {
 
     public function subTotal(): Money {
         return $this->unitPrice->multiply($this->quantity);
+    }
+
+    public function id(): ?string {
+        return $this->id;
+    }
+
+    public function product(): Product {
+        return $this->product;
+    }
+
+    public function quantity(): int {
+        return $this->quantity;
+    }
+
+    public function unitPrice(): Money {
+        return $this->unitPrice;
     }
 }

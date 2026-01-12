@@ -17,7 +17,7 @@ final class ProductRepositoryPdo implements ProductRepository {
         $stmt->execute(['term' => "%{$term}%"]);
 
         return array_map(
-            fn ($row) => new Product($row['id'], $row['name']),
+            fn ($row) => new Product(strval($row['id']), $row['name']),
             $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
     }
@@ -32,7 +32,7 @@ final class ProductRepositoryPdo implements ProductRepository {
             throw new \RuntimeException("Product with ID {$id} not found.");
         }
 
-        return new Product($row['id'], $row['name']);   
+        return new Product(strval($row['id']), $row['name']);   
     }
 
     public function save(Product $product): bool {

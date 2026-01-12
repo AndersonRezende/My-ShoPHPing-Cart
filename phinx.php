@@ -41,6 +41,11 @@ return
             'name' => __DIR__ . '/database/database.db',
             'memory' => false,
         ],
+        'testing' => [
+            'adapter' => 'sqlite',
+            'name' => ':memory:',
+            'memory' => true,
+        ],
     ],
     'version_order' => 'creation'
 ];

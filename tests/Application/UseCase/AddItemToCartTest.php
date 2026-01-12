@@ -18,7 +18,7 @@ class AddItemToCartTest extends TestCase {
             ->method('getById')
             ->willReturn(new Product('prod-1', 'Product 1'));
         
-        $input = new AddItemInput('prod-1', 'Product 1', 2, 1500);
+        $input = new AddItemInput('cartId-1', 'prod-1', 'Product 1', 2, 1500);
         $addItemToCart = new AddItemToCart($cartRepository, $productRepository);
         $output = $addItemToCart->execute($input);
 
@@ -37,10 +37,10 @@ class AddItemToCartTest extends TestCase {
         
         $addItemToCart = new AddItemToCart($cartRepository, $productRepository);
         
-        $input1 = new AddItemInput('prod-1', 'Product 1', 1, 1000);
+        $input1 = new AddItemInput('cartId-2', 'prod-1', 'Product 1', 1, 1000);
         $addItemToCart->execute($input1);
         
-        $input2 = new AddItemInput('prod-2', 'Product 2', 3, 2000);
+        $input2 = new AddItemInput('cartId-2', 'prod-2', 'Product 2', 3, 2000);
         $output = $addItemToCart->execute($input2);
 
         $this->assertEquals(7000, $output->total);
@@ -57,7 +57,7 @@ class AddItemToCartTest extends TestCase {
             ->method('getById')
             ->willReturn(new Product('prod-1', 'Product 1'));
         
-        $input = new AddItemInput('prod-1', 'Product 1', 0, 1500);
+        $input = new AddItemInput('cartId-3', 'prod-1', 'Product 1', 0, 1500);
         $addItemToCart = new AddItemToCart($cartRepository, $productRepository);
         $output = $addItemToCart->execute($input);
     }   
