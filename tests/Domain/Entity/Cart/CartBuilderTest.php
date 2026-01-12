@@ -19,7 +19,9 @@ class CartBuilderTest extends TestCase {
 
     #[DataProvider('dataProviderBuildCartWithExpectedId')]
     public function testCanBuildCartWithExpectedId(?string $id): void {
-        $cart = new CartBuilder()->withId($id)->build();
+        $cart = new CartBuilder()
+		->withId($id)
+		->build();
 
         $this->assertEquals($id, $cart->id());
         $this->assertInstanceOf(Cart::class, $cart);
