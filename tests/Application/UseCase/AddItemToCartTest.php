@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Test\Application\UseCase;
+namespace MyShoppingCart\Tests\Application\UseCase;
 
 use MyShoppingCart\Application\UseCase\AddItemToCart;
 use MyShoppingCart\Application\Repository\ProductRepository;
