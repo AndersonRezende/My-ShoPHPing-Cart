@@ -423,3 +423,4 @@ composer.phar
 /nbproject/private/
 nbproject/
 /database/database.db.sqlite3
+/database/.fuse_hidden*
