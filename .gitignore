@@ -424,3 +424,4 @@ composer.phar
 nbproject/
 /database/database.db.sqlite3
 /database/.fuse_hidden*
+/coverage-report/*

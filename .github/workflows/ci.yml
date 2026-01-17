@@ -12,8 +12,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     strategy:
+      fail-fast: false
       matrix:
         php-version: [8.4]
         include:
@@ -27,10 +29,25 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          coverage: xdebug
           extensions: mbstring, intl
 
       - name: Install dependencies
-        run: composer update --prefer-dist --no-progress
+        run: composer update --prefer-dist --no-progress --no-interaction
 
       - name: Run tests
-        run: vendor/bin/phpunit --configuration phpunit.xml
+        run: vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml
+
+      - name: Generate Coverage Badge
+        if: github.ref == 'refs/heads/master'
+        run: |
+          COVERAGE=$(php -r '$xml = simplexml_load_file("coverage.xml"); $metrics = $xml->project->metrics; $covered = (int)$metrics["coveredelements"]; $total = (int)$metrics["elements"]; echo $total > 0 ? round(($covered / $total) * 100) : 0;')
+          if [ "$COVERAGE" -ge 80 ]; then COLOR="green"; elif [ "$COVERAGE" -ge 50 ]; then COLOR="yellow"; else COLOR="red"; fi
+          curl "https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR" > coverage.svg
+
+      - name: Commit Coverage Badge
+        if: github.ref == 'refs/heads/master'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update coverage badge
+          file_pattern: coverage.svg
