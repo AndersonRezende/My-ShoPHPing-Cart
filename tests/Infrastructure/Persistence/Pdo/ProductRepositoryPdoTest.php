@@ -4,27 +4,23 @@ namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Domain\Entity\Product;
-use PHPUnit\Framework\TestCase;
 
-class ProductRepositoryPdoTest extends TestCase {
+class ProductRepositoryPdoTest extends DatabaseTestCase {
 
     public function testSearchProductByTermWhenThereAreNoItems(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        
-        $repository = new ProductRepositoryPdo($pdo);
+        $repository = new ProductRepositoryPdo($this->connection);
         $results = $repository->search('non-existing-term');
 
         $this->assertCount(0, $results);
     }
     
     public function testSearchProductByTermWhenThereAreItemsWithSameTerm(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        $pdo->exec("INSERT INTO products (id, name) VALUES (1, 'Pasta')");
-        $pdo->exec("INSERT INTO products (id, name) VALUES (2, 'Papaya')");
-        $pdo->exec("INSERT INTO products (id, name) VALUES (3, 'Egg')");
-        $pdo->exec("INSERT INTO products (id, name) VALUES (4, 'Eggplant')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (1, 'Pasta')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (2, 'Papaya')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (3, 'Egg')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (4, 'Eggplant')");
 
-        $repository = new ProductRepositoryPdo($pdo);
+        $repository = new ProductRepositoryPdo($this->connection);
         $results = $repository->search('pa');
 
         $this->assertCount(2, $results);
@@ -39,17 +35,14 @@ class ProductRepositoryPdoTest extends TestCase {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Product with ID 999 not found.');
 
-        $pdo = SqliteTestHelper::createConnection();
-
-        $repository = new ProductRepositoryPdo($pdo);
+        $repository = new ProductRepositoryPdo($this->connection);
         $repository->getById('999');
     }
 
     public function testGetByIdWhenProductExists(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        $pdo->exec("INSERT INTO products (id, name) VALUES ('1', 'Pasta')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES ('1', 'Pasta')");
 
-        $repository = new ProductRepositoryPdo($pdo);
+        $repository = new ProductRepositoryPdo($this->connection);
         $product = $repository->getById('1');
 
         $this->assertEquals('1', $product->id());
@@ -58,12 +51,11 @@ class ProductRepositoryPdoTest extends TestCase {
     }
 
     public function testSaveNewProduct(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        $repository = new ProductRepositoryPdo($pdo);
+        $repository = new ProductRepositoryPdo($this->connection);
         $product = new Product('1', 'Pasta');
         $result = $repository->save($product);
 
-        $stmt = $pdo->query("SELECT * FROM products WHERE id = '1'");
+        $stmt = $this->connection->query("SELECT * FROM products WHERE id = '1'");
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         $this->assertTrue($result);
@@ -72,13 +64,12 @@ class ProductRepositoryPdoTest extends TestCase {
     }
 
     public function testUpdateExistingProduct(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        $pdo->exec("INSERT INTO products (id, name) VALUES ('1', 'Pasta')");
-        $repository = new ProductRepositoryPdo($pdo);
+        $this->connection->exec("INSERT INTO products (id, name) VALUES ('1', 'Pasta')");
+        $repository = new ProductRepositoryPdo($this->connection);
         $updatedProduct = new Product('1', 'Spaghetti');
         $result = $repository->save($updatedProduct);
 
-        $stmt = $pdo->query("SELECT * FROM products WHERE id = '1'");
+        $stmt = $this->connection->query("SELECT * FROM products WHERE id = '1'");
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         $this->assertTrue($result);

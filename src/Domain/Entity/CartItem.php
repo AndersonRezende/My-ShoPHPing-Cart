@@ -36,4 +36,11 @@ class CartItem {
     public function unitPrice(): Money {
         return $this->unitPrice;
     }
+
+    public function setQuantity(int $quantity): void {
+        if ($quantity <= 0) {
+            throw new \InvalidArgumentException('Quantity must be greater than zero');
+        }
+        $this->quantity = $quantity;
+    }
 }

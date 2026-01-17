@@ -3,34 +3,37 @@
 namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use PDO;
+use Phinx\Config\Config;
+use Phinx\Migration\Manager;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\NullOutput;
 
 class SqliteTestHelper {
 
+    private static ?PDO $connection = null;
+
     public static function createConnection(): PDO {
-        $pdo = new PDO('sqlite::memory:');
+        if (self::$connection !== null) {
+            return self::$connection;
+        }
+
+        $configArray = require __DIR__ . '/../../../../phinx.php';
+        $rootPath = dirname(__DIR__, 4);
+
+        array_walk_recursive($configArray, function (&$value) use ($rootPath) {
+            if (is_string($value)) {
+                $value = str_replace('%%PHINX_CONFIG_DIR%%', $rootPath, $value);
+            }
+        });
+
+        $config = new Config($configArray);
+        $manager = new Manager($config, new StringInput(''), new NullOutput());
+        $manager->migrate('testing');
+
+        $pdo = $manager->getEnvironment('testing')->getAdapter()->getConnection();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        self::runMigrations($pdo);
-
-        return $pdo;
-    }
-
-    private static function runMigrations(PDO $pdo): void {
-        $adapter = new \Phinx\Db\Adapter\SQLiteAdapter(['name' => ':memory:']);
-        $adapter->setConnection($pdo);
-
-        $migrationDir = dirname(__DIR__, 4) . '/database/migrations';
-        $files = glob($migrationDir . '/*.php');
-        sort($files);
-        foreach ($files as $file) {
-            require_once $file;
-            $base = basename($file, '.php');
-            $parts = explode('_', $base);
-            $version = array_shift($parts);
-            $className = implode('', array_map('ucfirst', $parts));
-            $migration = new $className('testing', (int)$version);
-            $migration->setAdapter($adapter);
-            $migration->change();
-        }
+        self::$connection = $pdo;
+        return self::$connection;
     }
 }

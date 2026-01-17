@@ -22,8 +22,10 @@ final class CreateCartItemsTable extends AbstractMigration {
             ->addColumn('product_id', 'integer', ['null' => true])
             ->addColumn('quantity', 'integer')
             ->addColumn('unit_price', 'integer')
+            ->addTimestamps()
             ->addForeignKey('cart_id', 'carts', 'id', ['delete'=> 'CASCADE', 'update'=> 'NO_ACTION'])
             ->addForeignKey('product_id', 'products', 'id', ['delete'=> 'SET_NULL', 'update'=> 'NO_ACTION'])
+            ->addIndex(['cart_id', 'product_id'], ['unique' => true])
             ->create();
 
     }

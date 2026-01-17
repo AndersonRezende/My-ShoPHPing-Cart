@@ -23,6 +23,39 @@ class Cart {
         $this->items[] = $item;
     }
 
+    public function updateItemQuantity(string $productId, int $quantity): void {
+        if ($this->status !== CartStatus::OPENED) {
+            throw new \LogicException('Cannot modify a cart that is not opened');
+        }
+
+        if ($quantity <= 0) {
+            $this->removeItem($productId);
+            return;
+        }
+
+        foreach ($this->items as $item) {
+            if ($item->product()->id() === $productId) {
+                $item->setQuantity($quantity);
+                return;
+            }
+        }
+    }
+
+    public function removeItem(string $productId): void {
+        if ($this->status !== CartStatus::OPENED) {
+            throw new \LogicException('Cannot modify a cart that is not opened');
+        }
+
+        foreach ($this->items as $item) {
+            if ($item->product()->id() === $productId) {
+                unset($this->items[$item->id()]);
+                return;
+            }
+        }
+        
+        throw new \DomainException('Cart item not exists in the cart');
+    }
+
     public function finalize(): void {
         if ($this->status !== CartStatus::OPENED) {
             throw new \LogicException('Only opened carts can be completed');

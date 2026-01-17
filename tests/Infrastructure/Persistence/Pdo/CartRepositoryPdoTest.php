@@ -3,45 +3,39 @@
 namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
-use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\ValueObject\Money;
-use PHPUnit\Framework\TestCase;
+use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
-class CartRepositoryPdoTest extends TestCase {
+class CartRepositoryPdoTest extends DatabaseTestCase {
     
     public function testShouldNotReturnAnyCartItemWhenThereAreNoItems(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        
-        $repository = new CartRepositoryPdo($pdo);
+        $repository = new CartRepositoryPdo($this->connection);
         $cart = $repository->findById('1');
 
         $this->assertNull($cart);
     }
 
     public function testShouldCreateNewCart(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        
-        $repository = new CartRepositoryPdo($pdo);
+        $repository = new CartRepositoryPdo($this->connection);
         $cart = new CartBuilder()
             ->withId('1')
             ->withStatus(CartStatus::OPENED)
             ->build();
         $repository->save($cart);
 
-        $stmt = $pdo->query('SELECT COUNT(*) as item_count FROM cart_items WHERE cart_id = 1');
+        $stmt = $this->connection->query('SELECT COUNT(*) as item_count FROM cart_items WHERE cart_id = 1');
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         $this->assertEquals(0, (int)$result['item_count']);
     }
 
     public function testShouldSaveCartWithItems(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        $pdo->exec("INSERT INTO products (id, name, category_id) VALUES (1, 'Product 1', null)");
-        $repository = new CartRepositoryPdo($pdo);
+        $this->connection->exec("INSERT INTO products (id, name, category_id) VALUES (1, 'Product 1', null)");
+        $repository = new CartRepositoryPdo($this->connection);
         $cart = new CartBuilder()
             ->withId('1')
             ->withStatus(CartStatus::OPENED)
@@ -52,7 +46,7 @@ class CartRepositoryPdoTest extends TestCase {
         $cart->addItem($cartItem);
         $repository->save($cart);
 
-        $stmt = $pdo->query('SELECT ci.*, p.name as product_name FROM cart_items as ci JOIN products as p ON ci.product_id = p.id WHERE cart_id = 1');
+        $stmt = $this->connection->query('SELECT ci.*, p.name as product_name FROM cart_items as ci JOIN products as p ON ci.product_id = p.id WHERE cart_id = 1');
         $items = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         $this->assertCount(1, $items);
@@ -64,12 +58,11 @@ class CartRepositoryPdoTest extends TestCase {
     }
 
     public function testShouldReturnCartWithItemsWhenThereAreItems(): void {
-        $pdo = SqliteTestHelper::createConnection();
-        $pdo->exec("INSERT INTO carts (id, status) VALUES (1, 'opened')");
-        $pdo->exec("INSERT INTO products (id, name, category_id, created_at, updated_at) VALUES (1, 'Product 1', null, datetime('now'), datetime('now'))");
-        $pdo->exec("INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES (1, 1, 2, 500)");
+        $this->connection->exec("INSERT INTO carts (id, status, created_at, updated_at) VALUES (1, 'opened', datetime('now'), datetime('now'))");
+        $this->connection->exec("INSERT INTO products (id, name, category_id, created_at, updated_at) VALUES (1, 'Product 1', null, datetime('now'), datetime('now'))");
+        $this->connection->exec("INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES (1, 1, 2, 500)");
         
-        $repository = new CartRepositoryPdo($pdo);
+        $repository = new CartRepositoryPdo($this->connection);
         $cart = $repository->findById('1');
 
         $this->assertNotNull($cart);
