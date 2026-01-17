@@ -46,9 +46,9 @@ class Cart {
             throw new \LogicException('Cannot modify a cart that is not opened');
         }
 
-        foreach ($this->items as $item) {
+        foreach ($this->items as $index => $item) {
             if ($item->product()->id() === $productId) {
-                unset($this->items[$item->id()]);
+                unset($this->items[$index]);
                 return;
             }
         }
@@ -81,7 +81,7 @@ class Cart {
     }
 
     /** @var CartItem[] */
-    public function items(): array {
+    public function items(): ?array {
         return $this->items;
     }
 }

@@ -96,8 +96,8 @@ final class CartRepositoryPdo implements CartRepository {
                     ci.id as ci_id, ci.cart_id as ci_cart_id, ci.product_id as ci_product_id, ci.quantity as ci_quantity, ci.unit_price as ci_unit_price,
                     p.id as p_id, p.name as p_name
             FROM carts as c 
-            INNER JOIN cart_items as ci ON c.id = ci.cart_id
-            INNER JOIN products as p ON ci.product_id = p.id
+            LEFT JOIN cart_items as ci ON c.id = ci.cart_id
+            LEFT JOIN products as p ON ci.product_id = p.id
             WHERE c.id = :cart_id'
         );
         $stmt->execute(['cart_id' => $id]);
@@ -106,14 +106,16 @@ final class CartRepositoryPdo implements CartRepository {
         if ($rows) {
             $cartItems = [];
             foreach ($rows as $row) {
-                $product = new Product(strval($row['p_id']), $row['p_name']);
-                $cartItem = new CartItem(
-                    strval($row['ci_id']),
-                    $product,
-                    (int) $row['ci_quantity'],
-                    new Money((int) $row['ci_unit_price'])
-                );
-                $cartItems[] = $cartItem;
+                if (!empty($row['ci_id'])) {
+                    $product = new Product(strval($row['p_id']), $row['p_name']);
+                    $cartItem = new CartItem(
+                        strval($row['ci_id']),
+                        $product,
+                        (int) $row['ci_quantity'],
+                        new Money((int) $row['ci_unit_price'])
+                    );
+                    $cartItems[] = $cartItem;
+                }
             }
 
             return (new CartBuilder())
