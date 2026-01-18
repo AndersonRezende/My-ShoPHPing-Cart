@@ -2,6 +2,9 @@
 
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class PdoConnection {
     
     public static function getConnection(): \PDO {
