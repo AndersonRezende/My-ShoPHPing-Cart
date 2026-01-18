@@ -6,6 +6,7 @@ use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\ValueObject\Money;
+use MyShoppingCart\Domain\Enum\CartStatus;
 use PHPUnit\Framework\TestCase;
 
 class CartTest extends TestCase {
@@ -36,5 +37,17 @@ class CartTest extends TestCase {
 
         $this->assertEquals(0, $total->amount());
         $this->assertCount(0, $cart->items());
+    }
+
+    public function testCannotModifyClosedCart(): void {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot modify a cart that is not opened');
+
+        $cart = new Cart(status: CartStatus::COMPLETED);
+
+        $product = new Product('prod-003', 'Product 3');
+        $unitPrice = new Money(2000);
+        $cartItem = new CartItem(null, $product, 1, $unitPrice);
+        $cart->addItem($cartItem);
     }
 }

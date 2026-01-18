@@ -39,6 +39,8 @@ class Cart {
                 return;
             }
         }
+
+        throw new \DomainException('Cart item not exists in the cart');
     }
 
     public function removeItem(string $productId): void {
@@ -52,7 +54,7 @@ class Cart {
                 return;
             }
         }
-        
+
         throw new \DomainException('Cart item not exists in the cart');
     }
 

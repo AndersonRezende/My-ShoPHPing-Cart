@@ -26,4 +26,28 @@ class UpdateItemQuantityTest extends DatabaseTestCase {
         
         $this->assertEquals(3, $updatedCartItem->quantity());
     }
+
+    public function testShouldThrowExceptionWhenCartNotFound(): void {
+        $cartRepository = new CartRepositoryPdo($this->connection);
+        $updateItemQuantity = new UpdateItemQuantity($cartRepository);
+        $input = new UpdateItemQuantityInput('non-existent-cart-id', '1', 3);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cart not found');
+
+        $updateItemQuantity->execute($input);
+    }
+
+    public function testShouldThrowExceptionWhenItemNotInCart(): void {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Cart item not exists in the cart');
+        
+        $cart = new Cart('1');
+        $cartRepository = new CartRepositoryPdo($this->connection);
+        $cartRepository->save($cart);
+        $updateItemQuantity = new UpdateItemQuantity($cartRepository);
+        $input = new UpdateItemQuantityInput('1', '1', 3);
+        
+        $updateItemQuantity->execute($input);
+    }
 }
