@@ -9,7 +9,9 @@ abstract class DatabaseTestCase extends TestCase {
     protected \PDO $connection;
 
     protected function tearDown(): void {
-        $this->connection->rollBack();
+        if ($this->connection->inTransaction()) {
+            $this->connection->rollBack();
+        }
         parent::tearDown();
     }
 

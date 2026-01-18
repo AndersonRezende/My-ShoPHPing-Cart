@@ -74,4 +74,27 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
         $this->assertEquals(2, $item->quantity());
         $this->assertEquals(500, $item->unitPrice()->amount());
     }
+
+    public function testErrorInTransactionShouldRollback(): void {
+        $this->connection->commit();
+        $this->connection->exec('PRAGMA foreign_keys = ON;');
+        
+        $repository = new CartRepositoryPdo($this->connection);
+        $cart = new CartBuilder()
+            ->withId('1')
+            ->withStatus(CartStatus::OPENED)
+            ->build();
+        $product = new Product('9999', 'Product 1');
+        $unitPrice = new Money(500);
+        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cart->addItem($cartItem);
+        
+        try {
+            $repository->save($cart);
+            $this->fail('Should thrown a PDOException for FK violation.');
+        } catch (\PDOException $e) {
+            $stmt = $this->connection->query('SELECT COUNT(*) FROM carts WHERE id = 1');
+            $this->assertEquals(0, (int)$stmt->fetchColumn());
+        }
+    }
 }
