@@ -10,4 +10,9 @@ interface ProductRepository {
     public function search(string $term): array;
     
     public function getById(string $id): Product;
+
+    public function save(Product $product): bool;
+
+    /** @return Product[] */
+    public function findAll(): array;
 }

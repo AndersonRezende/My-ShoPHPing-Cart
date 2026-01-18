@@ -76,4 +76,22 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
         $this->assertEquals('1', $row['id']);
         $this->assertEquals('Spaghetti', $row['name']);
     }
+
+    public function testExecuteFindAllShouldReturnAllProducts(): void {
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (1, 'Pasta')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (2, 'Papaya')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (3, 'Egg')");
+
+        $repository = new ProductRepositoryPdo($this->connection);
+        $results = $repository->findAll();
+
+        $this->assertCount(3, $results);
+        $this->assertEquals('1', $results[0]->id());
+        $this->assertEquals('Pasta', $results[0]->name());
+        $this->assertEquals('2', $results[1]->id());
+        $this->assertEquals('Papaya', $results[1]->name());
+        $this->assertEquals('3', $results[2]->id());
+        $this->assertEquals('Egg', $results[2]->name());
+        $this->assertSame($results[0]::class, Product::class);
+    }
 }

@@ -46,4 +46,14 @@ final class ProductRepositoryPdo implements ProductRepository {
             'name' => $product->name(),
         ]);
     }
+
+    /** @return Product[] */
+    public function findAll(): array {
+        $stmt = $this->pdo->prepare('SELECT * FROM products');
+        $stmt->execute();
+        return array_map(
+            fn ($row) => new Product(strval($row['id']), $row['name']),
+            $stmt->fetchAll(PDO::FETCH_ASSOC)
+        );
+    }
 }
