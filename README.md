@@ -2,7 +2,7 @@
 
 ![Run PHP Tests](https://github.com/AndersonRezende/My-ShoPHPing-Cart/actions/workflows/ci.yml/badge.svg)
 ![php](https://img.shields.io/github/languages/top/AndersonRezende/My-ShoPHPing-Cart?style=flat-square)
-![Coverage](coverage.svg)
+![Coverage](https://raw.githubusercontent.com/AndersonRezende/My-ShoPHPing-Cart/badges/coverage.svg)
 
 ## Overview
 

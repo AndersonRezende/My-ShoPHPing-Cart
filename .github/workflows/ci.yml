@@ -43,11 +43,14 @@ jobs:
         run: |
           COVERAGE=$(php -r '$xml = simplexml_load_file("coverage.xml"); $metrics = $xml->project->metrics; $covered = (int)$metrics["coveredelements"]; $total = (int)$metrics["elements"]; echo $total > 0 ? round(($covered / $total) * 100) : 0;')
           if [ "$COVERAGE" -ge 80 ]; then COLOR="green"; elif [ "$COVERAGE" -ge 50 ]; then COLOR="yellow"; else COLOR="red"; fi
-          curl "https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR" > coverage.svg
+          mkdir -p badges
+          curl "https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR" > badges/coverage.svg
 
-      - name: Commit Coverage Badge
+      - name: Deploy Coverage Badge
         if: github.ref == 'refs/heads/master'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          commit_message: Update coverage badge
-          file_pattern: coverage.svg
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: badges
+          publish_branch: badges
+          force_orphan: true
