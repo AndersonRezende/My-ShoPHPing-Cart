@@ -50,4 +50,63 @@ class CartTest extends TestCase {
         $cartItem = new CartItem(null, $product, 1, $unitPrice);
         $cart->addItem($cartItem);
     }
+
+    public function testCannotUpdateItemQuantityInClosedCart(): void {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot modify a cart that is not opened');
+
+        $cart = new Cart(status: CartStatus::COMPLETED);
+
+        $cart->updateItemQuantity('prod-001', 5);
+    }
+
+    public function testShouldRemoveItemWhenQuantityIsZero(): void {
+        $cart = new Cart();
+        $product = new Product('prod-004', 'Product 4');
+        $unitPrice = new Money(2500);
+        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cart->addItem($cartItem);
+
+        $cart->updateItemQuantity('prod-004', 0);
+
+        $this->assertCount(0, $cart->items());
+    }
+    
+    public function testShouldThrowExceptionWhenItemNotInCart(): void {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Cart item not exists in the cart');
+
+        $cart = new Cart();
+        $product = new Product('prod-005', 'Product 5');
+        $unitPrice = new Money(3000);
+        $cartItem = new CartItem(null, $product, 1, $unitPrice);
+        $cart->addItem($cartItem);
+        $cart->updateItemQuantity('non-existent-product-id', 2);
+    }
+
+    public function testCannotRemoveItemFromNotOpenedCart(): void {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot modify a cart that is not opened');
+
+        $cart = new Cart(null, CartStatus::COMPLETED);
+
+        $cart->removeItem('prod-004', 0);
+    }
+
+    public function testCannotFinalizeNotOpenedCart(): void {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Only opened carts can be completed');
+
+        $cart = new Cart(null, CartStatus::COMPLETED);
+
+        $cart->finalize();
+    }
+
+    public function testCanFinalizeOpenedCart(): void {
+        $cart = new Cart();
+
+        $cart->finalize();
+
+        $this->assertEquals(CartStatus::COMPLETED, $cart->status());
+    }
 }
