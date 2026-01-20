@@ -9,7 +9,7 @@ final class PdoConnection {
     
     public static function getConnection(): \PDO {
         return new \PDO(
-            'sqlite:' . __DIR__ . '/../../../../database/database.db',
+            'sqlite:' . __DIR__ . '/../../../../database/database.db.sqlite3',
             null,
             null,
             [
