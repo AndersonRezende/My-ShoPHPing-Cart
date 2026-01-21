@@ -14,7 +14,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ListProductsCommandTest extends TestCase {
 
-    public function testExecuteListProductsCommand(): void {
+    public function testExecuteListProductsCommand_ShouldListProducts_WhenThereAreProducts(): void {
         $listProductsUseCase = $this->createMock(ListProductsUseCase::class);
         $listProductsUseCase->expects($this->once())
             ->method('execute')
@@ -34,9 +34,32 @@ class ListProductsCommandTest extends TestCase {
 
         $output = $commandTester->getDisplay();
 
+        $this->assertStringContainsString('ID', $output);
+        $this->assertStringContainsString('Nome', $output);
         $this->assertStringContainsString('Product 1', $output);
         $this->assertStringContainsString('1', $output);
         $this->assertStringContainsString('Product 2', $output);
         $this->assertStringContainsString('2', $output);
+    }
+
+    public function testExecuteListProductsCommand_ShouldOnlyShowHeader_WhenThereIsNoProduct(): void {
+        $listProductsUseCase = $this->createMock(ListProductsUseCase::class);
+        $listProductsUseCase->expects($this->once())
+            ->method('execute')
+            ->willReturn(array()
+        );
+        $listProductsCommand = new ListProductsCommand($listProductsUseCase);
+        $application = new Application();
+        $application->addCommand($listProductsCommand);
+        $command = $application->find('msp:list-products');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'command' => $command->getName(),
+        ]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertStringContainsString('ID', $output);
+        $this->assertStringContainsString('Nome', $output);
     }
 }
