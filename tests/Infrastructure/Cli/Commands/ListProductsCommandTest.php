@@ -33,7 +33,9 @@ class ListProductsCommandTest extends TestCase {
         ]);
 
         $output = $commandTester->getDisplay();
+        $statusCode = $commandTester->getStatusCode();
 
+        $this->assertEquals(Command::SUCCESS, $statusCode);
         $this->assertStringContainsString('ID', $output);
         $this->assertStringContainsString('Nome', $output);
         $this->assertStringContainsString('Product 1', $output);
