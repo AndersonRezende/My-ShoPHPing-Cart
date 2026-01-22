@@ -4,14 +4,14 @@ namespace MyShoppingCart\Domain\Entity;
 
 final class Product {
     public function __construct(
-        private readonly string $id, private readonly string $name
+        private readonly ?string $id, private readonly string $name
     ) {
         if (empty($name)) {
             throw new \InvalidArgumentException('Product name cannot be empty');
         }
     }
 
-    public function id(): string {
+    public function id(): ?string {
         return $this->id;
     }
 

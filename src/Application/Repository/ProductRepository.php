@@ -11,7 +11,7 @@ interface ProductRepository {
     
     public function getById(string $id): Product;
 
-    public function save(Product $product): bool;
+    public function save(Product $product): Product;
 
     /** @return Product[] */
     public function findAll(): array;

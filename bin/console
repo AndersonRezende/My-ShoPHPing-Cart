@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
+use MyShoppingCart\Infrastructure\Cli\Commands\CreateProductCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
@@ -24,7 +25,10 @@ $application = new Application('My Shopping Cart CLI', '1.0.0');
 //     'app:meu-comando' => MeuComando::class
 // ]);
 // $application->setCommandLoader($commandLoader);
-$commandLoader = new ContainerCommandLoader($container, ['msp:list-products' => ListProductsCommand::class]);
+$commandLoader = new ContainerCommandLoader($container, [
+    'msp:list-products' => ListProductsCommand::class,
+    'msp:create-product' => CreateProductCommand::class,
+]);
 $application->setCommandLoader($commandLoader);
 
 $application->run();

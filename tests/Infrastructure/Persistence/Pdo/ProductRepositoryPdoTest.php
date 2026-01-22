@@ -58,7 +58,7 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
         $stmt = $this->connection->query("SELECT * FROM products WHERE id = '1'");
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $this->assertTrue($result);
+        $this->assertEquals($result, $product);
         $this->assertEquals('1', $row['id']);
         $this->assertEquals('Pasta', $row['name']);
     }
@@ -72,7 +72,7 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
         $stmt = $this->connection->query("SELECT * FROM products WHERE id = '1'");
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $this->assertTrue($result);
+        $this->assertEquals($result, $updatedProduct);
         $this->assertEquals('1', $row['id']);
         $this->assertEquals('Spaghetti', $row['name']);
     }

@@ -35,16 +35,25 @@ final class ProductRepositoryPdo implements ProductRepository {
         return new Product(strval($row['id']), $row['name']);   
     }
 
-    public function save(Product $product): bool {
+    public function save(Product $product): Product {
         $stmt = $this->pdo->prepare(
             'INSERT INTO products (id, name) VALUES (:id, :name)
              ON CONFLICT(id) DO UPDATE SET name = :name'
         );
 
-        return $stmt->execute([
+        $result = $stmt->execute([
             'id' => $product->id(),
             'name' => $product->name(),
         ]);
+
+        if (!$result) {
+            throw new \RuntimeException('Failed to save product.');
+        }
+
+        return new Product(
+            $this->pdo->lastInsertId() ?: $product->id(),
+            $product->name()
+        );
     }
 
     /** @return Product[] */
