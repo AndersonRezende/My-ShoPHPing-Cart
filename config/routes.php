@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MyShoppingCart\Infrastructure\Http\Controller\ListProductsController;
+use MyShoppingCart\Infrastructure\Http\Controller\CreateProductController;
 use Slim\App;
 
 return function (App $app) {
@@ -12,4 +13,5 @@ return function (App $app) {
     });
 
     $app->get('/products', ListProductsController::class);
+    $app->post('/products', CreateProductController::class);
 };
