@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
-use MyShoppingCart\Infrastructure\Http\Controller\ListProductsController;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -33,13 +32,7 @@ $app->add(TwigMiddleware::create($app, $twig));
 
 $app->addErrorMiddleware(true, true, true);
 
-// 4. Rotas (Idealmente, mova isso para um arquivo separado config/routes.php)
-$app->get('/', function ($request, $response, $args) {
-    $response->getBody()->write("Bem-vindo ao My Shopping Cart (Clean Arch)");
-    return $response;
-});
-
-// Rota para listar produtos usando o Controller
-$app->get('/products', ListProductsController::class);
+$routes = require __DIR__ . '/../config/routes.php';
+$routes($app);
 
 $app->run();
