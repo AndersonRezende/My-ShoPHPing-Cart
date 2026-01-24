@@ -1,5 +1,6 @@
 <phpunit bootstrap="vendor/autoload.php"
-         colors="true">
+         colors="true"
+         displayDetailsOnAllIssues="true">
     <testsuites>
         <testsuite name="My ShoPHPing Cart Test Suite">
             <directory>tests</directory>
