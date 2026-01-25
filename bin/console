@@ -5,9 +5,11 @@ declare(strict_types=1);
 
 use DI\ContainerBuilder;
 use MyShoppingCart\Infrastructure\Cli\Commands\CreateProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\ShowProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\UpdateProductCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
-use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -28,6 +30,8 @@ $application = new Application('My Shopping Cart CLI', '1.0.0');
 $commandLoader = new ContainerCommandLoader($container, [
     'msp:list-products' => ListProductsCommand::class,
     'msp:create-product' => CreateProductCommand::class,
+    'msp:show-product' => ShowProductCommand::class,
+    'msp:update-product' => UpdateProductCommand::class,
 ]);
 $application->setCommandLoader($commandLoader);
 
