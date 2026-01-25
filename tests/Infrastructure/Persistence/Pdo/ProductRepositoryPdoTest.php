@@ -4,6 +4,7 @@ namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Domain\Entity\Product;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
 class ProductRepositoryPdoTest extends DatabaseTestCase {
 
@@ -93,5 +94,31 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
         $this->assertEquals('3', $results[2]->id());
         $this->assertEquals('Egg', $results[2]->name());
         $this->assertSame($results[0]::class, Product::class);
+    }
+
+    public function testExecuteDeleteByIdShouldDeleteProduct(): void {
+        $this->connection->exec("INSERT INTO products (id, name) VALUES ('1', 'Pasta')");
+        $repository = new ProductRepositoryPdo($this->connection);
+
+        $repository->deleteById('1');
+
+        $stmt = $this->connection->query("SELECT * FROM products WHERE id = '1'");
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $this->assertFalse($row);
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testExecuteDeleteByIdWhenProductDoesNotExist(): void {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Product with ID 1234 not found.');
+
+        $pdoMock = $this->createMock(\PDO::class);
+        $stmtMock = $this->createMock(\PDOStatement::class);
+        $pdoMock->method('prepare')->willReturn($stmtMock);
+        $stmtMock->method('execute')->willReturn(false);
+        $repository = new ProductRepositoryPdo($pdoMock);
+
+        $repository->deleteById('1234');
     }
 }

@@ -65,4 +65,12 @@ final class ProductRepositoryPdo implements ProductRepository {
             $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
     }
+
+    public function deleteById(string $id): void {
+        $stmt = $this->pdo->prepare('DELETE FROM products WHERE id = :id');
+        $result = $stmt->execute(['id' => $id]);
+        if ($result === false) {
+            throw new \RuntimeException("Product with ID {$id} not found.");
+        }
+    }
 }

@@ -8,6 +8,7 @@ use MyShoppingCart\Infrastructure\Cli\Commands\CreateProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\ShowProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\UpdateProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\DeleteProductCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 
@@ -28,10 +29,11 @@ $application = new Application('My Shopping Cart CLI', '1.0.0');
 // ]);
 // $application->setCommandLoader($commandLoader);
 $commandLoader = new ContainerCommandLoader($container, [
+    'msp:show-product' => ShowProductCommand::class,
     'msp:list-products' => ListProductsCommand::class,
     'msp:create-product' => CreateProductCommand::class,
-    'msp:show-product' => ShowProductCommand::class,
     'msp:update-product' => UpdateProductCommand::class,
+    'msp:delete-product' => DeleteProductCommand::class,
 ]);
 $application->setCommandLoader($commandLoader);
 

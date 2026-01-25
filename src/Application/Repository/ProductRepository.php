@@ -15,4 +15,6 @@ interface ProductRepository {
 
     /** @return Product[] */
     public function findAll(): array;
+
+    public function deleteById(string $id): void;
 }
