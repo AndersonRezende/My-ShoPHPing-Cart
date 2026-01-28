@@ -17,7 +17,8 @@ class InMemoryCartRepositoryMock implements CartRepository {
         return $this->cart;
     }
     
-    public function save(Cart $cart): void {
+    public function save(Cart $cart): Cart {
         $this->cart = $cart;
+        return $cart;
     }
 }

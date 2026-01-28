@@ -6,7 +6,7 @@ use MyShoppingCart\Domain\Entity\Cart;
 
 interface CartRepository {
     
-    public function save(Cart $cart): void;
+    public function save(Cart $cart): Cart;
 
     public function findById(string $id): ?Cart;
 }

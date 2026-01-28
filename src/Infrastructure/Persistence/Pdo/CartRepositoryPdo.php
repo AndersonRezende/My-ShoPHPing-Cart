@@ -15,14 +15,14 @@ final class CartRepositoryPdo implements CartRepository {
 
     public function __construct(private PDO $pdo) {}
 
-    public function save(Cart $cart): void {
+    public function save(Cart $cart): Cart {
         $inTransaction = $this->pdo->inTransaction();
         if (!$inTransaction) {
             $this->pdo->beginTransaction();
         }
 
         try {
-            $this->upsertCart($cart);
+            $cart = $this->upsertCart($cart);
 
             $dbProductIds = $this->getProductsIdsFromCartItemsByCartId($cart->id());
             $cartItemsProductIds = array_map(
@@ -46,15 +46,25 @@ final class CartRepositoryPdo implements CartRepository {
             }
             throw $e;
         }
+        return $cart;
     }
 
-    private function upsertCart(Cart $cart): void {
+    private function upsertCart(Cart $cart): Cart {
         $stmt = $this->pdo->prepare(
             'INSERT INTO carts (id, status)
              VALUES (:id, :status)
              ON CONFLICT(id) DO UPDATE SET status = :status'
         );
         $stmt->execute(['id' => $cart->id(), 'status' => $cart->status()->value]);
+        if ($cart->id() === null) {
+            $id = $this->pdo->lastInsertId();
+            return new CartBuilder()
+                ->withId($id)
+                ->withStatus($cart->status())
+                ->withCartItems($cart->items())
+                ->build();
+        }
+        return $cart;
     }
 
     private function getProductsIdsFromCartItemsByCartId(string $cartId): array {
