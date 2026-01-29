@@ -7,6 +7,9 @@ use MyShoppingCart\Infrastructure\Http\Controller\ListProductsController;
 use MyShoppingCart\Infrastructure\Http\Controller\CreateProductController;
 use MyShoppingCart\Infrastructure\Http\Controller\UpdateProductController;
 use MyShoppingCart\Infrastructure\Http\Controller\DeleteProductController;
+use MyShoppingCart\Infrastructure\Http\Controller\CreateCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\AddItemToCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\CheckoutController;
 use Slim\App;
 
 return function (App $app) {
@@ -20,4 +23,9 @@ return function (App $app) {
     $app->post('/products', CreateProductController::class);
     $app->put('/products/{id}', UpdateProductController::class);
     $app->delete('/products/{id}', DeleteProductController::class);
+
+    // Rotas do Carrinho
+    $app->post('/carts', CreateCartController::class);
+    $app->post('/carts/{id}/items', AddItemToCartController::class);
+    $app->post('/carts/{id}/checkout', CheckoutController::class);
 };
