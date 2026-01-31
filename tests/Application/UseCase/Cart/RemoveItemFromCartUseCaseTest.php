@@ -3,7 +3,7 @@
 namespace Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\RemoveItemFromCartInput;
-use MyShoppingCart\Application\UseCase\Cart\RemoveItemFromCart;
+use MyShoppingCart\Application\UseCase\Cart\RemoveItemFromCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;
@@ -11,7 +11,7 @@ use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
-class RemoveItemFromCartTest extends DatabaseTestCase {
+class RemoveItemFromCartUseCaseTest extends DatabaseTestCase {
 
     public function testExecuteRemoveItemFromCart(): void {
         $this->connection->exec("INSERT INTO products (id, name) VALUES ('1', 'Product 1');");
@@ -20,7 +20,7 @@ class RemoveItemFromCartTest extends DatabaseTestCase {
         $cartRepository = new CartRepositoryPdo($this->connection);
         $cartRepository->save($cart);
         
-        $removeItemFromCart = new RemoveItemFromCart($cartRepository);
+        $removeItemFromCart = new RemoveItemFromCartUseCase($cartRepository);
         $input = new RemoveItemFromCartInput('1', '1');
         $removeItemFromCart->execute($input);
         $cart = $cartRepository->findById('1');
@@ -31,7 +31,7 @@ class RemoveItemFromCartTest extends DatabaseTestCase {
 
     public function testExecuteRemoveItemFromCartThrowsExceptionWhenCartNotFound(): void {
         $cartRepository = new CartRepositoryPdo($this->connection);
-        $removeItemFromCart = new RemoveItemFromCart($cartRepository);
+        $removeItemFromCart = new RemoveItemFromCartUseCase($cartRepository);
         $input = new RemoveItemFromCartInput('non-existent-cart-id', '1');
 
         $this->expectException(\InvalidArgumentException::class);
@@ -45,7 +45,7 @@ class RemoveItemFromCartTest extends DatabaseTestCase {
         $cartRepository = new CartRepositoryPdo($this->connection);
         $cartRepository->save($cart);
         
-        $removeItemFromCart = new RemoveItemFromCart($cartRepository);
+        $removeItemFromCart = new RemoveItemFromCartUseCase($cartRepository);
         $input = new RemoveItemFromCartInput('1', 'non-existent-product-id');
 
         $this->expectException(\DomainException::class);

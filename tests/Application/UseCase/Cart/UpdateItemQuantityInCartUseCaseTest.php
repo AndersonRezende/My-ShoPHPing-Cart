@@ -3,7 +3,7 @@
 namespace Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
-use MyShoppingCart\Application\UseCase\Cart\UpdateItemQuantity;
+use MyShoppingCart\Application\UseCase\Cart\UpdateItemQuantityInCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;
@@ -11,7 +11,7 @@ use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
-class UpdateItemQuantityTest extends DatabaseTestCase {
+class UpdateItemQuantityInCartUseCaseTest extends DatabaseTestCase {
     
     public function testShouldUpdateItemQuantity(): void {
         $this->connection->exec("INSERT INTO products (id, name) VALUES ('1', 'Product 1');");
@@ -20,7 +20,7 @@ class UpdateItemQuantityTest extends DatabaseTestCase {
         $cartRepository = new CartRepositoryPdo($this->connection);
         $cartRepository->save($cart);
         
-        $updateItemQuantity = new UpdateItemQuantity($cartRepository);
+        $updateItemQuantity = new UpdateItemQuantityInCartUseCase($cartRepository);
         $input = new UpdateItemQuantityInput('1', '1', 3);
         $updateItemQuantity->execute($input);
         $updatedCartItem = $cartRepository->findById('1')->items()[0];
@@ -30,7 +30,7 @@ class UpdateItemQuantityTest extends DatabaseTestCase {
 
     public function testShouldThrowExceptionWhenCartNotFound(): void {
         $cartRepository = new CartRepositoryPdo($this->connection);
-        $updateItemQuantity = new UpdateItemQuantity($cartRepository);
+        $updateItemQuantity = new UpdateItemQuantityInCartUseCase($cartRepository);
         $input = new UpdateItemQuantityInput('non-existent-cart-id', '1', 3);
 
         $this->expectException(\InvalidArgumentException::class);
@@ -46,7 +46,7 @@ class UpdateItemQuantityTest extends DatabaseTestCase {
         $cart = new Cart('1');
         $cartRepository = new CartRepositoryPdo($this->connection);
         $cartRepository->save($cart);
-        $updateItemQuantity = new UpdateItemQuantity($cartRepository);
+        $updateItemQuantity = new UpdateItemQuantityInCartUseCase($cartRepository);
         $input = new UpdateItemQuantityInput('1', '1', 3);
         
         $updateItemQuantity->execute($input);
