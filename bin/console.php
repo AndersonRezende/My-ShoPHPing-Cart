@@ -7,11 +7,11 @@ use DI\ContainerBuilder;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AddItemToCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CreateCartCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\CreateProductCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\ShowProductCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\UpdateProductCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\DeleteProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\CreateProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductsCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\ShowProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\UpdateProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\DeleteProductCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 

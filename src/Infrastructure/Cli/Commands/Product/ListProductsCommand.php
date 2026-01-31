@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Infrastructure\Cli\Commands;
+namespace MyShoppingCart\Infrastructure\Cli\Commands\Product;
 
 use MyShoppingCart\Application\UseCase\ListProductsUseCase;
 use Symfony\Component\Console\Command\Command;

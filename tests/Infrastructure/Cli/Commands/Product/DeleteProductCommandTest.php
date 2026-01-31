@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands;
+namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Product;
 
 use MyShoppingCart\Application\UseCase\DeleteProductUseCase;
-use MyShoppingCart\Domain\Entity\Product;
-use MyShoppingCart\Infrastructure\Cli\Commands\DeleteProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\DeleteProductCommand;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;

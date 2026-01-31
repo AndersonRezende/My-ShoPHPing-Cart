@@ -1,18 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands;
+namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Product;
 
 use MyShoppingCart\Application\UseCase\ListProductsUseCase;
 use MyShoppingCart\Domain\Entity\Product;
-use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
-use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductsCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ListProductsCommandTest extends TestCase {
+class CreateProductCommandTest extends TestCase {
 
     public function testExecuteListProductsCommand_ShouldListProducts_WhenThereAreProducts(): void {
         $listProductsUseCase = $this->createMock(ListProductsUseCase::class);
