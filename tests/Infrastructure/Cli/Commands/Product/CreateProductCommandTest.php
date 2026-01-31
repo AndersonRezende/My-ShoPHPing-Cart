@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Product;
 
-use MyShoppingCart\Application\UseCase\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductsCommand;
 use PHPUnit\Framework\TestCase;

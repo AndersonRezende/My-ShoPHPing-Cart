@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Application\UseCase;
+namespace Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\RemoveItemFromCartInput;
-use MyShoppingCart\Application\UseCase\RemoveItemFromCart;
-use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Application\UseCase\Cart\RemoveItemFromCart;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
+use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;

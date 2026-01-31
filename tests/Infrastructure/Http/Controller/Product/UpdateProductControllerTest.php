@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\UpdateProductUseCase;
+use MyShoppingCart\Application\UseCase\Product\UpdateProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Http\Controller\Product\UpdateProductController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;

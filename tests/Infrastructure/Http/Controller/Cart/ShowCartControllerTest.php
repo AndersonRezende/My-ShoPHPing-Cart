@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 
 use InvalidArgumentException;
-use MyShoppingCart\Application\UseCase\ShowCartUseCase;
+use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\ShowCartController;

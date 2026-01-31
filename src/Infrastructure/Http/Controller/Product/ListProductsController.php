@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Application\UseCase;
+namespace MyShoppingCart\Application\UseCase\Cart;
 
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;

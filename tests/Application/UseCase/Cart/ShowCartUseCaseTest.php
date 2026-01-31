@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Application\UseCase;
+namespace Application\UseCase\Cart;
 
-use MyShoppingCart\Application\UseCase\ShowCartUseCase;
-use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Application\DTO\ShowCartInput;
+use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;

@@ -4,7 +4,7 @@ namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
-use MyShoppingCart\Application\UseCase\ShowCartUseCase;
+use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use Psr\Http\Message\ResponseInterface as Response;

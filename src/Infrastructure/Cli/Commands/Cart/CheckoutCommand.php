@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Cart;
 
 use MyShoppingCart\Application\DTO\CheckoutInput;
-use MyShoppingCart\Application\UseCase\CheckoutUseCase;
+use MyShoppingCart\Application\UseCase\Cart\CheckoutUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

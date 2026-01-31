@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Application\UseCase;
+namespace Application\UseCase\Cart;
 
-use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
-use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Application\DTO\AddItemInput;
+use MyShoppingCart\Application\Repository\ProductRepository;
+use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Tests\Util\InMemoryCartRepositoryMock;
 use PHPUnit\Framework\TestCase;

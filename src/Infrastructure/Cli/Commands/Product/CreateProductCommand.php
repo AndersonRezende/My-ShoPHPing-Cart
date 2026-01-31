@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Product;
 
 use MyShoppingCart\Application\DTO\CreateProductInput;
-use MyShoppingCart\Application\UseCase\CreateProductUseCase;
+use MyShoppingCart\Application\UseCase\Product\CreateProductUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

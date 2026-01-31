@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\DeleteProductUseCase;
+use MyShoppingCart\Application\UseCase\Product\DeleteProductUseCase;
 use MyShoppingCart\Infrastructure\Http\Controller\Product\DeleteProductController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;

@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Http\Controller\Product;
 
 use MyShoppingCart\Application\DTO\DeleteProductInput;
-use MyShoppingCart\Application\UseCase\DeleteProductUseCase;
+use MyShoppingCart\Application\UseCase\Product\DeleteProductUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

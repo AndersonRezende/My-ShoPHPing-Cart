@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Application\UseCase;
+namespace Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
+use MyShoppingCart\Application\UseCase\Cart\UpdateItemQuantity;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Application\UseCase;
+namespace Application\UseCase\Product;
 
-use MyShoppingCart\Application\UseCase\ShowProductUseCase;
 use MyShoppingCart\Application\DTO\ShowProductInput;
+use MyShoppingCart\Application\UseCase\Product\ShowProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;

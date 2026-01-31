@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Application\UseCase;
+namespace MyShoppingCart\Application\UseCase\Product;
 
 use MyShoppingCart\Application\Repository\ProductRepository;
+use MyShoppingCart\Application\UseCase\Product;
 
 class ListProductsUseCase {
 

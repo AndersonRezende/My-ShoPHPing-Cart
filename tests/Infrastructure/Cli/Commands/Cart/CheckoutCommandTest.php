@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Cart;
 
-use MyShoppingCart\Application\UseCase\CheckoutUseCase;
+use MyShoppingCart\Application\UseCase\Cart\CheckoutUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCommand;

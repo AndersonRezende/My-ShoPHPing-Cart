@@ -3,9 +3,7 @@
 namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Cart;
 
 use InvalidArgumentException;
-use MyShoppingCart\Application\DTO\CartOutput;
-use MyShoppingCart\Application\Repository\CartRepository;
-use MyShoppingCart\Application\UseCase\ShowCartUseCase;
+use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;

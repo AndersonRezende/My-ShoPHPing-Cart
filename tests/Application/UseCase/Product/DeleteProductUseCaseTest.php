@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Application\UseCase;
+namespace Application\UseCase\Product;
 
-use MyShoppingCart\Application\UseCase\DeleteProductUseCase;
 use MyShoppingCart\Application\DTO\DeleteProductInput;
-use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Application\UseCase\Product\DeleteProductUseCase;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;

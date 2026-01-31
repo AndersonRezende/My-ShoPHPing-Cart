@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 
 use MyShoppingCart\Application\DTO\CartOutput;
-use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
+use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\AddItemToCartController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;

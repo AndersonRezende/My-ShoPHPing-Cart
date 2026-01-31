@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Http\Controller\Product;
 
 use MyShoppingCart\Application\DTO\CreateProductInput;
-use MyShoppingCart\Application\UseCase\CreateProductUseCase;
+use MyShoppingCart\Application\UseCase\Product\CreateProductUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

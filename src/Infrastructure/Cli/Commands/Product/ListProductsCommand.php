@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Product;
 
-use MyShoppingCart\Application\UseCase\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

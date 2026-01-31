@@ -3,9 +3,6 @@
 use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Application\UseCase\AddItemToCart;
-use MyShoppingCart\Application\UseCase\ListProductsUseCase;
-use MyShoppingCart\Application\UseCase\RemoveItemFromCart;
-use MyShoppingCart\Application\UseCase\UpdateItemQuantity;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\PdoConnection;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;

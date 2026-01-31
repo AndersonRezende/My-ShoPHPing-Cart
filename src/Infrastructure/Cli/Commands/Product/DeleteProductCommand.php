@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Product;
 
 use MyShoppingCart\Application\DTO\DeleteProductInput;
-use MyShoppingCart\Application\UseCase\DeleteProductUseCase;
+use MyShoppingCart\Application\UseCase\Product\DeleteProductUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

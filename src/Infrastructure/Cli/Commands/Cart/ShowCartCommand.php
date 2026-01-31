@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Cart;
 
 use MyShoppingCart\Application\DTO\ShowCartInput;
-use MyShoppingCart\Application\UseCase\ShowCartUseCase;
+use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
