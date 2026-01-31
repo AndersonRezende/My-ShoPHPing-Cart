@@ -11,7 +11,7 @@ use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\ValueObject\Money;
 use PDO;
 
-final class CartRepositoryPdo implements CartRepository {
+final readonly class CartRepositoryPdo implements CartRepository {
 
     public function __construct(private PDO $pdo) {}
 

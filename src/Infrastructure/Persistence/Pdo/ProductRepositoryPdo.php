@@ -6,7 +6,7 @@ use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\Product;
 use PDO;
 
-final class ProductRepositoryPdo implements ProductRepository {
+final readonly class ProductRepositoryPdo implements ProductRepository {
     public function __construct(private PDO $pdo) {}
 
     public function search(string $term): array {
