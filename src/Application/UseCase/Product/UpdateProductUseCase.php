@@ -6,7 +6,7 @@ use MyShoppingCart\Application\DTO\UpdateProductInput;
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\Product;
 
-class UpdateProductUseCase {
+readonly class UpdateProductUseCase {
     public function __construct(private ProductRepository $productRepository) {}
 
     public function execute(UpdateProductInput $input): Product {

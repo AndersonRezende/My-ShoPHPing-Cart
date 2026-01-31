@@ -5,7 +5,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
 use MyShoppingCart\Application\Repository\CartRepository;
 
-class UpdateItemQuantity {
+readonly class UpdateItemQuantity {
     
     public function __construct(private CartRepository $repository) {}
 

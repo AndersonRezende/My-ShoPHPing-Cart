@@ -5,7 +5,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 use MyShoppingCart\Application\DTO\RemoveItemFromCartInput;
 use MyShoppingCart\Application\Repository\CartRepository;
 
-class RemoveItemFromCart {
+readonly class RemoveItemFromCart {
     
     public function __construct(private CartRepository $repository) {}
 

@@ -6,7 +6,7 @@ use MyShoppingCart\Application\DTO\ShowProductInput;
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\Product;
 
-class ShowProductUseCase {
+readonly class ShowProductUseCase {
     public function __construct(private ProductRepository $productRepository) {}
 
     public function execute(ShowProductInput $input): Product {

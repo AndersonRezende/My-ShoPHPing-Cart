@@ -7,7 +7,7 @@ use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
-class ShowCartUseCase {
+readonly class ShowCartUseCase {
 
     public function __construct(private CartRepository $repository) {}
 

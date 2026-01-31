@@ -6,7 +6,7 @@ use MyShoppingCart\Application\DTO\CheckoutInput;
 use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
-class CheckoutUseCase {
+readonly class CheckoutUseCase {
     public function __construct(private CartRepository $cartRepository) {}
 
     public function execute(CheckoutInput $input): Cart {

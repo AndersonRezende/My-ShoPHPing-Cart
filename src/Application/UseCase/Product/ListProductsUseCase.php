@@ -4,12 +4,13 @@ namespace MyShoppingCart\Application\UseCase\Product;
 
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Application\UseCase\Product;
+use MyShoppingCart\Domain\Entity\Product as ProductEntity;
 
-class ListProductsUseCase {
+readonly class ListProductsUseCase {
 
     public function __construct(private ProductRepository $productRepository) {}
 
-    /** @return Product[] */
+    /** @return ProductEntity[] */
     public function execute(): array {
         return $this->productRepository->findAll();
     }

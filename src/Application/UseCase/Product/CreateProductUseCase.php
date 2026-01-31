@@ -6,12 +6,11 @@ use MyShoppingCart\Application\DTO\CreateProductInput;
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\Product;
 
-class CreateProductUseCase {
+readonly class CreateProductUseCase {
     public function __construct(private ProductRepository $productRepository) {}
     
     public function execute(CreateProductInput $input): Product {
         $product = new Product(null, $input->name);
-        $product = $this->productRepository->save($product);
-        return $product;
+        return $this->productRepository->save($product);
     }
 }

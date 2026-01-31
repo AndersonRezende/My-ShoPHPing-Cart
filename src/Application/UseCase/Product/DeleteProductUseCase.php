@@ -5,7 +5,7 @@ namespace MyShoppingCart\Application\UseCase\Product;
 use MyShoppingCart\Application\DTO\DeleteProductInput;
 use MyShoppingCart\Application\Repository\ProductRepository;
 
-class DeleteProductUseCase {
+readonly class DeleteProductUseCase {
     public function __construct(private ProductRepository $productRepository) {}
 
     public function execute(DeleteProductInput $input): void {
