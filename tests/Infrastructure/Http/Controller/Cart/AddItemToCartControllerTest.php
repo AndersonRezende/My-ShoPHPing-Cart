@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Infrastructure\Http\Controller;
+namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 
 use MyShoppingCart\Application\DTO\CartOutput;
 use MyShoppingCart\Application\UseCase\AddItemToCart;
 use MyShoppingCart\Domain\Entity\Product;
-use MyShoppingCart\Infrastructure\Http\Controller\AddItemToCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\Cart\AddItemToCartController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;

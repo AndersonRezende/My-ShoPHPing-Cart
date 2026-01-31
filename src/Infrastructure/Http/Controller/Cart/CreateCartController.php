@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Infrastructure\Http\Controller;
+namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
 use MyShoppingCart\Application\DTO\CreateCartInput;
 use MyShoppingCart\Application\UseCase\CreateCartUseCase;

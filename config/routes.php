@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use MyShoppingCart\Infrastructure\Http\Controller\ShowProductController;
-use MyShoppingCart\Infrastructure\Http\Controller\ListProductsController;
-use MyShoppingCart\Infrastructure\Http\Controller\CreateProductController;
-use MyShoppingCart\Infrastructure\Http\Controller\UpdateProductController;
-use MyShoppingCart\Infrastructure\Http\Controller\DeleteProductController;
-use MyShoppingCart\Infrastructure\Http\Controller\CreateCartController;
-use MyShoppingCart\Infrastructure\Http\Controller\AddItemToCartController;
-use MyShoppingCart\Infrastructure\Http\Controller\CheckoutController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\ShowProductController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\ListProductsController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\CreateProductController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\UpdateProductController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\DeleteProductController;
+use MyShoppingCart\Infrastructure\Http\Controller\Cart\CreateCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\Cart\AddItemToCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\Cart\CheckoutController;
 use Slim\App;
 
 return function (App $app) {

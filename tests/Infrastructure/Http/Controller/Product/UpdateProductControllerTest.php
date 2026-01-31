@@ -1,23 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Infrastructure\Http\Controller;
+namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\DeleteProductUseCase;
-use MyShoppingCart\Infrastructure\Http\Controller\DeleteProductController;
+use MyShoppingCart\Application\UseCase\UpdateProductUseCase;
+use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\UpdateProductController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Slim\Psr7\Response;
 
-class DeleteProductControllerTest extends TestCase {
+class UpdateProductControllerTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnUpdatedProductWhenSuccess(): void {
-        $useCase = $this->createMock(DeleteProductUseCase::class);
-        $useCase->method('execute');
+        $useCase = $this->createMock(UpdateProductUseCase::class);
+        $useCase->method('execute')->willReturn(new Product('1', 'Arroz Integral'));
 
-        $controller = new DeleteProductController($useCase);
+        $controller = new UpdateProductController($useCase);
 
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn(json_encode(['name' => 'Arroz Integral']));
@@ -30,20 +31,20 @@ class DeleteProductControllerTest extends TestCase {
 
         $newResponse = $controller($request, $response, $args);
         $data = json_decode((string) $newResponse->getBody(), true);
-
+        
         $this->assertEquals(200, $newResponse->getStatusCode());
-        $this->assertEquals('Product deleted successfully', $data['message']);
+        $this->assertEquals('Arroz Integral', $data['name']);
     }
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnNotFoundWhenProductDoesNotExist(): void {
-        $useCase = $this->createMock(DeleteProductUseCase::class);
+        $useCase = $this->createMock(UpdateProductUseCase::class);
         $useCase->method('execute')->willThrowException(new \RuntimeException('Product not found'));
 
-        $controller = new DeleteProductController($useCase);
+        $controller = new UpdateProductController($useCase);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn('');
+        $stream->method('__toString')->willReturn(json_encode(['name' => 'Ghost']));
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
@@ -54,16 +55,16 @@ class DeleteProductControllerTest extends TestCase {
     }
 
     #[AllowMockObjectsWithoutExpectations]
-    public function testShouldReturnBadRequestWhenIdIsMissing(): void {
-        $controller = new DeleteProductController($this->createMock(DeleteProductUseCase::class));
+    public function testShouldReturnBadRequestWhenNameIsMissing(): void {
+        $controller = new UpdateProductController($this->createMock(UpdateProductUseCase::class));
         
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn(''); // Body vazio
+        $stream->method('__toString')->willReturn(json_encode([])); // Body vazio
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
 
-        $response = $controller($request, new Response(), []);
+        $response = $controller($request, new Response(), ['id' => '1']);
 
         $this->assertEquals(400, $response->getStatusCode());
     }

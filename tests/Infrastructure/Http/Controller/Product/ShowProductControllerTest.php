@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Infrastructure\Http\Controller;
+namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\UpdateProductUseCase;
+use MyShoppingCart\Application\UseCase\ShowProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
-use MyShoppingCart\Infrastructure\Http\Controller\UpdateProductController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\ShowProductController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Slim\Psr7\Response;
 
-class UpdateProductControllerTest extends TestCase {
+class ShowProductControllerTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnUpdatedProductWhenSuccess(): void {
-        $useCase = $this->createMock(UpdateProductUseCase::class);
+        $useCase = $this->createMock(ShowProductUseCase::class);
         $useCase->method('execute')->willReturn(new Product('1', 'Arroz Integral'));
 
-        $controller = new UpdateProductController($useCase);
+        $controller = new ShowProductController($useCase);
 
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn(json_encode(['name' => 'Arroz Integral']));
@@ -38,10 +38,10 @@ class UpdateProductControllerTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnNotFoundWhenProductDoesNotExist(): void {
-        $useCase = $this->createMock(UpdateProductUseCase::class);
+        $useCase = $this->createMock(ShowProductUseCase::class);
         $useCase->method('execute')->willThrowException(new \RuntimeException('Product not found'));
 
-        $controller = new UpdateProductController($useCase);
+        $controller = new ShowProductController($useCase);
 
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn(json_encode(['name' => 'Ghost']));
@@ -55,8 +55,8 @@ class UpdateProductControllerTest extends TestCase {
     }
 
     #[AllowMockObjectsWithoutExpectations]
-    public function testShouldReturnBadRequestWhenNameIsMissing(): void {
-        $controller = new UpdateProductController($this->createMock(UpdateProductUseCase::class));
+    public function testShouldReturnBadRequestWhenIdIsMissing(): void {
+        $controller = new ShowProductController($this->createMock(ShowProductUseCase::class));
         
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn(json_encode([])); // Body vazio
@@ -64,7 +64,7 @@ class UpdateProductControllerTest extends TestCase {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
 
-        $response = $controller($request, new Response(), ['id' => '1']);
+        $response = $controller($request, new Response(), []);
 
         $this->assertEquals(400, $response->getStatusCode());
     }
