@@ -2,14 +2,14 @@
 
 namespace MyShoppingCart\Tests\Application\UseCase;
 
-use MyShoppingCart\Application\UseCase\AddItemToCart;
+use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Application\DTO\AddItemInput;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Tests\Util\InMemoryCartRepositoryMock;
 use PHPUnit\Framework\TestCase;
 
-class AddItemToCartTest extends TestCase {
+class AddItemToCartUseCaseTest extends TestCase {
 
     public function testExecuteWithOneProduct(): void {
         $cartRepository = new InMemoryCartRepositoryMock();
@@ -19,7 +19,7 @@ class AddItemToCartTest extends TestCase {
             ->willReturn(new Product('1', 'Product 1'));
         
         $input = new AddItemInput('1', '1', 'Product 1', 2, 1500);
-        $addItemToCart = new AddItemToCart($cartRepository, $productRepository);
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
         $output = $addItemToCart->execute($input);
 
         $this->assertEquals(3000, $output->total);
@@ -35,7 +35,7 @@ class AddItemToCartTest extends TestCase {
                 return new Product($id, 'Product ' . substr($id, -1));
             });
         
-        $addItemToCart = new AddItemToCart($cartRepository, $productRepository);
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
         
         $input1 = new AddItemInput('2', '1', 'Product 1', 1, 1000);
         $addItemToCart->execute($input1);
@@ -58,7 +58,7 @@ class AddItemToCartTest extends TestCase {
             ->willReturn(new Product('1', 'Product 1'));
         
         $input = new AddItemInput('3', '1', 'Product 1', 0, 1500);
-        $addItemToCart = new AddItemToCart($cartRepository, $productRepository);
-        $output = $addItemToCart->execute($input);
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
+        $addItemToCart->execute($input);
     }   
 }

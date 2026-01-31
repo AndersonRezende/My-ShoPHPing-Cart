@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Cart;
 
 use MyShoppingCart\Application\DTO\CartOutput;
-use MyShoppingCart\Application\UseCase\AddItemToCart;
+use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AddItemToCartCommand;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class AddItemToCartCommandTest extends TestCase {
 
     public function testExecute_ShouldAddItem_WhenInputIsValid(): void {
-        $useCase = $this->createMock(AddItemToCart::class);
+        $useCase = $this->createMock(AddItemToCartUseCase::class);
         $useCase->expects($this->once())->method('execute')->willReturn(new CartOutput(1, [new Product('1', 'Arroz')]));
 
         $command = new AddItemToCartCommand($useCase);
@@ -36,7 +36,7 @@ class AddItemToCartCommandTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testExecute_ShouldFail_WhenUseCaseThrowsException(): void {
-        $useCase = $this->createMock(AddItemToCart::class);
+        $useCase = $this->createMock(AddItemToCartUseCase::class);
         $useCase->method('execute')
             ->willThrowException(new \RuntimeException('Product not found'));
 

@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Cart;
 
 use MyShoppingCart\Application\DTO\AddItemInput;
-use MyShoppingCart\Application\UseCase\AddItemToCart;
+use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AddItemToCartCommand extends Command {
-    public function __construct(private AddItemToCart $addItemToCart) {
+    public function __construct(private AddItemToCartUseCase $addItemToCart) {
         parent::__construct('msp:add-item-to-cart');
     }
 

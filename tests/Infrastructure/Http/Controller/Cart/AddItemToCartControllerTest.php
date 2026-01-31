@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 
 use MyShoppingCart\Application\DTO\CartOutput;
-use MyShoppingCart\Application\UseCase\AddItemToCart;
+use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\AddItemToCartController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -16,7 +16,7 @@ class AddItemToCartControllerTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldAddItemSuccessfully(): void {
-        $useCase = $this->createMock(AddItemToCart::class);
+        $useCase = $this->createMock(AddItemToCartUseCase::class);
         $useCase->expects($this->once())->method('execute')->willReturn(new CartOutput(1, [new Product('1', 'Arroz')]));
 
         $controller = new AddItemToCartController($useCase);

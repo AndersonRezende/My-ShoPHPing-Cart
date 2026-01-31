@@ -9,7 +9,7 @@ use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\ValueObject\Money;
 
-class AddItemToCart {
+class AddItemToCartUseCase {
     
     public function __construct(
             private CartRepository $cartRepository,

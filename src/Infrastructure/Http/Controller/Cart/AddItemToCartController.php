@@ -3,13 +3,13 @@
 namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
 use MyShoppingCart\Application\DTO\AddItemInput;
-use MyShoppingCart\Application\UseCase\AddItemToCart;
+use MyShoppingCart\Application\UseCase\AddItemToCartUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AddItemToCartController {
     
-    public function __construct(private AddItemToCart $addItemToCart) {}
+    public function __construct(private AddItemToCartUseCase $addItemToCart) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $cartId = $args['id'] ?? '';
