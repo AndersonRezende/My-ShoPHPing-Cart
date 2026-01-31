@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class DeleteProductController {
     
-    public function __construct(private DeleteProductUseCase $deleteProductUseCase) {}
+    public function __construct(private readonly DeleteProductUseCase $deleteProductUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $id = $args['id'] ?? null;

@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ShowProductController {
     
-    public function __construct(private ShowProductUseCase $showProductUseCase) {}
+    public function __construct(private readonly ShowProductUseCase $showProductUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $id = $args['id'] ?? null;

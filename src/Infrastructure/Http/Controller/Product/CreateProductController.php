@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CreateProductController {
     
-    public function __construct(private CreateProductUseCase $createProductUseCase) {}
+    public function __construct(private readonly CreateProductUseCase $createProductUseCase) {}
 
     public function __invoke(Request $request, Response $response): Response {
         $body = json_decode((string) $request->getBody(), true);

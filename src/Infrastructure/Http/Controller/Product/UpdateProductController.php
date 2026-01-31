@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UpdateProductController {
     
-    public function __construct(private UpdateProductUseCase $updateProductUseCase) {}
+    public function __construct(private readonly UpdateProductUseCase $updateProductUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $id = $args['id'] ?? null;

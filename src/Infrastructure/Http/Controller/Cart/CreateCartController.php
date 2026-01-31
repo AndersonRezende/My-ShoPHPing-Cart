@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CreateCartController {
     
-    public function __construct(private CreateCartUseCase $createCartUseCase) {}
+    public function __construct(private readonly CreateCartUseCase $createCartUseCase) {}
 
     public function __invoke(Request $request, Response $response): Response {
         $input = new CreateCartInput();

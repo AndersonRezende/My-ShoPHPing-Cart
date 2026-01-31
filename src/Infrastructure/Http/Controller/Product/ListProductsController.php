@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ListProductsController {
     
-    public function __construct(private ListProductsUseCase $listProductsUseCase) {}
+    public function __construct(private readonly ListProductsUseCase $listProductsUseCase) {}
 
     public function __invoke(Request $request, Response $response): Response {
         $products = $this->listProductsUseCase->execute();

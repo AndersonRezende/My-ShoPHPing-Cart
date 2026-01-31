@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CheckoutController {
     
-    public function __construct(private CheckoutUseCase $checkoutUseCase) {}
+    public function __construct(private readonly CheckoutUseCase $checkoutUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $cartId = $args['id'] ?? '';

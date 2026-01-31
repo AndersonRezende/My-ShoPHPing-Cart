@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ShowCartController {
 
-    public function __construct(private ShowCartUseCase $showCartUseCase) {}
+    public function __construct(private readonly ShowCartUseCase $showCartUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $showCartInput = new ShowCartInput($args['id']);
