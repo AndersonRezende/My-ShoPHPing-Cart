@@ -4,8 +4,9 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
-use MyShoppingCart\Infrastructure\Cli\Commands\CheckoutCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\CreateCartCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AddItemToCartCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CreateCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\CreateProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\ListProductsCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\ShowProductCommand;
