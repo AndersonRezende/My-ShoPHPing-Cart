@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ShowProductCommand extends Command {
-    public function __construct(private ShowProductUseCase $showProductUseCase) {
+    public function __construct(private readonly ShowProductUseCase $showProductUseCase) {
         parent::__construct('msp:show-product');
     }
 

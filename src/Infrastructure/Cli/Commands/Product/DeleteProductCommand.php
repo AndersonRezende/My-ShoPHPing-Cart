@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DeleteProductCommand extends Command {
-    public function __construct(private DeleteProductUseCase $deleteProductUseCase) {
+    public function __construct(private readonly DeleteProductUseCase $deleteProductUseCase) {
         parent::__construct('msp:delete-product');
     }
 

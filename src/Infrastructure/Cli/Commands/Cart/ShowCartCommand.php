@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ShowCartCommand extends Command {
-    public function __construct(private ShowCartUseCase $showCartUseCase) {
+    public function __construct(private readonly ShowCartUseCase $showCartUseCase) {
         return parent::__construct('msp:show-cart');
     }
 

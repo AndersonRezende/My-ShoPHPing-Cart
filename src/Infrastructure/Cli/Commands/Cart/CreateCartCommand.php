@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateCartCommand extends Command {
-    public function __construct(private CreateCartUseCase $createCartUseCase) {
+    public function __construct(private readonly CreateCartUseCase $createCartUseCase) {
         return parent::__construct('msp:create-cart');
     }
 

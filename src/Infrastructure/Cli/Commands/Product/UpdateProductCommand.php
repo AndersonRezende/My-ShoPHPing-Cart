@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UpdateProductCommand extends Command {
-    public function __construct(private UpdateProductUseCase $updateProductUseCase) {
+    public function __construct(private readonly UpdateProductUseCase $updateProductUseCase) {
         parent::__construct('msp:update-product');
     }
 

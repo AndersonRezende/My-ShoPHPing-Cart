@@ -10,7 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ListProductsCommand extends Command {
 
-    public function __construct(private ListProductsUseCase $listProductsUseCase) {
+    public function __construct(private readonly ListProductsUseCase $listProductsUseCase) {
         parent::__construct('msp:list-products');
     }
 

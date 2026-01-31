@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CheckoutCommand extends Command {
-    public function __construct(private CheckoutUseCase $checkoutUseCase) {
+    public function __construct(private readonly CheckoutUseCase $checkoutUseCase) {
         parent::__construct('msp:checkout');
     }
 

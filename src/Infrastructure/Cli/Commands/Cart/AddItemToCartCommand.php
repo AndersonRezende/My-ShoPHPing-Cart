@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AddItemToCartCommand extends Command {
-    public function __construct(private AddItemToCartUseCase $addItemToCart) {
+    public function __construct(private readonly AddItemToCartUseCase $addItemToCart) {
         parent::__construct('msp:add-item-to-cart');
     }
 
