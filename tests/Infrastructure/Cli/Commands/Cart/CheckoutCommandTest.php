@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Cart;
 
-use MyShoppingCart\Application\UseCase\Cart\CheckoutUseCase;
+use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCommand;
@@ -15,7 +15,7 @@ class CheckoutCommandTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testExecute_ShouldCheckout_WhenCartExists(): void {
-        $useCase = $this->createMock(CheckoutUseCase::class);
+        $useCase = $this->createMock(CheckoutCartUseCase::class);
         $cartMock = $this->createMock(Cart::class);
         $cartMock->method('total')->willReturn(new Money(150));
 
@@ -36,7 +36,7 @@ class CheckoutCommandTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testExecute_ShouldFail_WhenCartNotFound(): void {
-        $useCase = $this->createMock(CheckoutUseCase::class);
+        $useCase = $this->createMock(CheckoutCartUseCase::class);
         $useCase->method('execute')
             ->willThrowException(new \RuntimeException('Cart not found'));
 

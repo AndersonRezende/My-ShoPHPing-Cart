@@ -9,7 +9,7 @@ use MyShoppingCart\Infrastructure\Http\Controller\Product\UpdateProductControlle
 use MyShoppingCart\Infrastructure\Http\Controller\Product\DeleteProductController;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\CreateCartController;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\AddItemToCartController;
-use MyShoppingCart\Infrastructure\Http\Controller\Cart\CheckoutController;
+use MyShoppingCart\Infrastructure\Http\Controller\Cart\CheckoutCartController;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\ShowCartController;
 use Slim\App;
 
@@ -29,5 +29,5 @@ return function (App $app) {
     $app->get('/carts/{id}', ShowCartController::class);
     $app->post('/carts', CreateCartController::class);
     $app->post('/carts/{id}/items', AddItemToCartController::class);
-    $app->post('/carts/{id}/checkout', CheckoutController::class);
+    $app->post('/carts/{id}/checkout', CheckoutCartController::class);
 };

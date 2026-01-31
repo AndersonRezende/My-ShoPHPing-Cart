@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Cart;
 
 use MyShoppingCart\Application\DTO\CheckoutInput;
-use MyShoppingCart\Application\UseCase\Cart\CheckoutUseCase;
+use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CheckoutCommand extends Command {
-    public function __construct(private readonly CheckoutUseCase $checkoutUseCase) {
+    public function __construct(private readonly CheckoutCartUseCase $checkoutUseCase) {
         parent::__construct('msp:checkout');
     }
 

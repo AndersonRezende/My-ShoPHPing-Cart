@@ -7,9 +7,9 @@ use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AddItemToCartController {
+readonly class AddItemToCartController {
     
-    public function __construct(private readonly AddItemToCartUseCase $addItemToCart) {}
+    public function __construct(private AddItemToCartUseCase $addItemToCart) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $cartId = $args['id'] ?? '';

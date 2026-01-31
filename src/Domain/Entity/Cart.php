@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Domain\Entity;
 
+use LogicException;
 use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Domain\Enum\CartStatus;
 
@@ -17,7 +18,7 @@ class Cart {
 
     public function addItem(CartItem $item): void {
         if ($this->status !== CartStatus::OPENED) {
-            throw new \LogicException('Cannot modify a cart that is not opened');
+            throw new LogicException('Cannot modify a cart that is not opened');
         }
 
         $this->items[] = $item;
@@ -25,7 +26,7 @@ class Cart {
 
     public function updateItemQuantity(string $productId, int $quantity): void {
         if ($this->status !== CartStatus::OPENED) {
-            throw new \LogicException('Cannot modify a cart that is not opened');
+            throw new LogicException('Cannot modify a cart that is not opened');
         }
 
         if ($quantity <= 0) {
@@ -43,9 +44,10 @@ class Cart {
         throw new \DomainException('Cart item not exists in the cart');
     }
 
+    /** @throws LogicException */
     public function removeItem(string $productId): void {
         if ($this->status !== CartStatus::OPENED) {
-            throw new \LogicException('Cannot modify a cart that is not opened');
+            throw new LogicException('Cannot modify a cart that is not opened');
         }
 
         foreach ($this->items as $index => $item) {
@@ -58,9 +60,10 @@ class Cart {
         throw new \DomainException('Cart item not exists in the cart');
     }
 
+    /** @throws LogicException */
     public function finalize(): void {
         if ($this->status !== CartStatus::OPENED) {
-            throw new \LogicException('Only opened carts can be completed');
+            throw new LogicException('Only opened carts can be completed');
         }
 
         $this->status = CartStatus::COMPLETED;
@@ -82,7 +85,7 @@ class Cart {
         return $this->status;
     }
 
-    /** @var CartItem[] */
+    /** @return null|CartItem[] */
     public function items(): ?array {
         return $this->items;
     }
