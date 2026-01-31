@@ -426,3 +426,5 @@ nbproject/
 /database/.fuse_hidden*
 /coverage-report/*
 .idea/*
+.idea
+.idea/
