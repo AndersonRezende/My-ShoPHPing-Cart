@@ -4,16 +4,10 @@ namespace Application\UseCase\Cart;
 
 use LogicException;
 use MyShoppingCart\Application\DTO\CheckoutInput;
-use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
-use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
-use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
-use MyShoppingCart\Domain\Entity\CartItem;
-use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Enum\CartStatus;
-use MyShoppingCart\Domain\ValueObject\Money;
 use PHPUnit\Framework\TestCase;
 
 class CheckoutCartUseCaseTest extends TestCase {
