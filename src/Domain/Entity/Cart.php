@@ -16,6 +16,7 @@ class Cart {
         private CartStatus $status = CartStatus::OPENED
     ) {}
 
+    /** @throws LogicException */
     public function addItem(CartItem $item): void {
         if ($this->status !== CartStatus::OPENED) {
             throw new LogicException('Cannot modify a cart that is not opened');
@@ -24,6 +25,7 @@ class Cart {
         $this->items[] = $item;
     }
 
+    /** @throws LogicException */
     public function updateItemQuantity(string $productId, int $quantity): void {
         if ($this->status !== CartStatus::OPENED) {
             throw new LogicException('Cannot modify a cart that is not opened');

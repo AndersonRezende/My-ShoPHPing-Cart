@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Application\UseCase\Cart;
 
+use LogicException;
 use MyShoppingCart\Application\DTO\AddItemInput;
 use MyShoppingCart\Application\DTO\CartOutput;
 use MyShoppingCart\Application\Repository\CartRepository;
@@ -15,7 +16,8 @@ readonly class AddItemToCartUseCase {
             private CartRepository    $cartRepository,
             private ProductRepository $productRepository,
     ) {}
-    
+
+    /** @throws LogicException */
     public function execute(AddItemInput $input): CartOutput {
         $cart = $this->cartRepository->findById($input->cartId);
         

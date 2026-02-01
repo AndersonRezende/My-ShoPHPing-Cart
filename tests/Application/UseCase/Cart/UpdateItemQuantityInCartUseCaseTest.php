@@ -2,11 +2,15 @@
 
 namespace Application\UseCase\Cart;
 
+use LogicException;
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
+use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\UpdateItemQuantityInCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
+use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
@@ -50,5 +54,22 @@ class UpdateItemQuantityInCartUseCaseTest extends DatabaseTestCase {
         $input = new UpdateItemQuantityInput('1', '1', 3);
         
         $updateItemQuantity->execute($input);
+    }
+
+    public function testExecuteShouldThrowLogicExceptionWhenTryToUpdateItemQuantityInACompletedCart(): void {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot modify a cart that is not opened');
+
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->willReturn(new CartBuilder()
+                ->withId('nonexistent-cart-id')
+                ->withStatus(CartStatus::COMPLETED)
+                ->build()
+            );
+        $addItemToCart = new UpdateItemQuantityInCartUseCase($cartRepository);
+
+        $addItemToCart->execute(new UpdateItemQuantityInput('1', '1', 10));
     }
 }

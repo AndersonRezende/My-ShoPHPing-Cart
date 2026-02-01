@@ -2,10 +2,15 @@
 
 namespace Application\UseCase\Cart;
 
+use InvalidArgumentException;
+use LogicException;
 use MyShoppingCart\Application\DTO\AddItemInput;
+use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
+use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Tests\Util\InMemoryCartRepositoryMock;
 use PHPUnit\Framework\TestCase;
 
@@ -48,7 +53,7 @@ class AddItemToCartUseCaseTest extends TestCase {
     }
 
     public function testExecutingWithZeroQuantityMustThrowInvalidArgumentException(): void {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Quantity must be greater than zero');
         
         $cartRepository = new InMemoryCartRepositoryMock();
@@ -60,5 +65,26 @@ class AddItemToCartUseCaseTest extends TestCase {
         $input = new AddItemInput('3', '1', 'Product 1', 0, 1500);
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
         $addItemToCart->execute($input);
-    }   
+    }
+
+    public function testExecuteShouldThrowLogicExceptionWhenTryToAddItemInACompletedCart(): void {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot modify a cart that is not opened');
+
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->willReturn(new CartBuilder()
+                ->withId('nonexistent-cart-id')
+                ->withStatus(CartStatus::COMPLETED)
+                ->build()
+            );
+        $productRepository = $this->createMock(ProductRepository::class);
+        $productRepository->expects($this->once())
+            ->method('getById')
+            ->willReturn(new Product('1', 'Product 1'));
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
+
+        $addItemToCart->execute(new AddItemInput('1', '1', 'Product 1', 1, 1000));
+    }
 }

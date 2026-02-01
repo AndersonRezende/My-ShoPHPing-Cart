@@ -12,6 +12,6 @@ final readonly class CartOutput {
      */
     public function __construct(
             public int $total,
-            public array $items
+            public ?array $items
     ) {}
 }
