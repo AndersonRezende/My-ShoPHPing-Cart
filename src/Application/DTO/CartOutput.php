@@ -2,6 +2,8 @@
 
 namespace MyShoppingCart\Application\DTO;
 
+use MyShoppingCart\Domain\Entity\Product;
+
 final readonly class CartOutput {
     
     /**
