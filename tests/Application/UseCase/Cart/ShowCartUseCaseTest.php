@@ -2,6 +2,7 @@
 
 namespace Application\UseCase\Cart;
 
+use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Application\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class ShowCartUseCaseTest extends TestCase {
 
     public function testExecuteWhenCartDoesNotExist(): void {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Cart not found");
 
         $cartRepository = $this->createMock(CartRepository::class);
