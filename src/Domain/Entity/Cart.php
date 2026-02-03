@@ -11,6 +11,9 @@ class Cart {
     /** @var CartItem[] */
     private array $items = [];
 
+    /** @var string[] */
+    private array $userIds = [];
+
     public function __construct(
         private ?string $id = null,
         private CartStatus $status = CartStatus::OPENED
@@ -90,5 +93,23 @@ class Cart {
     /** @return null|CartItem[] */
     public function items(): ?array {
         return $this->items;
+    }
+
+    public function addUser(string $userId): void {
+        if (!in_array($userId, $this->userIds)) {
+            $this->userIds[] = $userId;
+        }
+    }
+
+    public function removeUser(string $userId): void {
+        $key = array_search($userId, $this->userIds);
+        if ($key !== false) {
+            unset($this->userIds[$key]);
+        }
+    }
+
+    /** @return string[] */
+    public function userIds(): array {
+        return $this->userIds;
     }
 }

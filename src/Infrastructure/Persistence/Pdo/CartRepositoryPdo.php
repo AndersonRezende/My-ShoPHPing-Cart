@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\Cart;
@@ -15,14 +15,14 @@ final readonly class CartRepositoryPdo implements CartRepository {
 
     public function __construct(private PDO $pdo) {}
 
-    public function save(Cart $cart): Cart {
+    public function save(Cart $cart): void {
         $inTransaction = $this->pdo->inTransaction();
         if (!$inTransaction) {
             $this->pdo->beginTransaction();
         }
 
         try {
-            $cart = $this->upsertCart($cart);
+            $this->upsertCart($cart);
 
             $dbProductIds = $this->getProductsIdsFromCartItemsByCartId($cart->id());
             $cartItemsProductIds = array_map(
@@ -36,6 +36,7 @@ final readonly class CartRepositoryPdo implements CartRepository {
             }
 
             $this->upsertCartItems($cart);
+            $this->upsertCartUsers($cart);
             
             if (!$inTransaction) {
                 $this->pdo->commit();
@@ -46,25 +47,15 @@ final readonly class CartRepositoryPdo implements CartRepository {
             }
             throw $e;
         }
-        return $cart;
     }
 
-    private function upsertCart(Cart $cart): Cart {
+    private function upsertCart(Cart $cart): void {
         $stmt = $this->pdo->prepare(
             'INSERT INTO carts (id, status)
              VALUES (:id, :status)
              ON CONFLICT(id) DO UPDATE SET status = :status'
         );
         $stmt->execute(['id' => $cart->id(), 'status' => $cart->status()->value]);
-        if ($cart->id() === null) {
-            $id = $this->pdo->lastInsertId();
-            return new CartBuilder()
-                ->withId($id)
-                ->withStatus($cart->status())
-                ->withCartItems($cart->items())
-                ->build();
-        }
-        return $cart;
     }
 
     private function getProductsIdsFromCartItemsByCartId(string $cartId): array {
@@ -100,6 +91,21 @@ final readonly class CartRepositoryPdo implements CartRepository {
         }
     }
 
+    private function upsertCartUsers(Cart $cart): void {
+        // First delete existing associations to handle removals
+        $stmt = $this->pdo->prepare("DELETE FROM cart_users WHERE cart_id = :cart_id");
+        $stmt->execute(['cart_id' => $cart->id()]);
+
+        // Then insert current associations
+        $stmt = $this->pdo->prepare("INSERT INTO cart_users (cart_id, user_id) VALUES (:cart_id, :user_id)");
+        foreach ($cart->userIds() as $userId) {
+            $stmt->execute([
+                'cart_id' => $cart->id(),
+                'user_id' => $userId
+            ]);
+        }
+    }
+
     public function findById(string $id): ?Cart {
         $stmt = $this->pdo->prepare(
             'SELECT c.id as c_id, c.status as c_status,
@@ -128,10 +134,16 @@ final readonly class CartRepositoryPdo implements CartRepository {
                 }
             }
 
+            // Fetch associated users
+            $stmt = $this->pdo->prepare("SELECT user_id FROM cart_users WHERE cart_id = :cart_id");
+            $stmt->execute(['cart_id' => $id]);
+            $userIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
             return (new CartBuilder())
                 ->withId($id)
                 ->withStatus(CartStatus::from($rows[0]['c_status']))
                 ->withCartItems($cartItems)
+                ->withUserIds($userIds)
                 ->build();
         }
         

@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\CreateCartInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
 readonly class CreateCartUseCase {
@@ -11,6 +11,7 @@ readonly class CreateCartUseCase {
 
     public function execute(CreateCartInput $input): Cart {
         $cart = new Cart(); 
-        return $this->cartRepository->save($cart);
+        $this->cartRepository->save($cart);
+        return $cart;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Tests\Util;
 
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
 class InMemoryCartRepositoryMock implements CartRepository {
@@ -17,8 +17,7 @@ class InMemoryCartRepositoryMock implements CartRepository {
         return $this->cart;
     }
     
-    public function save(Cart $cart): Cart {
+    public function save(Cart $cart): void {
         $this->cart = $cart;
-        return $cart;
     }
 }

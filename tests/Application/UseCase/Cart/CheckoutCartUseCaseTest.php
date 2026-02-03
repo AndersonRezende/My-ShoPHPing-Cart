@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Cart;
+namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use LogicException;
 use MyShoppingCart\Application\DTO\CheckoutInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Enum\CartStatus;
@@ -41,13 +41,8 @@ class CheckoutCartUseCaseTest extends TestCase {
                 ->build()
             );
         $cartRepository->expects($this->once())
-            ->method('save')
-            ->willReturn(
-                new CartBuilder()
-                ->withId('existing-cart-id')
-                ->withStatus(CartStatus::COMPLETED)
-                ->build()
-            );
+            ->method('save');
+            
         $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
 
         $cart = $checkoutCartUseCase->execute(new CheckoutInput('existing-cart-id'));

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Cart;
+namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\CartItem;

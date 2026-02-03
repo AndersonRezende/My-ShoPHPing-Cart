@@ -5,7 +5,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 use InvalidArgumentException;
 use LogicException;
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 
 readonly class UpdateItemQuantityInCartUseCase {
     
