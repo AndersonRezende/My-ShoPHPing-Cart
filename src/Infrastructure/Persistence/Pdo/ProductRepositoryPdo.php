@@ -2,8 +2,8 @@
 
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
-use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Domain\Repository\ProductRepository;
 use PDO;
 
 final readonly class ProductRepositoryPdo implements ProductRepository {

@@ -5,9 +5,9 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 use LogicException;
 use MyShoppingCart\Application\DTO\AddItemInput;
 use MyShoppingCart\Application\DTO\CartOutput;
-use MyShoppingCart\Application\Repository\CartRepository;
-use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Domain\Entity\CartItem;
+use MyShoppingCart\Domain\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\ProductRepository;
 use MyShoppingCart\Domain\ValueObject\Money;
 
 readonly class AddItemToCartUseCase {

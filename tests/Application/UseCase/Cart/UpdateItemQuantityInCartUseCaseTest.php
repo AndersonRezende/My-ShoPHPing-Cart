@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Cart;
+namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use LogicException;
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\UpdateItemQuantityInCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;

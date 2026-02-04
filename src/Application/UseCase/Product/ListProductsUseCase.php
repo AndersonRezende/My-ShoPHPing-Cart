@@ -2,9 +2,8 @@
 
 namespace MyShoppingCart\Application\UseCase\Product;
 
-use MyShoppingCart\Application\Repository\ProductRepository;
-use MyShoppingCart\Application\UseCase\Product;
 use MyShoppingCart\Domain\Entity\Product as ProductEntity;
+use MyShoppingCart\Domain\Repository\ProductRepository;
 
 readonly class ListProductsUseCase {
 

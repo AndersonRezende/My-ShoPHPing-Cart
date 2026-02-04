@@ -4,7 +4,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 
 use LogicException;
 use MyShoppingCart\Application\DTO\CheckoutInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
 readonly class CheckoutCartUseCase {
@@ -14,6 +14,7 @@ readonly class CheckoutCartUseCase {
     public function execute(CheckoutInput $input): Cart {
         $cart = $this->cartRepository->findById($input->cartId);
         $cart->finalize();
-        return $this->cartRepository->save($cart);
+        $this->cartRepository->save($cart);
+        return $cart;
     }
 }

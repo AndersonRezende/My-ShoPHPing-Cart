@@ -11,6 +11,9 @@ use MyShoppingCart\Infrastructure\Http\Controller\Cart\CreateCartController;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\AddItemToCartController;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\CheckoutCartController;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\ShowCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\Cart\AssociateUserToCartController;
+use MyShoppingCart\Infrastructure\Http\Controller\User\RegisterUserController;
+use MyShoppingCart\Infrastructure\Http\Controller\User\LoginUserController;
 use Slim\App;
 
 return function (App $app) {
@@ -30,4 +33,9 @@ return function (App $app) {
     $app->post('/carts', CreateCartController::class);
     $app->post('/carts/{id}/items', AddItemToCartController::class);
     $app->post('/carts/{id}/checkout', CheckoutCartController::class);
+    $app->post('/carts/{id}/associate-user', AssociateUserToCartController::class);
+
+    // Rotas de Usuário
+    $app->post('/users/register', RegisterUserController::class);
+    $app->post('/users/login', LoginUserController::class);
 };

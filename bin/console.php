@@ -8,11 +8,14 @@ use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AddItemToCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\ShowCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CreateCartCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AssociateUserToCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\CreateProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductsCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\ShowProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\UpdateProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\DeleteProductCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\User\RegisterUserCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\User\LoginUserCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 
@@ -27,11 +30,6 @@ $container = $containerBuilder->build();
 $application = new Application('My Shopping Cart CLI', '1.0.0');
 
 // 3. Registrar Comandos
-// Aqui você registraria seus comandos. Exemplo:
-// $commandLoader = new ContainerCommandLoader($container, [
-//     'app:meu-comando' => MeuComando::class
-// ]);
-// $application->setCommandLoader($commandLoader);
 $commandLoader = new ContainerCommandLoader($container, [
     'msp:show-product' => ShowProductCommand::class,
     'msp:list-products' => ListProductsCommand::class,
@@ -43,6 +41,10 @@ $commandLoader = new ContainerCommandLoader($container, [
     'msp:checkout' => CheckoutCommand::class,
     'msp:create-cart' => CreateCartCommand::class,
     'msp:add-item-to-cart' => AddItemToCartCommand::class,
+    'msp:associate-user-to-cart' => AssociateUserToCartCommand::class,
+
+    'msp:register-user' => RegisterUserCommand::class,
+    'msp:login-user' => LoginUserCommand::class,
 ]);
 $application->setCommandLoader($commandLoader);
 

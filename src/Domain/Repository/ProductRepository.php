@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Application\Repository;
+namespace MyShoppingCart\Domain\Repository;
 
 use MyShoppingCart\Domain\Entity\Product;
 

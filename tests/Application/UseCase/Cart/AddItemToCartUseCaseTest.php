@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Cart;
+namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use InvalidArgumentException;
 use LogicException;
 use MyShoppingCart\Application\DTO\AddItemInput;
-use MyShoppingCart\Application\Repository\CartRepository;
-use MyShoppingCart\Application\Repository\ProductRepository;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Enum\CartStatus;
+use MyShoppingCart\Domain\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\ProductRepository;
 use MyShoppingCart\Tests\Util\InMemoryCartRepositoryMock;
 use PHPUnit\Framework\TestCase;
 

@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\RemoveItemFromCartInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 
 readonly class RemoveItemFromCartUseCase {
     

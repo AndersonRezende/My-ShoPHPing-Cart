@@ -4,7 +4,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
-use MyShoppingCart\Application\Repository\CartRepository;
+use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
 readonly class ShowCartUseCase {

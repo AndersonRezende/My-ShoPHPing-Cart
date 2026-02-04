@@ -15,6 +15,9 @@ class CartBuilder {
     /** @var CartItem[] */
     private array $items = [];
 
+    /** @var string[] */
+    private array $userIds = [];
+
     public function withId(?string $id): self {
         $this->id = $id;
         return $this;
@@ -31,10 +34,19 @@ class CartBuilder {
         return $this;
     }
 
+    /** @param string[] $userIds */
+    public function withUserIds(array $userIds): self {
+        $this->userIds = $userIds;
+        return $this;
+    }
+
     public function build(): Cart {
         $cart = new Cart($this->id, $this->status);
         foreach ($this->items as $item) {
             $cart->addItem($item);
+        }
+        foreach ($this->userIds as $userId) {
+            $cart->addUser($userId);
         }
 
         return $cart;
