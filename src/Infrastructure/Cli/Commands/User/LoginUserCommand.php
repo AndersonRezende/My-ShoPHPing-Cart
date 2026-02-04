@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Cli\Commands\User;
 
+use MyShoppingCart\Application\DTO\LoginUserInput;
 use MyShoppingCart\Application\UseCase\User\LoginUserUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,10 +23,11 @@ class LoginUserCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
         try {
-            $user = $this->loginUserUseCase->execute(
+            $loginUserInput = new LoginUserInput(
                 $input->getArgument('email'),
                 $input->getArgument('password')
             );
+            $user = $this->loginUserUseCase->execute($loginUserInput);
             $output->writeln("Login successful. User ID: " . $user->id());
             return Command::SUCCESS;
         } catch (\Exception $e) {

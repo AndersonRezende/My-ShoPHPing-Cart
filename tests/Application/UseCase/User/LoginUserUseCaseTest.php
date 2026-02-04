@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Tests\Application\UseCase\User;
 
+use MyShoppingCart\Application\DTO\LoginUserInput;
 use MyShoppingCart\Application\UseCase\User\LoginUserUseCase;
 use MyShoppingCart\Domain\Entity\User;
 use MyShoppingCart\Domain\Repository\UserRepository;
@@ -23,8 +24,9 @@ class LoginUserUseCaseTest extends TestCase {
             ->method('findByEmail')
             ->willReturn($user);
 
+        $loginUserInput = new LoginUserInput('anderson@example.com', 'password123');
         $useCase = new LoginUserUseCase($userRepository);
-        $loggedInUser = $useCase->execute('anderson@example.com', 'password123');
+        $loggedInUser = $useCase->execute($loginUserInput);
 
         $this->assertSame($user, $loggedInUser);
     }
@@ -38,7 +40,8 @@ class LoginUserUseCaseTest extends TestCase {
             ->method('findByEmail')
             ->willReturn(null);
 
+        $loginUserInput = new LoginUserInput('anderson@example.com', 'password123');
         $useCase = new LoginUserUseCase($userRepository);
-        $useCase->execute('anderson@example.com', 'password123');
+        $useCase->execute($loginUserInput);
     }
 }

@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\User;
+namespace Infrastructure\Cli\Commands\User;
 
-use MyShoppingCart\Application\DTO\RegisterUserInput;
-use MyShoppingCart\Application\UseCase\User\RegisterUserUseCase;
+use MyShoppingCart\Application\DTO\LoginUserInput;
+use MyShoppingCart\Application\UseCase\User\LoginUserUseCase;
 use MyShoppingCart\Domain\Entity\User;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
-use MyShoppingCart\Infrastructure\Cli\Commands\User\RegisterUserCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\User\LoginUserCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class RegisterUserCommandTest extends TestCase {
+class LoginUserCommandTest extends TestCase {
 
-    public function testExecuteShouldRegisterUserSuccessfully(): void {
-        $useCase = $this->createMock(RegisterUserUseCase::class);
+    public function testExecuteShouldLoginUserSuccessfully(): void {
+        $useCase = $this->createMock(LoginUserUseCase::class);
         $user = new User(
             'user-123',
             'Anderson',
@@ -25,48 +25,46 @@ class RegisterUserCommandTest extends TestCase {
 
         $useCase->expects($this->once())
             ->method('execute')
-            ->with($this->isInstanceOf(RegisterUserInput::class))
+            ->with($this->isInstanceOf(LoginUserInput::class))
             ->willReturn($user);
 
-        $command = new RegisterUserCommand($useCase);
+        $command = new LoginUserCommand($useCase);
         $application = new Application();
         $application->addCommand($command);
 
-        $command = $application->find('msp:register-user');
+        $command = $application->find('msp:login-user');
         $commandTester = new CommandTester($command);
 
         $exitCode = $commandTester->execute([
-            'name' => 'Anderson',
             'email' => 'anderson@example.com',
             'password' => 'password123'
         ]);
 
         $output = $commandTester->getDisplay();
         $this->assertEquals(0, $exitCode);
-        $this->assertStringContainsString('User registered successfully with ID: user-123', $output);
+        $this->assertStringContainsString('Login successful. User ID: user-123', $output);
     }
 
     public function testExecuteShouldFailWhenUseCaseThrowsException(): void {
-        $useCase = $this->createMock(RegisterUserUseCase::class);
+        $useCase = $this->createMock(LoginUserUseCase::class);
         $useCase->expects($this->once())
             ->method('execute')
-            ->willThrowException(new \DomainException('User already exists'));
+            ->willThrowException(new \DomainException('Invalid email or password'));
 
-        $command = new RegisterUserCommand($useCase);
+        $command = new LoginUserCommand($useCase);
         $application = new Application();
         $application->addCommand($command);
         
-        $command = $application->find('msp:register-user');
+        $command = $application->find('msp:login-user');
         $commandTester = new CommandTester($command);
 
         $exitCode = $commandTester->execute([
-            'name' => 'Anderson',
             'email' => 'existing@example.com',
             'password' => 'password123'
         ]);
 
         $output = $commandTester->getDisplay();
         $this->assertEquals(1, $exitCode);
-        $this->assertStringContainsString('Error: User already exists', $output);
+        $this->assertStringContainsString('Error: Invalid email or password', $output);
     }
 }
