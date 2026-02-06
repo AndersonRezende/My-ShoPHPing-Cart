@@ -5,21 +5,21 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\UserRepository;
 
-class AssociateUserToCartUseCase {
+readonly class AssociateUserToCartUseCase {
     public function __construct(
-        private CartRepository          $cartRepository,
+        private CartRepository $cartRepository,
         private UserRepository $userRepository
     ) {}
 
     public function execute(string $cartId, string $userId): void {
         $cart = $this->cartRepository->findById($cartId);
         if (!$cart) {
-            throw new \DomainException("Cart not found");
+            throw new \DomainException('Cart not found');
         }
 
         $user = $this->userRepository->findById($userId);
         if (!$user) {
-            throw new \DomainException("User not found");
+            throw new \DomainException('User not found');
         }
 
         $cart->addUser($userId);
