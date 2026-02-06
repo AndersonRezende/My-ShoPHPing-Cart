@@ -2,10 +2,12 @@
 
 namespace MyShoppingCart\Domain\ValueObject;
 
-class Password {
+use InvalidArgumentException;
+
+readonly class Password {
     public function __construct(private string $value) {
         if (strlen($value) < 6) {
-            throw new \InvalidArgumentException("Password must be at least 6 characters long");
+            throw new InvalidArgumentException('Password must be at least 6 characters long');
         }
     }
 
