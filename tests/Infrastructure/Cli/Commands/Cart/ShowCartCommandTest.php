@@ -68,4 +68,21 @@ class ShowCartCommandTest extends TestCase {
         $this->assertStringContainsString('Subtotal', $output);
         $this->assertStringContainsString('3000', $output);
     }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testExecuteShouldSucceedWhenCartNotContainsItemsAndExists(): void {
+        $useCase = $this->createMock(ShowCartUseCase::class);
+        $useCase->method('execute')->willReturn(new CartBuilder()
+            ->withId('cart-1')
+            ->build());
+
+        $command = new ShowCartCommand($useCase);
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['id' => 'cart-1',]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
+        $this->assertStringContainsString('O carrinho está vazio.', $output);
+    }
 }
