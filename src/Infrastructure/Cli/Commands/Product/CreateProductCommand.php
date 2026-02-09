@@ -5,6 +5,7 @@ namespace MyShoppingCart\Infrastructure\Cli\Commands\Product;
 use MyShoppingCart\Application\DTO\CreateProductInput;
 use MyShoppingCart\Application\UseCase\Product\CreateProductUseCase;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -15,15 +16,19 @@ class CreateProductCommand extends Command {
     }
 
     protected function configure(): void {
-        $this->setDescription('Cria um novo produto.');
+        $this->setDescription('Cria um novo produto.')
+            ->addArgument('name', InputArgument::OPTIONAL, 'Nome do produto');;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
         $io = new SymfonyStyle($input, $output);
         $io->title('Cadastro de Produtos');
 
-        $io->section('Criar um novo produto');
-        $name = $io->ask('Nome do produto');
+        $name = $input->getArgument('name');
+        if (!$name) {
+            $io->section('Criar um novo produto');
+            $name = $io->ask('Nome do produto');
+        }
 
         $product = $this->createProductUseCase->execute(new CreateProductInput($name));
 
