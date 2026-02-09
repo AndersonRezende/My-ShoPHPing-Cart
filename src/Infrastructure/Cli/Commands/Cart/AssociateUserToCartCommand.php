@@ -9,10 +9,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class AssociateUserToCartCommand extends Command {
-    protected static $defaultName = 'cart:associate-user';
 
-    public function __construct(private AssociateUserToCartUseCase $associateUserToCartUseCase) {
-        parent::__construct();
+    public function __construct(private readonly AssociateUserToCartUseCase $associateUserToCartUseCase) {
+        parent::__construct('cart:associate-user');
     }
 
     protected function configure(): void {
@@ -27,10 +26,10 @@ class AssociateUserToCartCommand extends Command {
                 $input->getArgument('cartId'),
                 $input->getArgument('userId')
             );
-            $output->writeln("User associated to cart successfully.");
+            $output->writeln('User associated to cart successfully.');
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $output->writeln("Error: " . $e->getMessage());
+            $output->writeln('Error: ' . $e->getMessage());
             return Command::FAILURE;
         }
     }
