@@ -6,11 +6,11 @@ use MyShoppingCart\Application\UseCase\Cart\AssociateUserToCartUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AssociateUserToCartController {
+readonly class AssociateUserToCartController {
     public function __construct(private AssociateUserToCartUseCase $associateUserToCartUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
-        $data = $request->getParsedBody();
+        $data = json_decode((string) $request->getBody(), true);
         $cartId = $args['id'];
         $userId = $data['userId'];
 
