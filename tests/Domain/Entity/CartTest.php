@@ -109,4 +109,14 @@ class CartTest extends TestCase {
 
         $this->assertEquals(CartStatus::COMPLETED, $cart->status());
     }
+
+    public function testCanRemoveUserFromCart(): void {
+        $cart = new Cart();
+        $cart->addUser('1');
+        $cart->addUser('2');
+
+        $cart->removeUser('1');
+
+        $this->assertCount(1, $cart->userIds());
+    }
 }
