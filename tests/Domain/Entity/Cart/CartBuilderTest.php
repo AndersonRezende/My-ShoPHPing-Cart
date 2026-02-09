@@ -64,4 +64,15 @@ class CartBuilderTest extends TestCase {
         $this->assertEquals(null, $cart->id());
         $this->assertCount(2, $cart->items());
     }
+
+    public function testCanBuildCartWithUserIds(): void {
+        $userIds = ['user-123', 'user-456'];
+
+        $cart = new CartBuilder()
+            ->withUserIds($userIds)
+            ->build();
+
+        $this->assertInstanceOf(Cart::class, $cart);
+        $this->assertEquals($userIds, $cart->userIds());
+    }
 }
