@@ -5,7 +5,10 @@ namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 use InvalidArgumentException;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
+use MyShoppingCart\Domain\Entity\CartItem;
+use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Enum\CartStatus;
+use MyShoppingCart\Domain\ValueObject\Money;
 use MyShoppingCart\Infrastructure\Http\Controller\Cart\ShowCartController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +34,8 @@ class ShowCartControllerTest extends TestCase {
         $cart = $this->createMock(Cart::class);
         $cart->method('id')->willReturn('valid-cart-id');
         $cart->method('status')->willReturn(CartStatus::OPENED);
-        $cart->method('items')->willReturn([]);
+        $cartItem = new CartItem('1', new Product('1', 'Product-1'), 1, new Money(100));
+        $cart->method('items')->willReturn([$cartItem]);
         $useCase = $this->createMock(ShowCartUseCase::class);
         $useCase->method('execute')->willReturn($cart);
         $controller = new ShowCartController($useCase);
@@ -45,11 +49,17 @@ class ShowCartControllerTest extends TestCase {
             'cart' => [
                 'id' => 'valid-cart-id',
                 'status' => CartStatus::OPENED,
-                'items' => []
-                ]
+                'items' => [[
+                    'productId' => $cartItem->product()->id(),
+                    'name' => $cartItem->product()->name(),
+                    'quantity' => $cartItem->quantity(),
+                    'price' => $cartItem->unitPrice()->amount(),
+                    'subTotal' => $cartItem->subTotal()->amount()
+                ]]
+            ]
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($expectedPayload, $bodyContent);
-    }    
+    }
 }
