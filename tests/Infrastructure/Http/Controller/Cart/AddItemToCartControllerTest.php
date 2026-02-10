@@ -36,4 +36,23 @@ class AddItemToCartControllerTest extends TestCase {
 
         $this->assertEquals(201, $response->getStatusCode());
     }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testShouldNotAddItemSuccessfully(): void {
+        $useCase = $this->createMock(AddItemToCartUseCase::class);
+        $controller = new AddItemToCartController($useCase);
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn(json_encode([
+            'product_id' => '',
+            'quantity' => 2,
+            'unit_price' => 100,
+            'description' => 'Item Teste'
+        ]));
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getBody')->willReturn($stream);
+
+        $response = $controller($request, new Response(), ['id' => 'cart-1']);
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 }
