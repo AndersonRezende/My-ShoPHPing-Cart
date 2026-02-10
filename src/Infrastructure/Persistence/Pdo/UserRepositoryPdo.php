@@ -15,15 +15,19 @@ readonly class UserRepositoryPdo implements UserRepository {
         $stmt = $this->pdo->prepare("
             INSERT INTO users (id, name, email, password) 
             VALUES (:id, :name, :email, :password)
-            ON DUPLICATE KEY UPDATE name = :name, password = :password
+            ON CONFLICT(id) DO UPDATE SET name = :name, password = :password
         ");
         
-        $stmt->execute([
+        $result = $stmt->execute([
             'id' => $user->id(),
             'name' => $user->name(),
             'email' => $user->email()->value(),
             'password' => $user->password()->value()
         ]);
+
+        if (!$result) {
+            throw new \RuntimeException('Failed to save user.');
+        }
     }
 
     public function findById(string $id): ?User {
@@ -52,7 +56,7 @@ readonly class UserRepositoryPdo implements UserRepository {
 
     private function hydrateUser(array $data): User {
         return new User(
-            $data['id'],
+            strval($data['id']),
             $data['name'],
             new Email($data['email']),
             new Password($data['password'])
