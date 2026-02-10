@@ -12,7 +12,8 @@
         "slim/twig-view": "^3.4",
         "symfony/console": "^7.2",
         "twig/twig": "^3.19",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+      "ext-xdebug": "*"
     },
     "autoload": {
         "psr-4": {
