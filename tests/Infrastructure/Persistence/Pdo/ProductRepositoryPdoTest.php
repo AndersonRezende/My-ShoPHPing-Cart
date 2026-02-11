@@ -4,7 +4,10 @@ namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Domain\Entity\Product;
+use PDO;
+use PDOStatement;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use RuntimeException;
 
 class ProductRepositoryPdoTest extends DatabaseTestCase {
 
@@ -33,7 +36,7 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
     }
 
     public function testGetByIdWhenProductDoesNotExist(): void {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Product with ID 999 not found.');
 
         $repository = new ProductRepositoryPdo($this->connection);
@@ -62,6 +65,24 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
         $this->assertEquals($result, $product);
         $this->assertEquals('1', $row['id']);
         $this->assertEquals('Pasta', $row['name']);
+    }
+
+    public function testShouldThrowRuntimeExceptionWhenAnErrorOccursDuringSave(): void {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Failed to save product.');
+
+        $pdoStatementMock = $this->createMock(PDOStatement::class);
+        $pdoStatementMock->expects($this->once())
+            ->method('execute')
+            ->willReturn(false);
+        $pdoMock = $this->createMock(PDO::class);
+        $pdoMock->expects($this->once())
+            ->method('prepare')
+            ->willReturn($pdoStatementMock);
+        $repository = new ProductRepositoryPdo($pdoMock);
+        $product = new Product('1', 'Pasta');
+
+        $repository->save($product);
     }
 
     public function testUpdateExistingProduct(): void {
@@ -110,7 +131,7 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testExecuteDeleteByIdWhenProductDoesNotExist(): void {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Product with ID 1234 not found.');
 
         $pdoMock = $this->createMock(\PDO::class);
