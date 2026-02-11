@@ -2,6 +2,9 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
+use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\ValueObject\Email;
+use MyShoppingCart\Domain\ValueObject\Password;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Enum\CartStatus;
@@ -24,6 +27,23 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
         $cart = new CartBuilder()
             ->withId('1')
             ->withStatus(CartStatus::OPENED)
+            ->build();
+        $repository->save($cart);
+
+        $stmt = $this->connection->query('SELECT COUNT(*) as item_count FROM cart_items WHERE cart_id = 1');
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $this->assertEquals(0, (int)$result['item_count']);
+    }
+
+    public function testShouldSaveCartWithUser(): void {
+        $repository = new CartRepositoryPdo($this->connection);
+        $user = new User('1', 'Testevaldo', new Email('teste@email.com'), Password::hash('testevaldosenha'));
+
+        $cart = new CartBuilder()
+            ->withId('1')
+            ->withStatus(CartStatus::OPENED)
+            ->withUserIds([$user->id()])
             ->build();
         $repository->save($cart);
 
