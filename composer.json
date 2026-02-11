@@ -13,7 +13,8 @@
         "symfony/console": "^7.2",
         "twig/twig": "^3.19",
       "ext-pdo": "*",
-      "ext-xdebug": "*"
+      "ext-xdebug": "*",
+        "firebase/php-jwt": "^7.0"
     },
     "autoload": {
         "psr-4": {
