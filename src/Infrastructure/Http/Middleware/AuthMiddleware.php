@@ -11,7 +11,7 @@ use Firebase\JWT\Key;
 
 class AuthMiddleware {
     public function __invoke(Request $request, RequestHandler $handler): Response {
-        // 1. Pega o header Authorization: Bearer <token>
+        // Check header Authorization: Bearer <token>
         $authHeader = $request->getHeaderLine('Authorization');
         $token = str_replace('Bearer ', '', $authHeader);
 
@@ -20,15 +20,13 @@ class AuthMiddleware {
         }
 
         try {
-            // 2. Tenta decodificar. Se a assinatura for inválida ou expirada, lança Exception
             $secretKey = $_ENV['JWT_SECRET'] ?? 'default_secret_key';
             $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
 
-            // 3. SUCESSO! Injetamos o ID do usuário na requisição
-            // O atributo 'userId' ficará disponível para os Controllers
+            // Inject User ID in request
             $request = $request->withAttribute('userId', $decoded->sub);
 
-            // 4. Passa a bola para o próximo (o Controller)
+            // Call Controller
             return $handler->handle($request);
 
         } catch (\Exception $e) {
