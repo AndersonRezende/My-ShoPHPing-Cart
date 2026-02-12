@@ -6,8 +6,12 @@ use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = Dotenv::createImmutable(__DIR__ . DIRECTORY_SEPARATOR . '..');
+$dotenv->load();
 
 // 1. Configuração do Container de Injeção de Dependência (PHP-DI)
 $containerBuilder = new ContainerBuilder();
