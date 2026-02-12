@@ -11,7 +11,7 @@ readonly class RegisterUserController {
     public function __construct(private RegisterUserUseCase $registerUserUseCase) {}
 
     public function __invoke(Request $request, Response $response): Response {
-        $data = $request->getParsedBody();
+        $data = json_decode((string) $request->getBody(), true);
         
         try {
             $input = new RegisterUserInput(
