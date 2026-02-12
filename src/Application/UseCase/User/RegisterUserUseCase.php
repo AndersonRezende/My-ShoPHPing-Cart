@@ -19,7 +19,7 @@ readonly class RegisterUserUseCase {
         }
 
         $user = new User(
-            uniqid(),
+            null,
             $input->name,
             $emailVo,
             Password::hash($input->password)
