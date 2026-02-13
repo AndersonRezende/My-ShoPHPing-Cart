@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class CartTest extends TestCase {
 
     public function testCanAddItemsAndCalculateTotal(): void {
-        $cart = new Cart();
+        $cart = new Cart('1');
 
         $product1 = new Product('prod-001', 'Product 1');
         $unitPrice1 = new Money(1500);
@@ -31,7 +31,7 @@ class CartTest extends TestCase {
     }
 
     public function testTotalIsZeroWhenCartIsEmpty(): void {
-        $cart = new Cart();
+        $cart = new Cart('1');
 
         $total = $cart->total();
 
@@ -43,7 +43,7 @@ class CartTest extends TestCase {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Cannot modify a cart that is not opened');
 
-        $cart = new Cart(status: CartStatus::COMPLETED);
+        $cart = new Cart('1', status: CartStatus::COMPLETED);
 
         $product = new Product('prod-003', 'Product 3');
         $unitPrice = new Money(2000);
@@ -55,13 +55,13 @@ class CartTest extends TestCase {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Cannot modify a cart that is not opened');
 
-        $cart = new Cart(status: CartStatus::COMPLETED);
+        $cart = new Cart('1', status: CartStatus::COMPLETED);
 
         $cart->updateItemQuantity('prod-001', 5);
     }
 
     public function testShouldRemoveItemWhenQuantityIsZero(): void {
-        $cart = new Cart();
+        $cart = new Cart('1');
         $product = new Product('prod-004', 'Product 4');
         $unitPrice = new Money(2500);
         $cartItem = new CartItem(null, $product, 2, $unitPrice);
@@ -76,7 +76,7 @@ class CartTest extends TestCase {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Cart item not exists in the cart');
 
-        $cart = new Cart();
+        $cart = new Cart('1');
         $product = new Product('prod-005', 'Product 5');
         $unitPrice = new Money(3000);
         $cartItem = new CartItem(null, $product, 1, $unitPrice);
@@ -88,7 +88,7 @@ class CartTest extends TestCase {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Cannot modify a cart that is not opened');
 
-        $cart = new Cart(null, CartStatus::COMPLETED);
+        $cart = new Cart('1', CartStatus::COMPLETED);
 
         $cart->removeItem('prod-004', 0);
     }
@@ -97,13 +97,13 @@ class CartTest extends TestCase {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Only opened carts can be completed');
 
-        $cart = new Cart(null, CartStatus::COMPLETED);
+        $cart = new Cart('1', CartStatus::COMPLETED);
 
         $cart->finalize();
     }
 
     public function testCanFinalizeOpenedCart(): void {
-        $cart = new Cart();
+        $cart = new Cart('1');
 
         $cart->finalize();
 
@@ -111,7 +111,7 @@ class CartTest extends TestCase {
     }
 
     public function testCanRemoveUserFromCart(): void {
-        $cart = new Cart();
+        $cart = new Cart('1');
         $cart->addUser('1');
         $cart->addUser('2');
 

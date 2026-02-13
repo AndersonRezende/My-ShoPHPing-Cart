@@ -10,7 +10,7 @@ class InMemoryCartRepositoryMock implements CartRepository {
     private Cart $cart;
 
     public function __construct() {
-        $this->cart = new Cart();
+        $this->cart = new Cart('1');
     }
     
     public function findById(string $id): ?Cart {

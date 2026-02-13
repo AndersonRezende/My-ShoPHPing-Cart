@@ -139,7 +139,7 @@ final readonly class CartRepositoryPdo implements CartRepository {
             $stmt->execute(['cart_id' => $id]);
             $userIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-            return (new CartBuilder())
+            return new CartBuilder()
                 ->withId($id)
                 ->withStatus(CartStatus::from($rows[0]['c_status']))
                 ->withCartItems($cartItems)
