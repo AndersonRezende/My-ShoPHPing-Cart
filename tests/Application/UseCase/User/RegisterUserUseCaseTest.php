@@ -6,6 +6,7 @@ use MyShoppingCart\Application\DTO\RegisterUserInput;
 use MyShoppingCart\Application\UseCase\User\RegisterUserUseCase;
 use MyShoppingCart\Domain\Entity\User;
 use MyShoppingCart\Domain\Repository\UserRepository;
+use MyShoppingCart\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 
@@ -17,8 +18,10 @@ class RegisterUserUseCaseTest extends TestCase {
             ->willReturn(null);
         $userRepository->expects($this->once())
             ->method('save');
+        $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
+        $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
 
-        $useCase = new RegisterUserUseCase($userRepository);
+        $useCase = new RegisterUserUseCase($userRepository, $uuidGenerator);
         $input = new RegisterUserInput('Anderson', 'anderson@example.com', 'password123');
         $user = $useCase->execute($input);
 
@@ -36,8 +39,9 @@ class RegisterUserUseCaseTest extends TestCase {
         $userRepository->expects($this->once())
             ->method('findByEmail')
             ->willReturn($this->createMock(User::class));
+        $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
 
-        $useCase = new RegisterUserUseCase($userRepository);
+        $useCase = new RegisterUserUseCase($userRepository, $uuidGenerator);
         $input = new RegisterUserInput('Anderson', 'anderson@example.com', 'password123');
         $useCase->execute($input);
     }

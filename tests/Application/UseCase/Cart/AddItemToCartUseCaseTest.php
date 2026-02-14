@@ -11,11 +11,14 @@ use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\ProductRepository;
+use MyShoppingCart\Domain\Service\IdGeneratorInterface;
 use MyShoppingCart\Tests\Util\InMemoryCartRepositoryMock;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 
 class AddItemToCartUseCaseTest extends TestCase {
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testExecuteWithOneProduct(): void {
         $cartRepository = new InMemoryCartRepositoryMock();
         $productRepository = $this->createMock(ProductRepository::class);
@@ -23,14 +26,18 @@ class AddItemToCartUseCaseTest extends TestCase {
             ->method('getById')
             ->willReturn(new Product('1', 'Product 1'));
         
+        $idGenerator = $this->createMock(IdGeneratorInterface::class);
+        $idGenerator->method('generate')->willReturn('item-1');
+
         $input = new AddItemInput('1', '1', 'Product 1', 2, 1500);
-        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         $output = $addItemToCart->execute($input);
 
         $this->assertEquals(3000, $output->total);
         $this->assertCount(1, $output->items);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testExecuteWithMultipleProducts(): void {
         $cartRepository = new InMemoryCartRepositoryMock();
         $productRepository = $this->createMock(ProductRepository::class);
@@ -40,7 +47,9 @@ class AddItemToCartUseCaseTest extends TestCase {
                 return new Product($id, 'Product ' . substr($id, -1));
             });
         
-        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
+        $idGenerator = $this->createMock(IdGeneratorInterface::class);
+        $idGenerator->method('generate')->willReturnOnConsecutiveCalls('item-1', 'item-2');
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         
         $input1 = new AddItemInput('2', '1', 'Product 1', 1, 1000);
         $addItemToCart->execute($input1);
@@ -61,9 +70,11 @@ class AddItemToCartUseCaseTest extends TestCase {
         $productRepository->expects($this->once())
             ->method('getById')
             ->willReturn(new Product('1', 'Product 1'));
-        
+        $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
+        $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
+
         $input = new AddItemInput('3', '1', 'Product 1', 0, 1500);
-        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $uuidGenerator);
         $addItemToCart->execute($input);
     }
 
@@ -83,7 +94,10 @@ class AddItemToCartUseCaseTest extends TestCase {
         $productRepository->expects($this->once())
             ->method('getById')
             ->willReturn(new Product('1', 'Product 1'));
-        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository);
+        $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
+        $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
+
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $uuidGenerator);
 
         $addItemToCart->execute(new AddItemInput('1', '1', 'Product 1', 1, 1000));
     }

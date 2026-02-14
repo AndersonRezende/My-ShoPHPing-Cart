@@ -7,7 +7,7 @@ use MyShoppingCart\Domain\ValueObject\Money;
 
 class CartItem {
     public function __construct(
-        private ?string $id,
+        private string $id,
         private Product $product, 
         private int $quantity,
         private Money $unitPrice
@@ -21,7 +21,7 @@ class CartItem {
         return $this->unitPrice->multiply($this->quantity);
     }
 
-    public function id(): ?string {
+    public function id(): string {
         return $this->id;
     }
 

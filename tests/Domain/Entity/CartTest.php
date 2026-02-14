@@ -16,12 +16,12 @@ class CartTest extends TestCase {
 
         $product1 = new Product('prod-001', 'Product 1');
         $unitPrice1 = new Money(1500);
-        $cartItem1 = new CartItem(null, $product1, 2, $unitPrice1);
+        $cartItem1 = new CartItem('1', $product1, 2, $unitPrice1);
         $cart->addItem($cartItem1);
 
         $product2 = new Product('prod-002', 'Product 2');
         $unitPrice2 = new Money(3000);
-        $cartItem2 = new CartItem(null, $product2, 1, $unitPrice2);
+        $cartItem2 = new CartItem('2', $product2, 1, $unitPrice2);
         $cart->addItem($cartItem2);
 
         $total = $cart->total();
@@ -47,7 +47,7 @@ class CartTest extends TestCase {
 
         $product = new Product('prod-003', 'Product 3');
         $unitPrice = new Money(2000);
-        $cartItem = new CartItem(null, $product, 1, $unitPrice);
+        $cartItem = new CartItem('1', $product, 1, $unitPrice);
         $cart->addItem($cartItem);
     }
 
@@ -64,7 +64,7 @@ class CartTest extends TestCase {
         $cart = new Cart('1');
         $product = new Product('prod-004', 'Product 4');
         $unitPrice = new Money(2500);
-        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cartItem = new CartItem('1', $product, 2, $unitPrice);
         $cart->addItem($cartItem);
 
         $cart->updateItemQuantity('prod-004', 0);
@@ -79,7 +79,7 @@ class CartTest extends TestCase {
         $cart = new Cart('1');
         $product = new Product('prod-005', 'Product 5');
         $unitPrice = new Money(3000);
-        $cartItem = new CartItem(null, $product, 1, $unitPrice);
+        $cartItem = new CartItem('1', $product, 1, $unitPrice);
         $cart->addItem($cartItem);
         $cart->updateItemQuantity('non-existent-product-id', 2);
     }

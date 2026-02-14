@@ -13,15 +13,15 @@ class CartItemTest extends TestCase {
         $this->expectExceptionMessage('Quantity must be greater than zero');
 
         $product = new Product('prod-001', 'Sample Product');
-        new CartItem(null, $product, 0, new Money(1000));
+        new CartItem('item-1', $product, 0, new Money(1000));
     }
 
     public function testCanCreateCartItemWithValidQuantity(): void {
         $product = new Product('prod-002', 'Another Product');
-        $cartItem = new CartItem(null, $product, 2, new Money(1500));
+        $cartItem = new CartItem('item-1', $product, 2, new Money(1500));
 
         $this->assertInstanceOf(CartItem::class, $cartItem);
-        $this->assertNull($cartItem->id());
+        $this->assertEquals('item-1', $cartItem->id());
         $this->assertEquals(2, $cartItem->quantity());
         $this->assertEquals($product, $cartItem->product());
     }
@@ -29,7 +29,7 @@ class CartItemTest extends TestCase {
     public function testCalculateSubTotalReturnsCorrectAmount(): void {
         $product = new Product('prod-003', 'Third Product');
         $unitPrice = new Money(2000);
-        $cartItem = new CartItem(null, $product, 3, $unitPrice);
+        $cartItem = new CartItem('item-1', $product, 3, $unitPrice);
 
         $subTotal = $cartItem->subTotal();
 
@@ -39,7 +39,7 @@ class CartItemTest extends TestCase {
     public function testCanUpdateQuantity(): void {
         $product = new Product('prod-004', 'Fourth Product');
         $unitPrice = new Money(2500);
-        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cartItem = new CartItem('item-1', $product, 2, $unitPrice);
 
         $cartItem->setQuantity(3);
 
@@ -52,7 +52,7 @@ class CartItemTest extends TestCase {
 
         $product = new Product('prod-004', 'Fourth Product');
         $unitPrice = new Money(2500);
-        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cartItem = new CartItem('item-1', $product, 2, $unitPrice);
 
         $cartItem->setQuantity(0);
     }

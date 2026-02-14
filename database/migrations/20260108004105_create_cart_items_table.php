@@ -8,7 +8,7 @@ final class CreateCartItemsTable extends AbstractMigration {
     public function change(): void {
         $this->table('cart_items')
             ->addColumn('cart_id', 'string', ['limit' => 36])
-            ->addColumn('product_id', 'integer', ['null' => true])
+            ->addColumn('product_id', 'string', ['limit' => 36, 'null' => true])
             ->addColumn('quantity', 'integer')
             ->addColumn('unit_price', 'integer')
             ->addTimestamps()
