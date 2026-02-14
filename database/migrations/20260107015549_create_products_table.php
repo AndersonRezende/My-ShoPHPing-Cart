@@ -7,7 +7,7 @@ use Phinx\Migration\AbstractMigration;
 final class CreateProductsTable extends AbstractMigration {
     public function change(): void {
         $this->table('products', ['id' => false, 'primary_key' => 'id'])
-            ->addColumn('id', 'string', ['limit' => 36])
+            ->addColumn('id', 'string', ['limit' => 36, 'null' => false])
             ->addColumn('name', 'string', ['limit' => 255])
             ->addColumn('category_id', 'string', ['limit' => 36, 'null' => true])
             ->addTimestamps()
