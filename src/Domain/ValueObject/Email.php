@@ -2,10 +2,14 @@
 
 namespace MyShoppingCart\Domain\ValueObject;
 
+use InvalidArgumentException;
+
 readonly class Email {
+
+    /** @throws InvalidArgumentException */
     public function __construct(private string $value) {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("Invalid email address");
+            throw new InvalidArgumentException('Invalid email address');
         }
     }
 
