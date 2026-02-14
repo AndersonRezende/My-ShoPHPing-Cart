@@ -62,7 +62,7 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
             ->build();
         $product = new Product('1', $expectedProductName = 'Product 1');
         $unitPrice = new Money(500);
-        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cartItem = new CartItem('1', $product, 2, $unitPrice);
         $cart->addItem($cartItem);
         $repository->save($cart);
 
@@ -106,7 +106,7 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
             ->build();
         $product = new Product('9999', 'Product 1');
         $unitPrice = new Money(500);
-        $cartItem = new CartItem(null, $product, 2, $unitPrice);
+        $cartItem = new CartItem('1', $product, 2, $unitPrice);
         $cart->addItem($cartItem);
         
         try {

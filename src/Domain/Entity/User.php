@@ -7,13 +7,13 @@ use MyShoppingCart\Domain\ValueObject\Password;
 
 class User {
     public function __construct(
-        private ?string $id,
+        private string $id,
         private string $name,
         private Email $email,
         private Password $password
     ) {}
 
-    public function id(): ?string {
+    public function id(): string {
         return $this->id;
     }
 

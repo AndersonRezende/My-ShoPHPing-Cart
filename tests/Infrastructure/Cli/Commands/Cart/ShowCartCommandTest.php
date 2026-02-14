@@ -35,7 +35,7 @@ class ShowCartCommandTest extends TestCase {
     #[AllowMockObjectsWithoutExpectations]
     public function testExecuteShouldSucceedWhenCartExists(): void {
         $cartItem = new CartItem(
-            null,
+            '1',
             new Product('prod-1', 'Product 1'),
             2,
             new Money(1500)

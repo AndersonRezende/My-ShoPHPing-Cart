@@ -56,7 +56,7 @@ readonly class UserRepositoryPdo implements UserRepository {
 
     private function hydrateUser(array $data): User {
         return new User(
-            strval($data['id']),
+            $data['id'],
             $data['name'],
             new Email($data['email']),
             new Password($data['password'])

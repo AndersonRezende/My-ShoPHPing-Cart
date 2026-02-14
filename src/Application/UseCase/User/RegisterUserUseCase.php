@@ -5,11 +5,15 @@ namespace MyShoppingCart\Application\UseCase\User;
 use MyShoppingCart\Application\DTO\RegisterUserInput;
 use MyShoppingCart\Domain\Entity\User;
 use MyShoppingCart\Domain\Repository\UserRepository;
+use MyShoppingCart\Domain\Service\IdGeneratorInterface;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
 
 readonly class RegisterUserUseCase {
-    public function __construct(private UserRepository $userRepository) {}
+    public function __construct(
+        private UserRepository $userRepository,
+        private IdGeneratorInterface $idGenerator
+    ) {}
 
     public function execute(RegisterUserInput $input): User {
         $emailVo = new Email($input->email);
@@ -18,8 +22,9 @@ readonly class RegisterUserUseCase {
             throw new \DomainException("User with this email already exists");
         }
 
+        $id = $this->idGenerator->generate();
         $user = new User(
-            null,
+            $id,
             $input->name,
             $emailVo,
             Password::hash($input->password)

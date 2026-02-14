@@ -5,6 +5,7 @@ namespace MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Enum\CartStatus;
+use MyShoppingCart\Infrastructure\Service\UuidGenerator;
 
 class CartBuilder {
 
@@ -41,7 +42,10 @@ class CartBuilder {
     }
 
     public function build(): Cart {
-        $cart = new Cart($this->id, $this->status);
+        $id = $this->id ?? new UuidGenerator()->generate();
+        
+        $cart = new Cart($id, $this->status);
+
         foreach ($this->items as $item) {
             $cart->addItem($item);
         }

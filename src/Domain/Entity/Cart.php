@@ -15,7 +15,7 @@ class Cart {
     private array $userIds = [];
 
     public function __construct(
-        private ?string $id = null,
+        private readonly string $id,
         private CartStatus $status = CartStatus::OPENED
     ) {}
 
@@ -82,7 +82,7 @@ class Cart {
         return $total;
     }
 
-    public function id(): ?string {
+    public function id(): string {
         return $this->id;
     }
 

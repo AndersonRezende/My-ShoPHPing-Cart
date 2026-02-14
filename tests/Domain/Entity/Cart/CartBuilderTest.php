@@ -12,15 +12,9 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
 class CartBuilderTest extends TestCase {
 
-    public static function dataProviderBuildCartWithExpectedId(): iterable {
-        yield 'Null ID' => [null];
-        yield 'Valid ID' => ['cart-123'];
-    }
-
-    #[DataProvider('dataProviderBuildCartWithExpectedId')]
-    public function testCanBuildCartWithExpectedId(?string $id): void {
+    public function testCanBuildCartWithExpectedId(): void {
         $cart = new CartBuilder()
-		->withId($id)
+		->withId($id = '1')
 		->build();
 
         $this->assertEquals($id, $cart->id());
@@ -61,7 +55,7 @@ class CartBuilderTest extends TestCase {
             ->build();
 
         $this->assertInstanceOf(Cart::class, $cart);
-        $this->assertEquals(null, $cart->id());
+        $this->assertNotNull($cart->id());
         $this->assertCount(2, $cart->items());
     }
 

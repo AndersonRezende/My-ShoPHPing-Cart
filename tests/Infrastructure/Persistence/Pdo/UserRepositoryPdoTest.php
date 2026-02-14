@@ -27,14 +27,14 @@ class UserRepositoryPdoTest extends DatabaseTestCase {
         $repository = new UserRepositoryPdo($pdoMock);
 
         $repository->save(
-            new User(null, 'teste', new Email('teste@email.com'), new Password('123456'))
+            new User('1', 'teste', new Email('teste@email.com'), new Password('123456'))
         );
     }
 
     public function testShouldCreateNewUser(): void {
         $repository = new UserRepositoryPdo($this->connection);
         $user = new User(
-            null,
+            '1',
             $name = 'Testevaldo',
             $email = new Email('testevaldo@email.com'),
             $password = Password::hash('testevaldosenha'));
