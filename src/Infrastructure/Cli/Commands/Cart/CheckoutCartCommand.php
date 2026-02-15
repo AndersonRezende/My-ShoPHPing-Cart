@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Cart;
 
-use MyShoppingCart\Application\DTO\CheckoutInput;
+use MyShoppingCart\Application\DTO\CheckoutCartInput;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,7 +27,7 @@ class CheckoutCartCommand extends Command {
         $userId = $input->getArgument('user_id');
 
         try {
-            $cart = $this->checkoutUseCase->execute(new CheckoutInput($cartId, $userId));
+            $cart = $this->checkoutUseCase->execute(new CheckoutCartInput($cartId, $userId));
             $io->success("Carrinho finalizado! Total: {$cart->total()->amount()}");
             return Command::SUCCESS;
         } catch (\Exception $e) {

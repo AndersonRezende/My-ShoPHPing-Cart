@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
 use LogicException;
-use MyShoppingCart\Application\DTO\CheckoutInput;
+use MyShoppingCart\Application\DTO\CheckoutCartInput;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use MyShoppingCart\Domain\Enum\CartStatus;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,7 +17,7 @@ readonly class CheckoutCartController {
         $cartId = $args['id'] ?? '';
         $userId = $request->getAttribute('userId');
         
-        $input = new CheckoutInput($cartId, $userId);
+        $input = new CheckoutCartInput($cartId, $userId);
         try {
             $cart = $this->checkoutUseCase->execute($input);
         } catch (LogicException $exception) {

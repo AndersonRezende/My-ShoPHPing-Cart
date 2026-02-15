@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Application\DTO;
 
-final readonly class AddItemInput {
+final readonly class AddItemToCartInput {
     public function __construct(
             public string $cartId,
             public string $userId,

@@ -3,7 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
 use Exception;
-use MyShoppingCart\Application\DTO\AddItemInput;
+use MyShoppingCart\Application\DTO\AddItemToCartInput;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -22,7 +22,7 @@ readonly class AddItemToCartController {
              return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
-        $input = new AddItemInput(
+        $input = new AddItemToCartInput(
             $cartId,
             $userId,
             $body['product_id'],

@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Cart;
 
-use MyShoppingCart\Application\DTO\AddItemInput;
+use MyShoppingCart\Application\DTO\AddItemToCartInput;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,7 +35,7 @@ class AddItemToCartCommand extends Command {
         $unitPrice = (int) $input->getArgument('unit_price');
 
         try {
-            $this->addItemToCart->execute(new AddItemInput(
+            $this->addItemToCart->execute(new AddItemToCartInput(
                 $cartId,
                 $userId,
                 $productId,

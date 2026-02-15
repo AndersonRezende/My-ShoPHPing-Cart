@@ -4,7 +4,7 @@ namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use DomainException;
 use LogicException;
-use MyShoppingCart\Application\DTO\CheckoutInput;
+use MyShoppingCart\Application\DTO\CheckoutCartInput;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
@@ -28,7 +28,7 @@ class CheckoutCartUseCaseTest extends TestCase {
                 ->build());
         $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
 
-        $checkoutCartUseCase->execute(new CheckoutInput('nonexistent-cart-id', 'user-id'));
+        $checkoutCartUseCase->execute(new CheckoutCartInput('nonexistent-cart-id', 'user-id'));
     }
 
     public function testExecuteShouldThrownDomainExceptionWhenUnauthorizedUserTriesToCheckout(): void {
@@ -45,7 +45,7 @@ class CheckoutCartUseCaseTest extends TestCase {
                 ->build());
         $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
 
-        $checkoutCartUseCase->execute(new CheckoutInput('nonexistent-cart-id', 'user-id'));
+        $checkoutCartUseCase->execute(new CheckoutCartInput('nonexistent-cart-id', 'user-id'));
     }
 
     public function testExecuteShouldCheckoutCartSuccessfully(): void {
@@ -65,7 +65,7 @@ class CheckoutCartUseCaseTest extends TestCase {
             
         $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
 
-        $cart = $checkoutCartUseCase->execute(new CheckoutInput('existing-cart-id', 'user-id'));
+        $cart = $checkoutCartUseCase->execute(new CheckoutCartInput('existing-cart-id', 'user-id'));
         
 
         $this->assertEquals(CartStatus::COMPLETED, $cart->status());

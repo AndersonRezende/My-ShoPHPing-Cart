@@ -2,7 +2,7 @@
 
 namespace MyShoppingCart\Application\DTO;
 
-readonly class CheckoutInput {
+readonly class CheckoutCartInput {
     public function __construct(
         public string $cartId,
         public string $userId,

@@ -5,7 +5,7 @@ namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 use DomainException;
 use InvalidArgumentException;
 use LogicException;
-use MyShoppingCart\Application\DTO\AddItemInput;
+use MyShoppingCart\Application\DTO\AddItemToCartInput;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\Product;
@@ -35,7 +35,7 @@ class AddItemToCartUseCaseTest extends TestCase {
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $idGenerator->method('generate')->willReturn('item-1');
 
-        $input = new AddItemInput('c-1', 'u-1', 'p-1', 'Product 1', 2, 1500);
+        $input = new AddItemToCartInput('c-1', 'u-1', 'p-1', 'Product 1', 2, 1500);
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         $addItemToCart->execute($input);
     }
@@ -58,7 +58,7 @@ class AddItemToCartUseCaseTest extends TestCase {
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $idGenerator->method('generate')->willReturn('item-1');
 
-        $input = new AddItemInput('c-1', 'u-1', 'p-1', 'Product 1', 2, 1500);
+        $input = new AddItemToCartInput('c-1', 'u-1', 'p-1', 'Product 1', 2, 1500);
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         $output = $addItemToCart->execute($input);
 
@@ -87,10 +87,10 @@ class AddItemToCartUseCaseTest extends TestCase {
         $idGenerator->method('generate')->willReturnOnConsecutiveCalls('item-1', 'item-2');
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         
-        $input1 = new AddItemInput('c-2', 'u-1', '1', 'Product 1', 1, 1000);
+        $input1 = new AddItemToCartInput('c-2', 'u-1', '1', 'Product 1', 1, 1000);
         $addItemToCart->execute($input1);
         
-        $input2 = new AddItemInput('c-2', 'u-1', '2', 'Product 2', 3, 2000);
+        $input2 = new AddItemToCartInput('c-2', 'u-1', '2', 'Product 2', 3, 2000);
         $output = $addItemToCart->execute($input2);
 
         $this->assertEquals(7000, $output->total);
@@ -116,7 +116,7 @@ class AddItemToCartUseCaseTest extends TestCase {
         $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
         $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
 
-        $input = new AddItemInput('c-1', 'u-1', 'p-1', 'Product 1', 0, 1500);
+        $input = new AddItemToCartInput('c-1', 'u-1', 'p-1', 'Product 1', 0, 1500);
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $uuidGenerator);
         $addItemToCart->execute($input);
     }
@@ -143,6 +143,6 @@ class AddItemToCartUseCaseTest extends TestCase {
 
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $uuidGenerator);
 
-        $addItemToCart->execute(new AddItemInput('c-1', 'u-1','1', 'Product 1', 1, 1000));
+        $addItemToCart->execute(new AddItemToCartInput('c-1', 'u-1','1', 'Product 1', 1, 1000));
     }
 }

@@ -4,7 +4,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 
 use DomainException;
 use LogicException;
-use MyShoppingCart\Application\DTO\AddItemInput;
+use MyShoppingCart\Application\DTO\AddItemToCartInput;
 use MyShoppingCart\Application\DTO\CartOutput;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\Repository\CartRepository;
@@ -21,7 +21,7 @@ readonly class AddItemToCartUseCase {
     ) {}
 
     /** @throws LogicException|DomainException */
-    public function execute(AddItemInput $input): CartOutput {
+    public function execute(AddItemToCartInput $input): CartOutput {
         $cart = $this->cartRepository->findById($input->cartId);
         if (!$cart->isUserAllowedToAccess($input->userId)) {
             throw new DomainException('Access denied: You can not modify this cart.');
