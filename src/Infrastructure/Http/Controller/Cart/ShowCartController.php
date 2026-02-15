@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
+use DomainException;
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
@@ -15,13 +16,19 @@ readonly class ShowCartController {
     public function __construct(private ShowCartUseCase $showCartUseCase) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response {
-        $showCartInput = new ShowCartInput($args['id']);
+        $userId = $request->getAttribute('userId');
+        $showCartInput = new ShowCartInput($args['id'], $userId);
+        
         try {
             $cart = $this->showCartUseCase->execute($showCartInput);
         } catch (InvalidArgumentException $e) {
             $payload = json_encode(['error' => $e->getMessage()]);
             $response->getBody()->write($payload);
             return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        } catch (DomainException $e) {
+            $payload = json_encode(['error' => $e->getMessage()]);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
         }
         
         $payload = json_encode($this->formatPayload($cart));

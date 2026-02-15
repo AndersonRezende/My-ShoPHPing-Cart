@@ -10,22 +10,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class CheckoutCommand extends Command {
+class CheckoutCartCommand extends Command {
     public function __construct(private readonly CheckoutCartUseCase $checkoutUseCase) {
         parent::__construct('msp:checkout');
     }
 
     protected function configure(): void {
         $this->setDescription('Finaliza um carrinho de compras.')
-            ->addArgument('id', InputArgument::REQUIRED, 'ID do carrinho');
+            ->addArgument('cart_id', InputArgument::REQUIRED, 'ID do carrinho')
+            ->addArgument('user_id', InputArgument::REQUIRED, 'ID do usuário');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
         $io = new SymfonyStyle($input, $output);
-        $id = $input->getArgument('id');
+        $cartId = $input->getArgument('cart_id');
+        $userId = $input->getArgument('user_id');
 
         try {
-            $cart = $this->checkoutUseCase->execute(new CheckoutInput($id));
+            $cart = $this->checkoutUseCase->execute(new CheckoutInput($cartId, $userId));
             $io->success("Carrinho finalizado! Total: {$cart->total()->amount()}");
             return Command::SUCCESS;
         } catch (\Exception $e) {

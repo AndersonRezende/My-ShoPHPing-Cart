@@ -78,15 +78,15 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
     }
 
     public function testShouldReturnCartWithItemsWhenThereAreItems(): void {
-        $this->connection->exec("INSERT INTO carts (id, status, created_at, updated_at) VALUES (1, 'opened', datetime('now'), datetime('now'))");
-        $this->connection->exec("INSERT INTO products (id, name, category_id, created_at, updated_at) VALUES (1, 'Product 1', null, datetime('now'), datetime('now'))");
-        $this->connection->exec("INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES (1, 1, 2, 500)");
+        $this->connection->exec("INSERT INTO carts (id, status, created_at, updated_at) VALUES ('c-1', 'opened', datetime('now'), datetime('now'))");
+        $this->connection->exec("INSERT INTO products (id, name, category_id, created_at, updated_at) VALUES ('p-1', 'Product 1', null, datetime('now'), datetime('now'))");
+        $this->connection->exec("INSERT INTO cart_items (id, cart_id, product_id, quantity, unit_price) VALUES ('ci-1', 'c-1', 'p-1', 2, 500)");
         
         $repository = new CartRepositoryPdo($this->connection);
-        $cart = $repository->findById('1');
+        $cart = $repository->findById('c-1');
 
         $this->assertNotNull($cart);
-        $this->assertEquals('1', $cart->id());
+        $this->assertEquals('c-1', $cart->id());
         $this->assertEquals(CartStatus::OPENED, $cart->status());
         $this->assertCount(1, $cart->items());
         $item = $cart->items()[0];

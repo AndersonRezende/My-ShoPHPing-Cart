@@ -112,4 +112,8 @@ class Cart {
     public function userIds(): array {
         return $this->userIds;
     }
+
+    public function isUserAllowedToAccess(string $userId): bool {
+        return in_array($userId, $this->userIds());
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 
+use DomainException;
 use InvalidArgumentException;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
@@ -20,13 +21,31 @@ class ShowCartControllerTest extends TestCase {
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldThrowInvalidArgumentExceptionWhenCartIdIsInvalid(): void {
         $useCase = $this->createMock(ShowCartUseCase::class);
-        $useCase->method('execute')->willThrowException(new InvalidArgumentException("Cart not found"));
+        $useCase->method('execute')->willThrowException(new InvalidArgumentException('Cart not found'));
         $controller = new ShowCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
 
         $response = $controller($request, new Response(), ['id' => 'invalid-cart-id']);
 
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testShouldThrowDomainExceptionWhenUnauthorizedUserTriesToAccessCart(): void {
+        $useCase = $this->createMock(ShowCartUseCase::class);
+        $useCase->method('execute')->willThrowException(new DomainException('Access denied: This cart belongs to a registered user.'));
+        $controller = new ShowCartController($useCase);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
+
+        $response = $controller($request, new Response(), ['id' => 'invalid-cart-id']);
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -40,6 +59,9 @@ class ShowCartControllerTest extends TestCase {
         $useCase->method('execute')->willReturn($cart);
         $controller = new ShowCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
 
         $response = $controller($request, new Response(), ['id' => 'valid-cart-id']);
 

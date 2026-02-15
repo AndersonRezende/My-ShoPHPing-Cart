@@ -25,7 +25,7 @@ class CreateCartCommandTest extends TestCase {
         $command = new CreateCartCommand($useCase);
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute([]);
+        $commandTester->execute(['userId' => '1']);
 
         $output = $commandTester->getDisplay();
         $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());

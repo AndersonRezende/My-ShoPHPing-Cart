@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Application\UseCase\Cart;
 
+use DomainException;
 use LogicException;
 use MyShoppingCart\Application\DTO\CheckoutInput;
 use MyShoppingCart\Domain\Repository\CartRepository;
@@ -10,9 +11,12 @@ use MyShoppingCart\Domain\Entity\Cart;
 readonly class CheckoutCartUseCase {
     public function __construct(private CartRepository $cartRepository) {}
 
-    /** @throws LogicException */
+    /** @throws LogicException|DomainException */
     public function execute(CheckoutInput $input): Cart {
         $cart = $this->cartRepository->findById($input->cartId);
+        if (!$cart->isUserAllowedToAccess($input->userId)) {
+            throw new DomainException('User is not allowed to access this cart');
+        }
         $cart->finalize();
         $this->cartRepository->save($cart);
         return $cart;

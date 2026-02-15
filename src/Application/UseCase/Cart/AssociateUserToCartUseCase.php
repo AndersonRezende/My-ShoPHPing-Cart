@@ -3,6 +3,7 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use DomainException;
+use MyShoppingCart\Application\DTO\AssociateUserToCartInput;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\UserRepository;
 
@@ -12,18 +13,22 @@ readonly class AssociateUserToCartUseCase {
         private UserRepository $userRepository
     ) {}
 
-    public function execute(string $cartId, string $userId): void {
-        $cart = $this->cartRepository->findById($cartId);
+    public function execute(AssociateUserToCartInput $input): void {
+        $cart = $this->cartRepository->findById($input->cartId);
         if (!$cart) {
             throw new DomainException('Cart not found');
         }
 
-        $user = $this->userRepository->findById($userId);
+        if (!$cart->isUserAllowedToAccess($input->ownerUserId)) {
+            throw new DomainException('User is not allowed to access this cart');
+        }
+
+        $user = $this->userRepository->findById($input->userId);
         if (!$user) {
             throw new DomainException('User not found');
         }
 
-        $cart->addUser($userId);
+        $cart->addUser($input->userId);
         $this->cartRepository->save($cart);
     }
 }

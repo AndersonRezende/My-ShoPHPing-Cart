@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
+use DomainException;
 use InvalidArgumentException;
 use LogicException;
 use MyShoppingCart\Application\DTO\AddItemInput;
@@ -12,24 +13,52 @@ use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\ProductRepository;
 use MyShoppingCart\Domain\Service\IdGeneratorInterface;
-use MyShoppingCart\Tests\Util\InMemoryCartRepositoryMock;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 
 class AddItemToCartUseCaseTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
-    public function testExecuteWithOneProduct(): void {
-        $cartRepository = new InMemoryCartRepositoryMock();
+    public function testExecuteShouldThrowDomainExceptionWhenUserIsNotAuthorized(): void {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Access denied: You can not modify this cart.');
+
+        $cart = new CartBuilder()
+            ->withId('c-1')
+            ->withUserIds(['u-2'])
+            ->build();
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->willReturn($cart);
+        $productRepository = $this->createMock(ProductRepository::class);
+        $idGenerator = $this->createMock(IdGeneratorInterface::class);
+        $idGenerator->method('generate')->willReturn('item-1');
+
+        $input = new AddItemInput('c-1', 'u-1', 'p-1', 'Product 1', 2, 1500);
+        $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
+        $addItemToCart->execute($input);
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testExecuteWithOneProductAndAuthorizedUser(): void {
+        $cart = new CartBuilder()
+            ->withId('c-1')
+            ->withUserIds(['u-1'])
+            ->build();
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->willReturn($cart);
         $productRepository = $this->createMock(ProductRepository::class);
         $productRepository->expects($this->once())
             ->method('getById')
-            ->willReturn(new Product('1', 'Product 1'));
+            ->willReturn(new Product('p-1', 'Product 1'));
         
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $idGenerator->method('generate')->willReturn('item-1');
 
-        $input = new AddItemInput('1', '1', 'Product 1', 2, 1500);
+        $input = new AddItemInput('c-1', 'u-1', 'p-1', 'Product 1', 2, 1500);
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         $output = $addItemToCart->execute($input);
 
@@ -38,8 +67,15 @@ class AddItemToCartUseCaseTest extends TestCase {
     }
 
     #[AllowMockObjectsWithoutExpectations]
-    public function testExecuteWithMultipleProducts(): void {
-        $cartRepository = new InMemoryCartRepositoryMock();
+    public function testExecuteWithMultipleProductsAndAuthorizedUser(): void {
+        $cart = new CartBuilder()
+            ->withId('c-1')
+            ->withUserIds(['u-1'])
+            ->build();
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->exactly(2))
+            ->method('findById')
+            ->willReturn($cart);
         $productRepository = $this->createMock(ProductRepository::class);
         $productRepository->expects($this->exactly(2))
             ->method('getById')
@@ -51,10 +87,10 @@ class AddItemToCartUseCaseTest extends TestCase {
         $idGenerator->method('generate')->willReturnOnConsecutiveCalls('item-1', 'item-2');
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $idGenerator);
         
-        $input1 = new AddItemInput('2', '1', 'Product 1', 1, 1000);
+        $input1 = new AddItemInput('c-2', 'u-1', '1', 'Product 1', 1, 1000);
         $addItemToCart->execute($input1);
         
-        $input2 = new AddItemInput('2', '2', 'Product 2', 3, 2000);
+        $input2 = new AddItemInput('c-2', 'u-1', '2', 'Product 2', 3, 2000);
         $output = $addItemToCart->execute($input2);
 
         $this->assertEquals(7000, $output->total);
@@ -64,16 +100,23 @@ class AddItemToCartUseCaseTest extends TestCase {
     public function testExecutingWithZeroQuantityMustThrowInvalidArgumentException(): void {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Quantity must be greater than zero');
-        
-        $cartRepository = new InMemoryCartRepositoryMock();
+
+        $cart = new CartBuilder()
+            ->withId('c-1')
+            ->withUserIds(['u-1'])
+            ->build();
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->willReturn($cart);
         $productRepository = $this->createMock(ProductRepository::class);
         $productRepository->expects($this->once())
             ->method('getById')
-            ->willReturn(new Product('1', 'Product 1'));
+            ->willReturn(new Product('p-1', 'Product 1'));
         $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
         $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
 
-        $input = new AddItemInput('3', '1', 'Product 1', 0, 1500);
+        $input = new AddItemInput('c-1', 'u-1', 'p-1', 'Product 1', 0, 1500);
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $uuidGenerator);
         $addItemToCart->execute($input);
     }
@@ -88,17 +131,18 @@ class AddItemToCartUseCaseTest extends TestCase {
             ->willReturn(new CartBuilder()
                 ->withId('nonexistent-cart-id')
                 ->withStatus(CartStatus::COMPLETED)
+                ->withUserIds(['u-1'])
                 ->build()
             );
         $productRepository = $this->createMock(ProductRepository::class);
         $productRepository->expects($this->once())
             ->method('getById')
-            ->willReturn(new Product('1', 'Product 1'));
+            ->willReturn(new Product('p-1', 'Product 1'));
         $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
         $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
 
         $addItemToCart = new AddItemToCartUseCase($cartRepository, $productRepository, $uuidGenerator);
 
-        $addItemToCart->execute(new AddItemInput('1', '1', 'Product 1', 1, 1000));
+        $addItemToCart->execute(new AddItemInput('c-1', 'u-1','1', 'Product 1', 1, 1000));
     }
 }

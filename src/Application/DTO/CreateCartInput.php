@@ -3,5 +3,5 @@
 namespace MyShoppingCart\Application\DTO;
 
 readonly class CreateCartInput {
-    public function __construct() {}
+    public function __construct(public string $owner) {}
 }

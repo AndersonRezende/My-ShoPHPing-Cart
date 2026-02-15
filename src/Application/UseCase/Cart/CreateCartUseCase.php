@@ -3,6 +3,8 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\CreateCartInput;
+use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
+use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\Service\IdGeneratorInterface;
@@ -15,7 +17,11 @@ readonly class CreateCartUseCase {
 
     public function execute(CreateCartInput $input): Cart {
         $id = $this->idGenerator->generate();
-        $cart = new Cart($id);
+        $cart = new CartBuilder()
+            ->withId($id)
+            ->withUserIds([$input->owner])
+            ->withStatus(CartStatus::OPENED)
+            ->build();
         $this->cartRepository->save($cart);
         return $cart;
     }

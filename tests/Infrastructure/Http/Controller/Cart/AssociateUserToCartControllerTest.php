@@ -19,9 +19,12 @@ class AssociateUserToCartControllerTest extends TestCase {
         $useCase->expects($this->once())->method('execute');
         $controller = new AssociateUserToCartController($useCase);
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
+        $stream->method('__toString')->willReturn(json_encode(['user_id' => '1']));
 
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => '1']);
@@ -35,9 +38,12 @@ class AssociateUserToCartControllerTest extends TestCase {
         $useCase->expects($this->once())->method('execute')->willThrowException(new DomainException('Cart not found'));
         $controller = new AssociateUserToCartController($useCase);
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn(json_encode(['userId' => '10']));
+        $stream->method('__toString')->willReturn(json_encode(['user_id' => '10']));
 
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => '1']);

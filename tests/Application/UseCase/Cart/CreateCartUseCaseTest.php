@@ -22,7 +22,7 @@ class CreateCartUseCaseTest extends TestCase {
             ->willReturn('uuid-1234');
 
         $createCartUseCase = new CreateCartUseCase($cartRepository, $idGenerator);
-        $outputCart = $createCartUseCase->execute(new CreateCartInput());
+        $outputCart = $createCartUseCase->execute(new CreateCartInput('user-1234'));
 
         $this->assertInstanceOf(Cart::class, $outputCart);
         $this->assertEquals('uuid-1234', $outputCart->id());

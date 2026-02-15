@@ -5,13 +5,13 @@ namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Cart;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
 use MyShoppingCart\Domain\ValueObject\Money;
-use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCartCommand;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class CheckoutCommandTest extends TestCase {
+class CheckoutCartCommandTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testExecute_ShouldCheckout_WhenCartExists(): void {
@@ -23,10 +23,10 @@ class CheckoutCommandTest extends TestCase {
             ->method('execute')
             ->willReturn($cartMock);
 
-        $command = new CheckoutCommand($useCase);
+        $command = new CheckoutCartCommand($useCase);
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['id' => '123']);
+        $commandTester->execute(['cart_id' => '1', 'user_id' => '1']);
 
         $output = $commandTester->getDisplay();
 
@@ -40,10 +40,10 @@ class CheckoutCommandTest extends TestCase {
         $useCase->method('execute')
             ->willThrowException(new \RuntimeException('Cart not found'));
 
-        $command = new CheckoutCommand($useCase);
+        $command = new CheckoutCartCommand($useCase);
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['id' => 'invalid-id']);
+        $commandTester->execute(['cart_id' => 'invalid-id', 'user_id' => '1']);
 
         $output = $commandTester->getDisplay();
         

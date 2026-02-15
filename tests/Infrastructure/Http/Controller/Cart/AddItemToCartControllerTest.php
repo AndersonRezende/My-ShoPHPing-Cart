@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Cart;
 
+use DomainException;
 use MyShoppingCart\Application\DTO\CartOutput;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use MyShoppingCart\Domain\Entity\Product;
@@ -30,6 +31,9 @@ class AddItemToCartControllerTest extends TestCase {
         ]));
 
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => 'cart-1']);
@@ -54,5 +58,31 @@ class AddItemToCartControllerTest extends TestCase {
         $response = $controller($request, new Response(), ['id' => 'cart-1']);
 
         $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testShouldNotAddItemSuccessfullyWhenUseCaseThrowsException(): void {
+        $useCase = $this->createMock(AddItemToCartUseCase::class);
+        $useCase->expects($this->once())
+            ->method('execute')
+            ->willThrowException(new DomainException('Access denied: You can not modify this cart.'));
+        $controller = new AddItemToCartController($useCase);
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn(json_encode([
+            'product_id' => 'p-1',
+            'quantity' => 2,
+            'unit_price' => 100,
+            'description' => 'Item Teste',
+            'userId' => '1'
+        ]));
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getBody')->willReturn($stream);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
+
+        $response = $controller($request, new Response(), ['id' => 'cart-1']);
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }
