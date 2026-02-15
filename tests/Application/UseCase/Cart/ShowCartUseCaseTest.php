@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
+use DomainException;
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Domain\Repository\CartRepository;
@@ -29,15 +30,28 @@ class ShowCartUseCaseTest extends TestCase {
         $showCartUseCase->execute(new ShowCartInput('nonexistent-cart-id'));
     }
 
+    public function testExecuteShouldThrowDomainExceptionWhenUserIsNotAllowedToAccess(): void {
+        $this->expectExceptionMessage(DomainException::class);
+        $this->expectExceptionMessage('Access denied: This cart belongs to a registered user.');
+
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->willReturn(new CartBuilder()->withId('existing-cart-id')->withUserIds(['user-1'])->build());
+        $showCartUseCase = new ShowCartUseCase($cartRepository);
+
+        $showCartUseCase->execute(new ShowCartInput('cart-id', 'user-2'));
+    }
+
     public function testExecuteWhenCartExists(): void {
         $cartRepository = $this->createMock(CartRepository::class);
         $cartRepository->expects($this->once())
             ->method('findById')
             ->with('existing-cart-id')
-            ->willReturn(new CartBuilder()->withId('existing-cart-id')->build());
+            ->willReturn(new CartBuilder()->withId('existing-cart-id')->withUserIds(['user-id'])->build());
         $showCartUseCase = new ShowCartUseCase($cartRepository);
 
-        $cart = $showCartUseCase->execute(new ShowCartInput('existing-cart-id'));
+        $cart = $showCartUseCase->execute(new ShowCartInput('existing-cart-id', 'user-id'));
 
         $this->assertEquals('existing-cart-id', $cart->id());
         $this->assertEquals(CartStatus::OPENED, $cart->status());
@@ -58,10 +72,11 @@ class ShowCartUseCaseTest extends TestCase {
             ->willReturn(new CartBuilder()
                 ->withId('existing-cart-id')
                 ->withCartItems([$cartItem])
+                ->withUserIds(['u-2'])
                 ->build());
         $showCartUseCase = new ShowCartUseCase($cartRepository);
 
-        $cart = $showCartUseCase->execute(new ShowCartInput('existing-cart-id'));
+        $cart = $showCartUseCase->execute(new ShowCartInput('existing-cart-id', 'u-2'));
 
         $this->assertEquals('existing-cart-id', $cart->id());
         $this->assertEquals(CartStatus::OPENED, $cart->status());

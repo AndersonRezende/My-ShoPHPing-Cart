@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Application\UseCase\Cart;
 
+use DomainException;
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Domain\Repository\CartRepository;
@@ -18,16 +19,9 @@ readonly class ShowCartUseCase {
             throw new InvalidArgumentException("Cart not found");
         }
 
-        if (!empty($cart->userIds()) && $showCartInput->userId !== null) {
-            if (!in_array($showCartInput->userId, $cart->userIds())) {
-                throw new \DomainException("Access denied: You are not the owner of this cart.");
-            }
+        if (!$cart->isUserAllowedToAccess($showCartInput->userId)) {
+            throw new DomainException('Access denied: This cart belongs to a registered user.');
         }
-
-        if (!empty($cart->userIds()) && $showCartInput->userId === null) {
-            throw new \DomainException("Access denied: This cart belongs to a registered user.");
-        }
-
        return $cart;
     }
 }
