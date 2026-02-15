@@ -18,6 +18,7 @@ class AddItemToCartCommand extends Command {
     protected function configure(): void {
         $this->setDescription('Adiciona um item ao carrinho de compras.')
             ->addArgument('cart_id', InputArgument::REQUIRED, 'ID do carrinho')
+            ->addArgument('user_id', InputArgument::REQUIRED, 'ID do usuário')
             ->addArgument('product_id', InputArgument::REQUIRED, 'ID do produto')
             ->addArgument('quantity', InputArgument::REQUIRED, 'Quantidade do produto')
             ->addArgument('unit_price', InputArgument::OPTIONAL, 'Preço unitário do produto', 0)
@@ -27,6 +28,7 @@ class AddItemToCartCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int {
         $io = new SymfonyStyle($input, $output);
         $cartId = $input->getArgument('cart_id');
+        $userId = $input->getArgument('user_id');
         $productId = $input->getArgument('product_id');
         $description = $input->getArgument('description') ?? '';
         $quantity = (int) $input->getArgument('quantity');
@@ -35,6 +37,7 @@ class AddItemToCartCommand extends Command {
         try {
             $this->addItemToCart->execute(new AddItemInput(
                 $cartId,
+                $userId,
                 $productId,
                 $description,
                 $quantity,

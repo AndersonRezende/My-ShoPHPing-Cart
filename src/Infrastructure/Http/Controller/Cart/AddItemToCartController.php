@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
+use Exception;
 use MyShoppingCart\Application\DTO\AddItemInput;
 use MyShoppingCart\Application\UseCase\Cart\AddItemToCartUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -22,13 +23,20 @@ readonly class AddItemToCartController {
 
         $input = new AddItemInput(
             $cartId,
+            $body['userId'],
             $body['product_id'],
             $body['description'] ?? '',
             (int) $body['quantity'],
             (int) ($body['unit_price'] ?? 0)
         );
 
-        $this->addItemToCart->execute($input);
+        try {
+            $this->addItemToCart->execute($input);
+        } catch (Exception $e) {
+            $payload = json_encode(['error' => $e->getMessage()]);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+        }
 
         return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }

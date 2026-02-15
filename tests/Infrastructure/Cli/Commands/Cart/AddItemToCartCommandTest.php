@@ -22,6 +22,7 @@ class AddItemToCartCommandTest extends TestCase {
 
         $commandTester->execute([
             'cart_id' => '1',
+            'user_id' => '1',
             'product_id' => '1',
             'quantity' => '2',
             'unit_price' => '50',
@@ -45,6 +46,7 @@ class AddItemToCartCommandTest extends TestCase {
 
         $commandTester->execute([
             'cart_id' => 'cart-1',
+            'user_id' => 'cart-1',
             'product_id' => 'prod-999',
             'quantity' => '1',
             'unit_price' => '10'
