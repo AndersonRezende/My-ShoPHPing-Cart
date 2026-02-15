@@ -72,10 +72,11 @@ final readonly class CartRepositoryPdo implements CartRepository {
     }
 
     private function upsertCartItems(Cart $cart): void {
+        // Agora incluímos o ID do item no INSERT
         $stmt = $this->pdo->prepare(
             'INSERT INTO cart_items 
-            (cart_id, product_id, quantity, unit_price)
-            VALUES (:cart_id, :product_id, :quantity, :unit_price)
+            (id, cart_id, product_id, quantity, unit_price)
+            VALUES (:id, :cart_id, :product_id, :quantity, :unit_price)
             ON CONFLICT(cart_id, product_id) DO UPDATE SET 
                 quantity = :quantity,
                 unit_price = :unit_price'
@@ -83,6 +84,7 @@ final readonly class CartRepositoryPdo implements CartRepository {
 
         foreach ($cart->items() as $item) {
             $stmt->execute([
+                'id' => $item->id(),
                 'cart_id' => $cart->id(),
                 'product_id' => $item->product()->id(),
                 'quantity' => $item->quantity(),
@@ -92,11 +94,9 @@ final readonly class CartRepositoryPdo implements CartRepository {
     }
 
     private function upsertCartUsers(Cart $cart): void {
-        // First delete existing associations to handle removals
         $stmt = $this->pdo->prepare("DELETE FROM cart_users WHERE cart_id = :cart_id");
         $stmt->execute(['cart_id' => $cart->id()]);
 
-        // Then insert current associations
         $stmt = $this->pdo->prepare("INSERT INTO cart_users (cart_id, user_id) VALUES (:cart_id, :user_id)");
         foreach ($cart->userIds() as $userId) {
             $stmt->execute([
@@ -107,46 +107,52 @@ final readonly class CartRepositoryPdo implements CartRepository {
     }
 
     public function findById(string $id): ?Cart {
-        $stmt = $this->pdo->prepare(
-            'SELECT c.id as c_id, c.status as c_status,
-                    ci.id as ci_id, ci.cart_id as ci_cart_id, ci.product_id as ci_product_id, ci.quantity as ci_quantity, ci.unit_price as ci_unit_price,
-                    p.id as p_id, p.name as p_name
-            FROM carts as c 
-            LEFT JOIN cart_items as ci ON c.id = ci.cart_id
-            LEFT JOIN products as p ON ci.product_id = p.id
-            WHERE c.id = :cart_id'
-        );
-        $stmt->execute(['cart_id' => $id]);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare('SELECT id, status FROM carts WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $cartData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($rows) {
-            $cartItems = [];
-            foreach ($rows as $row) {
-                if (!empty($row['ci_id'])) {
-                    $product = new Product(strval($row['p_id']), $row['p_name']);
-                    $cartItem = new CartItem(
-                        strval($row['ci_id']),
-                        $product,
-                        (int) $row['ci_quantity'],
-                        new Money((int) $row['ci_unit_price'])
-                    );
-                    $cartItems[] = $cartItem;
-                }
-            }
-
-            // Fetch associated users
-            $stmt = $this->pdo->prepare("SELECT user_id FROM cart_users WHERE cart_id = :cart_id");
-            $stmt->execute(['cart_id' => $id]);
-            $userIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-            return new CartBuilder()
-                ->withId($id)
-                ->withStatus(CartStatus::from($rows[0]['c_status']))
-                ->withCartItems($cartItems)
-                ->withUserIds($userIds)
-                ->build();
+        if (!$cartData) {
+            return null;
         }
         
-        return null;
+        $cartItems = $this->findCartItemsByCartId($id);
+        $userIds = $this->findCartUsersByCartId($id);
+        
+        return new CartBuilder()
+            ->withId($cartData['id'])
+            ->withStatus(CartStatus::from($cartData['status']))
+            ->withCartItems($cartItems)
+            ->withUserIds($userIds)
+            ->build();
+    }
+
+    private function findCartItemsByCartId(string $cartId): array {
+        $stmt = $this->pdo->prepare(
+            'SELECT ci.id as ci_id, ci.quantity, ci.unit_price, 
+                    p.id as p_id, p.name as p_name
+             FROM cart_items ci
+             JOIN products p ON ci.product_id = p.id
+             WHERE ci.cart_id = :cart_id'
+        );
+        $stmt->execute(['cart_id' => $cartId]);
+        $itemsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $cartItems = [];
+        foreach ($itemsData as $row) {
+            $product = new Product($row['p_id'], $row['p_name']);
+            $cartItems[] = new CartItem(
+                strval($row['ci_id']),
+                $product,
+                (int)$row['quantity'],
+                new Money((int)$row['unit_price'])
+            );
+        }
+        return $cartItems;
+    }
+
+    private function findCartUsersByCartId(string $id): array {
+        $stmt = $this->pdo->prepare('SELECT user_id FROM cart_users WHERE cart_id = :cart_id');
+        $stmt->execute(['cart_id' => $id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

@@ -12,7 +12,9 @@ readonly class CreateCartController {
     public function __construct(private CreateCartUseCase $createCartUseCase) {}
 
     public function __invoke(Request $request, Response $response): Response {
-        $input = new CreateCartInput();
+        $data = json_decode((string) $request->getBody(), true);
+        $userId =  $data['userId'];
+        $input = new CreateCartInput($userId);
         $cart = $this->createCartUseCase->execute($input);
 
         $payload = json_encode(['id' => $cart->id(), 'status' => 'OPEN']);

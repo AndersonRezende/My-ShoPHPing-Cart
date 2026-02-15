@@ -8,6 +8,7 @@ use MyShoppingCart\Infrastructure\Http\Controller\Cart\CreateCartController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Slim\Psr7\Response;
 
 class CreateCartControllerTest extends TestCase {
@@ -17,11 +18,13 @@ class CreateCartControllerTest extends TestCase {
         $useCase = $this->createMock(CreateCartUseCase::class);
         $cartMock = $this->createMock(Cart::class);
         $cartMock->method('id')->willReturn('cart-123');
-        
         $useCase->method('execute')->willReturn($cartMock);
 
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
         $controller = new CreateCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getBody')->willReturn($stream);
         
         $response = $controller($request, new Response());
         $data = json_decode((string) $response->getBody(), true);

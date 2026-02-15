@@ -18,6 +18,16 @@ readonly class ShowCartUseCase {
             throw new InvalidArgumentException("Cart not found");
         }
 
+        if (!empty($cart->userIds()) && $showCartInput->userId !== null) {
+            if (!in_array($showCartInput->userId, $cart->userIds())) {
+                throw new \DomainException("Access denied: You are not the owner of this cart.");
+            }
+        }
+
+        if (!empty($cart->userIds()) && $showCartInput->userId === null) {
+            throw new \DomainException("Access denied: This cart belongs to a registered user.");
+        }
+
        return $cart;
     }
 }
