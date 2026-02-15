@@ -2,19 +2,19 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
-use MyShoppingCart\Infrastructure\Http\Controller\Product\ListProductsController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\ListProductController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\Response;
 
-class ListProductsControllerTest extends TestCase {
+class ListProductControllerTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnJsonListWhenProductsExist(): void {
-        $listProductsUseCase = $this->createMock(ListProductsUseCase::class);
+        $listProductsUseCase = $this->createMock(ListProductUseCase::class);
         $listProductsUseCase->expects($this->once())
             ->method('execute')
             ->willReturn([
@@ -22,7 +22,7 @@ class ListProductsControllerTest extends TestCase {
                 new Product('2', 'Feijão'),
             ]);
 
-        $controller = new ListProductsController($listProductsUseCase);
+        $controller = new ListProductController($listProductsUseCase);
         $request = $this->createMock(ServerRequestInterface::class);
         
         $response = new Response();

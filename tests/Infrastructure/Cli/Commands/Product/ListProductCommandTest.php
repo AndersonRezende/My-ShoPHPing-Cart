@@ -2,18 +2,18 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Cli\Commands\Product;
 
-use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
-use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductsCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ListProductsCommandTest extends TestCase {
+class ListProductCommandTest extends TestCase {
 
     public function testExecuteListProductsCommand_ShouldListProducts_WhenThereAreProducts(): void {
-        $listProductsUseCase = $this->createMock(ListProductsUseCase::class);
+        $listProductsUseCase = $this->createMock(ListProductUseCase::class);
         $listProductsUseCase->expects($this->once())
             ->method('execute')
             ->willReturn(array(
@@ -21,7 +21,7 @@ class ListProductsCommandTest extends TestCase {
                 new Product('2', 'Product 2')
             )
         );
-        $listProductsCommand = new ListProductsCommand($listProductsUseCase);
+        $listProductsCommand = new ListProductCommand($listProductsUseCase);
         $application = new Application();
         $application->addCommand($listProductsCommand);
         $command = $application->find('msp:list-products');
@@ -43,12 +43,12 @@ class ListProductsCommandTest extends TestCase {
     }
 
     public function testExecuteListProductsCommand_ShouldOnlyShowHeader_WhenThereIsNoProduct(): void {
-        $listProductsUseCase = $this->createMock(ListProductsUseCase::class);
+        $listProductsUseCase = $this->createMock(ListProductUseCase::class);
         $listProductsUseCase->expects($this->once())
             ->method('execute')
             ->willReturn(array()
         );
-        $listProductsCommand = new ListProductsCommand($listProductsUseCase);
+        $listProductsCommand = new ListProductCommand($listProductsUseCase);
         $application = new Application();
         $application->addCommand($listProductsCommand);
         $command = $application->find('msp:list-products');

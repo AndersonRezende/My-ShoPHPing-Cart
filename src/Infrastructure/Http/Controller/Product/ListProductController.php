@@ -2,13 +2,13 @@
 
 namespace MyShoppingCart\Infrastructure\Http\Controller\Product;
 
-use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class ListProductsController {
+class ListProductController {
     
-    public function __construct(private readonly ListProductsUseCase $listProductsUseCase) {}
+    public function __construct(private readonly ListProductUseCase $listProductsUseCase) {}
 
     public function __invoke(Request $request, Response $response): Response {
         $products = $this->listProductsUseCase->execute();

@@ -2,7 +2,7 @@
 
 namespace Application\UseCase\Product;
 
-use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
@@ -13,7 +13,7 @@ class ListProductsUseCaseTest extends DatabaseTestCase {
         $this->connection->exec("INSERT INTO products (id, name) VALUES (1, 'Pasta')");
         $this->connection->exec("INSERT INTO products (id, name) VALUES (2, 'Papaya')");
         $productRepository = new ProductRepositoryPdo($this->connection);
-        $listProductsUseCase = new ListProductsUseCase($productRepository);
+        $listProductsUseCase = new ListProductUseCase($productRepository);
         
         $products = $listProductsUseCase->execute();
 

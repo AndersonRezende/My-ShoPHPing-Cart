@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use MyShoppingCart\Infrastructure\Http\Controller\Product\ShowProductController;
-use MyShoppingCart\Infrastructure\Http\Controller\Product\ListProductsController;
+use MyShoppingCart\Infrastructure\Http\Controller\Product\ListProductController;
 use MyShoppingCart\Infrastructure\Http\Controller\Product\CreateProductController;
 use MyShoppingCart\Infrastructure\Http\Controller\Product\UpdateProductController;
 use MyShoppingCart\Infrastructure\Http\Controller\Product\DeleteProductController;
@@ -32,7 +32,7 @@ return function (App $app) {
 
         // Rotas de Produto
         $group->get('/products/{id}', ShowProductController::class);
-        $group->get('/products', ListProductsController::class);
+        $group->get('/products', ListProductController::class);
         $group->post('/products', CreateProductController::class);
         $group->put('/products/{id}', UpdateProductController::class);
         $group->delete('/products/{id}', DeleteProductController::class);

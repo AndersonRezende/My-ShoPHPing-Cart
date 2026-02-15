@@ -2,15 +2,15 @@
 
 namespace MyShoppingCart\Infrastructure\Cli\Commands\Product;
 
-use MyShoppingCart\Application\UseCase\Product\ListProductsUseCase;
+use MyShoppingCart\Application\UseCase\Product\ListProductUseCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ListProductsCommand extends Command {
+class ListProductCommand extends Command {
 
-    public function __construct(private readonly ListProductsUseCase $listProductsUseCase) {
+    public function __construct(private readonly ListProductUseCase $listProductsUseCase) {
         parent::__construct('msp:list-products');
     }
 

@@ -5,7 +5,7 @@ namespace MyShoppingCart\Application\UseCase\Product;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Repository\ProductRepository;
 
-readonly class ListProductsUseCase {
+readonly class ListProductUseCase {
 
     public function __construct(private ProductRepository $productRepository) {}
 

@@ -10,7 +10,7 @@ use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CreateCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AssociateUserToCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\CreateProductCommand;
-use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductsCommand;
+use MyShoppingCart\Infrastructure\Cli\Commands\Product\ListProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\ShowProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\UpdateProductCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\DeleteProductCommand;
@@ -32,7 +32,7 @@ $application = new Application('My Shopping Cart CLI', '1.0.0');
 // 3. Registrar Comandos
 $commandLoader = new ContainerCommandLoader($container, [
     'msp:show-product' => ShowProductCommand::class,
-    'msp:list-products' => ListProductsCommand::class,
+    'msp:list-products' => ListProductCommand::class,
     'msp:create-product' => CreateProductCommand::class,
     'msp:update-product' => UpdateProductCommand::class,
     'msp:delete-product' => DeleteProductCommand::class,
