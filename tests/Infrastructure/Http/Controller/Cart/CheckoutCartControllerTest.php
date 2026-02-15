@@ -14,6 +14,7 @@ use MyShoppingCart\Infrastructure\Http\Controller\Cart\ShowCartController;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Slim\Psr7\Response;
 
 class CheckoutCartControllerTest extends TestCase {
@@ -23,7 +24,10 @@ class CheckoutCartControllerTest extends TestCase {
         $useCase = $this->createMock(CheckoutCartUseCase::class);
         $useCase->method('execute')->willThrowException(new LogicException('Only opened carts can be completed'));
         $controller = new CheckoutCartController($useCase);
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => 'already-checkout-cart-id']);
 
@@ -35,7 +39,10 @@ class CheckoutCartControllerTest extends TestCase {
         $useCase = $this->createMock(CheckoutCartUseCase::class);
         $useCase->method('execute')->willReturn(new CartBuilder()->withStatus(CartStatus::COMPLETED)->build());
         $controller = new CheckoutCartController($useCase);
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => 'cart-id']);
         $data = json_decode((string) $response->getBody(), true);

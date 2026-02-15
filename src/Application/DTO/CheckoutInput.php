@@ -4,6 +4,7 @@ namespace MyShoppingCart\Application\DTO;
 
 readonly class CheckoutInput {
     public function __construct(
-        public string $cartId
+        public string $cartId,
+        public string $userId,
     ) {}
 }
