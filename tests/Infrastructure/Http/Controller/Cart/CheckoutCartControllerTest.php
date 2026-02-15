@@ -25,8 +25,10 @@ class CheckoutCartControllerTest extends TestCase {
         $useCase->method('execute')->willThrowException(new LogicException('Only opened carts can be completed'));
         $controller = new CheckoutCartController($useCase);
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => 'already-checkout-cart-id']);
@@ -42,6 +44,9 @@ class CheckoutCartControllerTest extends TestCase {
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => 'cart-id']);

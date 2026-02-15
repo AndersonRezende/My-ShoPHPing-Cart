@@ -20,7 +20,7 @@ readonly class ShowCartUseCase {
         }
 
         if (!$cart->isUserAllowedToAccess($showCartInput->userId)) {
-            throw new DomainException('Access denied: This cart belongs to a registered user.');
+            throw new DomainException('User is not allowed to access this cart');
         }
        return $cart;
     }

@@ -15,9 +15,9 @@ readonly class CheckoutCartController {
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $cartId = $args['id'] ?? '';
-        $body = json_decode((string) $request->getBody(), true);
+        $userId = $request->getAttribute('userId');
         
-        $input = new CheckoutInput($cartId, $body['userId']);
+        $input = new CheckoutInput($cartId, $userId);
         try {
             $cart = $this->checkoutUseCase->execute($input);
         } catch (LogicException $exception) {

@@ -14,6 +14,7 @@ readonly class AddItemToCartController {
 
     public function __invoke(Request $request, Response $response, array $args): Response {
         $cartId = $args['id'] ?? '';
+        $userId = $request->getAttribute('userId');
         $body = json_decode((string) $request->getBody(), true);
 
         if (empty($cartId) || empty($body['product_id']) || empty($body['quantity'])) {
@@ -23,7 +24,7 @@ readonly class AddItemToCartController {
 
         $input = new AddItemInput(
             $cartId,
-            $body['userId'],
+            $userId,
             $body['product_id'],
             $body['description'] ?? '',
             (int) $body['quantity'],

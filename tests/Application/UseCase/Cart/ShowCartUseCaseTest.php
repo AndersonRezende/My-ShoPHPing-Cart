@@ -32,7 +32,7 @@ class ShowCartUseCaseTest extends TestCase {
 
     public function testExecuteShouldThrowDomainExceptionWhenUserIsNotAllowedToAccess(): void {
         $this->expectExceptionMessage(DomainException::class);
-        $this->expectExceptionMessage('Access denied: This cart belongs to a registered user.');
+        $this->expectExceptionMessage('User is not allowed to access this cart');
 
         $cartRepository = $this->createMock(CartRepository::class);
         $cartRepository->expects($this->once())

@@ -27,11 +27,13 @@ class AddItemToCartControllerTest extends TestCase {
             'product_id' => 'prod-1',
             'quantity' => 2,
             'unit_price' => 100,
-            'description' => 'Item Teste',
-            'userId' => '1'
+            'description' => 'Item Teste'
         ]));
 
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
 
         $response = $controller($request, new Response(), ['id' => 'cart-1']);
@@ -75,6 +77,9 @@ class AddItemToCartControllerTest extends TestCase {
         ]));
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
 
         $response = $controller($request, new Response(), ['id' => 'cart-1']);
 

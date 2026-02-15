@@ -18,8 +18,9 @@ class AssociateUserToCartCommandTest extends TestCase {
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
-            'cartId' => '1',
-            'userId' => '1',
+            'cart_id' => '1',
+            'owner_user_id' => '1',
+            'user_id' => '2',
         ]);
         $output = $commandTester->getDisplay();
 
@@ -34,8 +35,9 @@ class AssociateUserToCartCommandTest extends TestCase {
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
-            'cartId' => '1',
-            'userId' => '1',
+            'cart_id' => '1',
+            'owner_user_id' => '1',
+            'user_id' => '2',
         ]);
         $output = $commandTester->getDisplay();
 

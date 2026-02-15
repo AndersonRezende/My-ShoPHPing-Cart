@@ -24,6 +24,9 @@ class ShowCartControllerTest extends TestCase {
         $useCase->method('execute')->willThrowException(new InvalidArgumentException('Cart not found'));
         $controller = new ShowCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
 
         $response = $controller($request, new Response(), ['id' => 'invalid-cart-id']);
 
@@ -36,6 +39,9 @@ class ShowCartControllerTest extends TestCase {
         $useCase->method('execute')->willThrowException(new DomainException('Access denied: This cart belongs to a registered user.'));
         $controller = new ShowCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
 
         $response = $controller($request, new Response(), ['id' => 'invalid-cart-id']);
 
@@ -53,6 +59,9 @@ class ShowCartControllerTest extends TestCase {
         $useCase->method('execute')->willReturn($cart);
         $controller = new ShowCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
 
         $response = $controller($request, new Response(), ['id' => 'valid-cart-id']);
 
