@@ -16,7 +16,7 @@ readonly class ShowCartUseCase {
     public function execute(ShowCartInput $showCartInput): Cart {
         $cart = $this->repository->findById($showCartInput->cartId);
         if ($cart === null) {
-            throw new InvalidArgumentException("Cart not found");
+            throw new InvalidArgumentException('Cart not found');
         }
 
         if (!$cart->isUserAllowedToAccess($showCartInput->userId)) {

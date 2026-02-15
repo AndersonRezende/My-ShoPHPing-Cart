@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Http\Controller\Cart;
 
+use DomainException;
 use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
@@ -24,7 +25,7 @@ readonly class ShowCartController {
             $payload = json_encode(['error' => $e->getMessage()]);
             $response->getBody()->write($payload);
             return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             $payload = json_encode(['error' => $e->getMessage()]);
             $response->getBody()->write($payload);
             return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
