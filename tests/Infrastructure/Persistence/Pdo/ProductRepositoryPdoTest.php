@@ -117,6 +117,30 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
         $this->assertSame($results[0]::class, Product::class);
     }
 
+    public function testExecuteFindByNameShouldReturnExpectedProducts(): void {
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (1, 'Pasta')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (2, 'Papaya')");
+        $this->connection->exec("INSERT INTO products (id, name) VALUES (3, 'Egg')");
+
+        $repository = new ProductRepositoryPdo($this->connection);
+        $results = $repository->findByName('pa');
+
+        $this->assertCount(2, $results);
+        $this->assertEquals('1', $results[0]->id());
+        $this->assertEquals('Pasta', $results[0]->name());
+        $this->assertEquals('2', $results[1]->id());
+        $this->assertEquals('Papaya', $results[1]->name());
+        $this->assertSame($results[0]::class, Product::class);
+    }
+
+    public function testExecuteFindByNameShouldReturnNullWhenThereAreNoProducts(): void {
+        $repository = new ProductRepositoryPdo($this->connection);
+
+        $results = $repository->findByName('pa');
+
+        $this->assertCount(0, $results);
+    }
+
     public function testExecuteDeleteByIdShouldDeleteProduct(): void {
         $this->connection->exec("INSERT INTO products (id, name) VALUES ('1', 'Pasta')");
         $repository = new ProductRepositoryPdo($this->connection);

@@ -71,4 +71,14 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
             throw new \RuntimeException("Product with ID {$id} not found.");
         }
     }
+
+    /** @return Product[] */
+    public function findByName(string $name): array {
+        $stmt = $this->pdo->prepare('SELECT * FROM products WHERE name LIKE :name');
+        $stmt->execute(['name' => "%{$name}%"]);
+        return array_map(
+            fn ($row) => new Product($row['id'], $row['name'], $row['category_id']),
+            $stmt->fetchAll(PDO::FETCH_ASSOC)
+        );
+    }
 }
