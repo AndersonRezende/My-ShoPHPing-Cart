@@ -11,13 +11,13 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
 
     public function search(string $term): array {
         $stmt = $this->pdo->prepare(
-            'SELECT id, name FROM products WHERE name LIKE :term'
+            'SELECT id, name, category_id FROM products WHERE name LIKE :term'
         );
 
         $stmt->execute(['term' => "%{$term}%"]);
 
         return array_map(
-            fn ($row) => new Product($row['id'], $row['name']),
+            fn ($row) => new Product($row['id'], $row['name'], $row['category_id']),
             $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
     }
@@ -32,18 +32,19 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
             throw new \RuntimeException("Product with ID {$id} not found.");
         }
 
-        return new Product($row['id'], $row['name']);   
+        return new Product($row['id'], $row['name'], $row['category_id']);   
     }
 
     public function save(Product $product): Product {
         $stmt = $this->pdo->prepare(
-            'INSERT INTO products (id, name) VALUES (:id, :name)
-             ON CONFLICT(id) DO UPDATE SET name = :name'
+            'INSERT INTO products (id, name, category_id) VALUES (:id, :name, :category_id)
+             ON CONFLICT(id) DO UPDATE SET name = :name, category_id = :category_id'
         );
 
         $result = $stmt->execute([
             'id' => $product->id(),
             'name' => $product->name(),
+            'category_id' => $product->categoryId()
         ]);
 
         if (!$result) {
@@ -58,7 +59,7 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
         $stmt = $this->pdo->prepare('SELECT * FROM products');
         $stmt->execute();
         return array_map(
-            fn ($row) => new Product($row['id'], $row['name']),
+            fn ($row) => new Product($row['id'], $row['name'], $row['category_id']),
             $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
     }
