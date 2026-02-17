@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Product;
+namespace MyShoppingCart\Tests\Application\UseCase\Product;
 
 use MyShoppingCart\Application\UseCase\Product\ListProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
-class ListProductsUseCaseTest extends DatabaseTestCase {
+class ListProductUseCaseTest extends DatabaseTestCase {
 
     public function testExecuteListProducts(): void {
         $this->connection->exec("INSERT INTO products (id, name) VALUES (1, 'Pasta')");

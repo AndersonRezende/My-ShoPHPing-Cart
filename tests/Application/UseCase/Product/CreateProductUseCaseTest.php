@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Product;
+namespace MyShoppingCart\Tests\Application\UseCase\Product;
 
-use Cassandra\Uuid;
 use MyShoppingCart\Application\DTO\CreateProductInput;
 use MyShoppingCart\Application\UseCase\Product\CreateProductUseCase;
 use MyShoppingCart\Domain\Service\IdGeneratorInterface;

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Application\UseCase\Product;
+namespace MyShoppingCart\Tests\Application\UseCase\Product;
 
 use MyShoppingCart\Application\DTO\UpdateProductInput;
 use MyShoppingCart\Application\UseCase\Product\UpdateProductUseCase;
