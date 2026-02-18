@@ -34,6 +34,27 @@ class CreateProductCommandTest extends TestCase {
         $this->assertStringContainsString("Produto criado com sucesso! ID: {$product->id()} Nome: {$product->name()}", $output);
     }
 
+    public function testExecute_ShouldAskForName_WhenNameIsNotProvided(): void {
+        $useCase = $this->createMock(CreateProductUseCase::class);
+        $useCase->expects($this->once())
+            ->method('execute')
+            ->with($this->callback(function($input) {
+                return $input->name === 'Novo Nome Interativo';
+            }))
+            ->willReturn(new Product('1', 'Novo Nome Interativo'));
+        $command = new CreateProductCommand($useCase);
+        $application = new Application();
+        $application->addCommand($command);
+        $commandTester = new CommandTester($application->find('msp:create-product'));
+        $commandTester->setInputs(['Novo Nome Interativo']);
+        $commandTester->execute([]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertStringContainsString('Nome do produto', $output);
+        $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
+    }
+
     public function testExecuteListProductsCommand_ShouldOnlyShowHeader_WhenThereIsNoProduct(): void {
         $listProductsUseCase = $this->createMock(ListProductUseCase::class);
         $listProductsUseCase->expects($this->once())

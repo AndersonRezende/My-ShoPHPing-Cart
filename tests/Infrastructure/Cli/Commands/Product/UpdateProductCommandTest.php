@@ -34,6 +34,27 @@ class UpdateProductCommandTest extends TestCase {
         $this->assertStringContainsString('Produto atualizado com sucesso', $output);
     }
 
+    public function testExecute_ShouldAskForName_WhenNameIsNotProvided(): void {
+        $useCase = $this->createMock(UpdateProductUseCase::class);
+        $useCase->expects($this->once())
+            ->method('execute')
+            ->with($this->callback(function($input) {
+                return $input->name === 'Novo Nome Interativo';
+            }))
+            ->willReturn(new Product('1', 'Novo Nome Interativo'));
+        $command = new UpdateProductCommand($useCase);
+        $application = new Application();
+        $application->addCommand($command);
+        $commandTester = new CommandTester($application->find('msp:update-product'));
+        $commandTester->setInputs(['Novo Nome Interativo']);
+        $commandTester->execute(['id' => '1',]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertStringContainsString('Novo nome do produto', $output);
+        $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
+    }
+
     #[AllowMockObjectsWithoutExpectations]
     public function testExecute_ShouldFail_WhenProductNotFound(): void {
         $useCase = $this->createMock(UpdateProductUseCase::class);
