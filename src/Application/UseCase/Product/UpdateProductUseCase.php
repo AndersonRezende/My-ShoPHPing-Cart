@@ -10,9 +10,9 @@ readonly class UpdateProductUseCase {
     public function __construct(private ProductRepository $productRepository) {}
 
     public function execute(UpdateProductInput $input): Product {
-        $this->productRepository->getById($input->id);
-
-        $product = new Product($input->id, $input->name);
+        $product = $this->productRepository->getById($input->id);
+        $product->rename($input->name);
+        $product->moveToCategory($input->categoryId);
         return $this->productRepository->save($product);
     }
 }

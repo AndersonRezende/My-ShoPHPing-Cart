@@ -21,7 +21,7 @@ readonly class UpdateProductController {
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
-        $input = new UpdateProductInput($id, $body['name']);
+        $input = new UpdateProductInput($id, $body['name'], $body['categoryId'] ?? null);
 
         try {
             $product = $this->updateProductUseCase->execute($input);

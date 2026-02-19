@@ -18,7 +18,8 @@ class UpdateProductCommand extends Command {
     protected function configure(): void {
         $this->setDescription('Atualiza um produto existente.')
             ->addArgument('id', InputArgument::REQUIRED, 'ID do produto')
-            ->addArgument('name', InputArgument::OPTIONAL, 'Novo nome do produto');
+            ->addArgument('name', InputArgument::REQUIRED, 'Novo nome do produto')
+            ->addArgument('category_id', InputArgument::OPTIONAL, 'Categoria do produto');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -27,13 +28,10 @@ class UpdateProductCommand extends Command {
 
         $id = $input->getArgument('id');
         $name = $input->getArgument('name');
-
-        if (!$name) {
-            $name = $io->ask('Novo nome do produto');
-        }
+        $categoryId = $input->getArgument('category_id') ?? null;
 
         try {
-            $product = $this->updateProductUseCase->execute(new UpdateProductInput($id, $name));
+            $product = $this->updateProductUseCase->execute(new UpdateProductInput($id, $name, $categoryId));
             $io->success("Produto atualizado com sucesso! ID: {$product->id()} Nome: {$product->name()}");
             return Command::SUCCESS;
         } catch (\Exception $e) {

@@ -7,6 +7,7 @@ use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Infrastructure\Cli\Commands\Product\UpdateProductCommand;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -17,7 +18,7 @@ class UpdateProductCommandTest extends TestCase {
         $useCase = $this->createMock(UpdateProductUseCase::class);
         $useCase->expects($this->once())
             ->method('execute')
-            ->willReturn(new Product('1', 'Arroz Parboilizado'));
+            ->willReturn(new Product('1', 'Arroz Parboilizado', '1'));
 
         $command = new UpdateProductCommand($useCase);
         $application = new Application();
@@ -34,31 +35,10 @@ class UpdateProductCommandTest extends TestCase {
         $this->assertStringContainsString('Produto atualizado com sucesso', $output);
     }
 
-    public function testExecute_ShouldAskForName_WhenNameIsNotProvided(): void {
-        $useCase = $this->createMock(UpdateProductUseCase::class);
-        $useCase->expects($this->once())
-            ->method('execute')
-            ->with($this->callback(function($input) {
-                return $input->name === 'Novo Nome Interativo';
-            }))
-            ->willReturn(new Product('1', 'Novo Nome Interativo'));
-        $command = new UpdateProductCommand($useCase);
-        $application = new Application();
-        $application->addCommand($command);
-        $commandTester = new CommandTester($application->find('msp:update-product'));
-        $commandTester->setInputs(['Novo Nome Interativo']);
-        $commandTester->execute(['id' => '1',]);
-
-        $output = $commandTester->getDisplay();
-
-        $this->assertStringContainsString('Novo nome do produto', $output);
-        $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
-    }
-
     #[AllowMockObjectsWithoutExpectations]
     public function testExecute_ShouldFail_WhenProductNotFound(): void {
         $useCase = $this->createMock(UpdateProductUseCase::class);
-        $useCase->method('execute')->willThrowException(new \RuntimeException('Product not found'));
+        $useCase->method('execute')->willThrowException(new RuntimeException('Product not found'));
 
         $command = new UpdateProductCommand($useCase);
         $commandTester = new CommandTester($command);

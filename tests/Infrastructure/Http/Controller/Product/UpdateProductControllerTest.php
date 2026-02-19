@@ -17,15 +17,11 @@ class UpdateProductControllerTest extends TestCase {
     public function testShouldReturnUpdatedProductWhenSuccess(): void {
         $useCase = $this->createMock(UpdateProductUseCase::class);
         $useCase->method('execute')->willReturn(new Product('1', 'Arroz Integral'));
-
         $controller = new UpdateProductController($useCase);
-
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn(json_encode(['name' => 'Arroz Integral']));
-
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
-        
         $response = new Response();
         $args = ['id' => '1'];
 
@@ -57,10 +53,8 @@ class UpdateProductControllerTest extends TestCase {
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnBadRequestWhenNameIsMissing(): void {
         $controller = new UpdateProductController($this->createMock(UpdateProductUseCase::class));
-        
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn(json_encode([])); // Body vazio
-
+        $stream->method('__toString')->willReturn(json_encode([]));
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
 
