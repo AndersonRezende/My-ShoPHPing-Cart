@@ -3,6 +3,7 @@
 namespace Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\UserRepositoryPdo;
@@ -74,12 +75,13 @@ class UserRepositoryPdoTest extends DatabaseTestCase {
         $this->assertEquals('123456', $user->password()->value());
     }
 
-    public function testShouldReturnNullWhenUserDoesNotExistAndFindById(): void {
+    public function testShouldThrowExceptionWhenUserDoesNotExist(): void {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage("User not found with ID 1.");
+
         $repository = new UserRepositoryPdo($this->connection);
 
         $user = $repository->findById('1');
-
-        $this->assertNull($user);
     }
 
     public function testShouldReturnNullWhenUserDoesNotExistAndFindByEmail(): void {

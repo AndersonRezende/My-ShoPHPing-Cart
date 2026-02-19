@@ -7,6 +7,7 @@ use MyShoppingCart\Application\DTO\AssociateUserToCartInput;
 use MyShoppingCart\Application\UseCase\Cart\AssociateUserToCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
 use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\UserRepository;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -21,6 +22,7 @@ class AssociateUserToCartUseCaseTest extends TestCase {
             ->withUserIds(['u-1'])
             ->build();
         $user = $this->createMock(User::class);
+        $user->expects($this->once())->method('id')->willReturn('u-2');
 
         $cartRepository = $this->createMock(CartRepository::class);
         $cartRepository->expects($this->once())
@@ -52,7 +54,7 @@ class AssociateUserToCartUseCaseTest extends TestCase {
         $cartRepository = $this->createMock(CartRepository::class);
         $cartRepository->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willThrowException(new ResourceNotFoundException('Cart not found'));
         $userRepository = $this->createMock(UserRepository::class);
 
         $input = new AssociateUserToCartInput('cart-123', 'u-1', 'u-2');
@@ -104,7 +106,7 @@ class AssociateUserToCartUseCaseTest extends TestCase {
         $userRepository->expects($this->once())
             ->method('findById')
             ->with('u-2')
-            ->willReturn(null);
+            ->willThrowException(new ResourceNotFoundException('User not found'));
 
         $input = new AssociateUserToCartInput('cart-123', 'u-1', 'u-2');
         $useCase = new AssociateUserToCartUseCase($cartRepository, $userRepository);

@@ -3,6 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\UserRepository;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
@@ -30,13 +31,14 @@ readonly class UserRepositoryPdo implements UserRepository {
         }
     }
 
+    /** @throws ResourceNotFoundException */
     public function findById(string $id): ?User {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$data) {
-            return null;
+            throw new ResourceNotFoundException("User not found with ID {$id}.");
         }
 
         return $this->hydrateUser($data);

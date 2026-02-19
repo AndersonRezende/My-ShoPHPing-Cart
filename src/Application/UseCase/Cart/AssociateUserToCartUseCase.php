@@ -14,22 +14,16 @@ readonly class AssociateUserToCartUseCase {
         private UserRepository $userRepository
     ) {}
 
+    /** @throws ResourceNotFoundException */
     public function execute(AssociateUserToCartInput $input): void {
         $cart = $this->cartRepository->findById($input->cartId);
-        if (!$cart) {
-            throw new ResourceNotFoundException('Cart not found');
-        }
-
         $user = $this->userRepository->findById($input->userId);
-        if (!$user) {
-            throw new ResourceNotFoundException('User not found');
-        }
 
         if (!$cart->isUserAllowedToAccess($input->ownerUserId)) {
             throw new DomainException('User is not allowed to access this cart');
         }
 
-        $cart->addUser($input->userId);
+        $cart->addUser($user->id());
         $this->cartRepository->save($cart);
     }
 }
