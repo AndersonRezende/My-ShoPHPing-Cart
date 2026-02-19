@@ -5,6 +5,7 @@ namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 use DomainException;
 use LogicException;
 use MyShoppingCart\Application\DTO\CheckoutCartInput;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\CheckoutCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
@@ -43,6 +44,20 @@ class CheckoutCartUseCaseTest extends TestCase {
                 ->withId('nonexistent-cart-id')
                 ->withStatus(CartStatus::COMPLETED)
                 ->build());
+        $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
+
+        $checkoutCartUseCase->execute(new CheckoutCartInput('nonexistent-cart-id', 'user-id'));
+    }
+
+    public function testExecuteShouldThrowExceptionWhenCartDoesNotExist(): void {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Cart not found');
+
+        $cartRepository = $this->createMock(CartRepository::class);
+        $cartRepository->expects($this->once())
+            ->method('findById')
+            ->with('nonexistent-cart-id')
+            ->willReturn(null);
         $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
 
         $checkoutCartUseCase->execute(new CheckoutCartInput('nonexistent-cart-id', 'user-id'));

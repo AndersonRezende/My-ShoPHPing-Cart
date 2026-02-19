@@ -3,20 +3,26 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use DomainException;
-use LogicException;
 use MyShoppingCart\Application\DTO\CheckoutCartInput;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Entity\Cart;
 
 readonly class CheckoutCartUseCase {
     public function __construct(private CartRepository $cartRepository) {}
 
-    /** @throws LogicException|DomainException */
+    /** @throws ResourceNotFoundException|DomainException */
     public function execute(CheckoutCartInput $input): Cart {
         $cart = $this->cartRepository->findById($input->cartId);
+        
+        if (!$cart) {
+            throw new ResourceNotFoundException('Cart not found');
+        }
+
         if (!$cart->isUserAllowedToAccess($input->userId)) {
             throw new DomainException('User is not allowed to access this cart');
         }
+
         $cart->finalize();
         $this->cartRepository->save($cart);
         return $cart;

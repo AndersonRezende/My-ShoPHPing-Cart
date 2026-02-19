@@ -4,6 +4,7 @@ namespace MyShoppingCart\Application\UseCase\Cart;
 
 use DomainException;
 use MyShoppingCart\Application\DTO\AssociateUserToCartInput;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\UserRepository;
 
@@ -16,16 +17,16 @@ readonly class AssociateUserToCartUseCase {
     public function execute(AssociateUserToCartInput $input): void {
         $cart = $this->cartRepository->findById($input->cartId);
         if (!$cart) {
-            throw new DomainException('Cart not found');
-        }
-
-        if (!$cart->isUserAllowedToAccess($input->ownerUserId)) {
-            throw new DomainException('User is not allowed to access this cart');
+            throw new ResourceNotFoundException('Cart not found');
         }
 
         $user = $this->userRepository->findById($input->userId);
         if (!$user) {
-            throw new DomainException('User not found');
+            throw new ResourceNotFoundException('User not found');
+        }
+
+        if (!$cart->isUserAllowedToAccess($input->ownerUserId)) {
+            throw new DomainException('User is not allowed to access this cart');
         }
 
         $cart->addUser($input->userId);

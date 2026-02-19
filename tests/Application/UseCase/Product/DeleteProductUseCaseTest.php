@@ -4,6 +4,7 @@ namespace MyShoppingCart\Tests\Application\UseCase\Product;
 
 use MyShoppingCart\Application\DTO\DeleteProductInput;
 use MyShoppingCart\Application\UseCase\Product\DeleteProductUseCase;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -26,7 +27,7 @@ class DeleteProductUseCaseTest extends DatabaseTestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldThrowExceptionWhenProductNotFound(): void {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Product with ID 123 not found.');
 
         $pdoMock = $this->createMock(\PDO::class);

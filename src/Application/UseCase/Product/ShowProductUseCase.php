@@ -4,11 +4,13 @@ namespace MyShoppingCart\Application\UseCase\Product;
 
 use MyShoppingCart\Application\DTO\ShowProductInput;
 use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\ProductRepository;
 
 readonly class ShowProductUseCase {
     public function __construct(private ProductRepository $productRepository) {}
 
+    /** @throws ResourceNotFoundException */
     public function execute(ShowProductInput $input): Product {
         return $this->productRepository->getById($input->id);
     }

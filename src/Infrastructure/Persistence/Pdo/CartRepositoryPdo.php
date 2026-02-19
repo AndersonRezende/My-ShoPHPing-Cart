@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
@@ -72,7 +73,6 @@ final readonly class CartRepositoryPdo implements CartRepository {
     }
 
     private function upsertCartItems(Cart $cart): void {
-        // Agora incluímos o ID do item no INSERT
         $stmt = $this->pdo->prepare(
             'INSERT INTO cart_items 
             (id, cart_id, product_id, quantity, unit_price)
@@ -106,13 +106,14 @@ final readonly class CartRepositoryPdo implements CartRepository {
         }
     }
 
-    public function findById(string $id): ?Cart {
+    /** @throws ResourceNotFoundException */
+    public function findById(string $id): Cart {
         $stmt = $this->pdo->prepare('SELECT id, status FROM carts WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $cartData = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$cartData) {
-            return null;
+            throw new ResourceNotFoundException("Cart not found with ID {$id}.");
         }
         
         $cartItems = $this->findCartItemsByCartId($id);

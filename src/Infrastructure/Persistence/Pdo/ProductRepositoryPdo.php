@@ -3,6 +3,7 @@
 namespace MyShoppingCart\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\ProductRepository;
 use PDO;
 
@@ -22,14 +23,14 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
         );
     }
 
+    /** @throws ResourceNotFoundException */
     public function getById(string $id): Product {
         $stmt = $this->pdo->prepare('SELECT * FROM products WHERE id = :id');
         $stmt->execute(['id' => $id]);
-
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row === false) {
-            throw new \RuntimeException("Product with ID {$id} not found.");
+            throw new ResourceNotFoundException("Product with ID {$id} not found.");
         }
 
         return new Product($row['id'], $row['name'], $row['category_id']);   
@@ -64,11 +65,12 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
         );
     }
 
+    /** @throws ResourceNotFoundException */
     public function deleteById(string $id): void {
         $stmt = $this->pdo->prepare('DELETE FROM products WHERE id = :id');
         $result = $stmt->execute(['id' => $id]);
-        if ($result === false) {
-            throw new \RuntimeException("Product with ID {$id} not found.");
+        if ($result === false || $stmt->rowCount() === 0) {
+            throw new ResourceNotFoundException("Product with ID {$id} not found.");
         }
     }
 

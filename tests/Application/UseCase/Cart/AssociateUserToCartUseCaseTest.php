@@ -65,6 +65,7 @@ class AssociateUserToCartUseCaseTest extends TestCase {
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('User is not allowed to access this cart');
 
+        $user = $this->createMock(User::class);
         $cart = new CartBuilder()
             ->withId('cart-123')
             ->withUserIds(['u-1'])
@@ -75,6 +76,10 @@ class AssociateUserToCartUseCaseTest extends TestCase {
             ->with('cart-123')
             ->willReturn($cart);
         $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())
+            ->method('findById')
+            ->with('u-3')
+            ->willReturn($user);
 
         $input = new AssociateUserToCartInput('cart-123', 'u-2', 'u-3');
         $useCase = new AssociateUserToCartUseCase($cartRepository, $userRepository);

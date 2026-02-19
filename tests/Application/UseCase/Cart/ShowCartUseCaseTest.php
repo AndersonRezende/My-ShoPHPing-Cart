@@ -3,8 +3,8 @@
 namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use DomainException;
-use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\ShowCartInput;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\ShowCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart\CartBuilder;
@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 class ShowCartUseCaseTest extends TestCase {
 
     public function testExecuteWhenCartDoesNotExist(): void {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage("Cart not found");
 
         $cartRepository = $this->createMock(CartRepository::class);

@@ -4,6 +4,7 @@ namespace MyShoppingCart\Tests\Application\UseCase\Cart;
 
 use LogicException;
 use MyShoppingCart\Application\DTO\UpdateItemQuantityInput;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Application\UseCase\Cart\UpdateItemQuantityInCartUseCase;
 use MyShoppingCart\Domain\Entity\Cart;
@@ -33,12 +34,12 @@ class UpdateItemQuantityInCartUseCaseTest extends DatabaseTestCase {
     }
 
     public function testShouldThrowExceptionWhenCartNotFound(): void {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Cart not found');
+
         $cartRepository = new CartRepositoryPdo($this->connection);
         $updateItemQuantity = new UpdateItemQuantityInCartUseCase($cartRepository);
         $input = new UpdateItemQuantityInput('non-existent-cart-id', '1', 3);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cart not found');
 
         $updateItemQuantity->execute($input);
     }

@@ -3,6 +3,7 @@
 namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\CartRepositoryPdo;
@@ -15,11 +16,12 @@ use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
 class CartRepositoryPdoTest extends DatabaseTestCase {
     
-    public function testShouldNotReturnAnyCartItemWhenThereAreNoItems(): void {
+    public function testShouldThrowExceptionWhenCartWasNotFound(): void {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Cart not found');
+
         $repository = new CartRepositoryPdo($this->connection);
         $cart = $repository->findById('1');
-
-        $this->assertNull($cart);
     }
 
     public function testShouldCreateNewCart(): void {

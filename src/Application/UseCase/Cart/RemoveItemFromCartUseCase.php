@@ -3,6 +3,7 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use MyShoppingCart\Application\DTO\RemoveItemFromCartInput;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 
 readonly class RemoveItemFromCartUseCase {
@@ -11,10 +12,6 @@ readonly class RemoveItemFromCartUseCase {
 
     public function execute(RemoveItemFromCartInput $input): void {
         $cart = $this->repository->findById($input->cartId);
-
-        if (!$cart) {
-            throw new \InvalidArgumentException('Cart not found');
-        }
 
         $cart->removeItem($input->productId);
         

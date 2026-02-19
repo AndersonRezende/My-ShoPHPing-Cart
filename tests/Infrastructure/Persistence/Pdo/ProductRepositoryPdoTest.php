@@ -2,6 +2,7 @@
 
 namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Domain\Entity\Product;
 use PDO;
@@ -36,7 +37,7 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
     }
 
     public function testGetByIdWhenProductDoesNotExist(): void {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Product with ID 999 not found.');
 
         $repository = new ProductRepositoryPdo($this->connection);
@@ -155,7 +156,7 @@ class ProductRepositoryPdoTest extends DatabaseTestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testExecuteDeleteByIdWhenProductDoesNotExist(): void {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Product with ID 1234 not found.');
 
         $pdoMock = $this->createMock(\PDO::class);

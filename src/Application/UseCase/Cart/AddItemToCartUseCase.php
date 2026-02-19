@@ -3,10 +3,10 @@
 namespace MyShoppingCart\Application\UseCase\Cart;
 
 use DomainException;
-use LogicException;
 use MyShoppingCart\Application\DTO\AddItemToCartInput;
 use MyShoppingCart\Application\DTO\CartOutput;
 use MyShoppingCart\Domain\Entity\CartItem;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\CartRepository;
 use MyShoppingCart\Domain\Repository\ProductRepository;
 use MyShoppingCart\Domain\Service\IdGeneratorInterface;
@@ -20,13 +20,14 @@ readonly class AddItemToCartUseCase {
             private IdGeneratorInterface $idGenerator
     ) {}
 
-    /** @throws LogicException|DomainException */
+    /** @throws ResourceNotFoundException|DomainException */
     public function execute(AddItemToCartInput $input): CartOutput {
         $cart = $this->cartRepository->findById($input->cartId);
+
         if (!$cart->isUserAllowedToAccess($input->userId)) {
             throw new DomainException('Access denied: You can not modify this cart.');
         }
-        
+
         $product = $this->productRepository->getById($input->productId);
         $unitPrice = new Money($input->unitPrice);
         

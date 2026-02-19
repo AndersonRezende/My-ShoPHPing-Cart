@@ -5,6 +5,7 @@ namespace MyShoppingCart\Tests\Application\UseCase\Product;
 use MyShoppingCart\Application\DTO\ShowProductInput;
 use MyShoppingCart\Application\UseCase\Product\ShowProductUseCase;
 use MyShoppingCart\Domain\Entity\Product;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\ProductRepositoryPdo;
 use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
@@ -24,11 +25,13 @@ class ShowProductUseCaseTest extends DatabaseTestCase {
     }
 
     public function testShouldThrowExceptionWhenProductNotFound(): void {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Product with ID abc not found.');
+
         $productRepository = new ProductRepositoryPdo($this->connection);
         $showProductUseCase = new ShowProductUseCase($productRepository);
         $showProductUseCaseInput = new ShowProductInput('abc');
 
-        $this->expectException(\RuntimeException::class);
         $showProductUseCase->execute($showProductUseCaseInput);
     }
 }
