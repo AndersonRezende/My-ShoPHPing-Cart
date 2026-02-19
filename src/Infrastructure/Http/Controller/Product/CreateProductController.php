@@ -20,10 +20,10 @@ class CreateProductController {
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
-        $input = new CreateProductInput($body['name']);
+        $input = new CreateProductInput($body['name'], $body['category_id'] ?? null);
         $product = $this->createProductUseCase->execute($input);
 
-        $payload = json_encode(['id' => $product->id(), 'name' => $product->name()]);
+        $payload = json_encode(['id' => $product->id(), 'name' => $product->name(), 'category_id' => $product->categoryId()]);
         $response->getBody()->write($payload);
 
         return $response->withHeader('Content-Type', 'application/json')->withStatus(201);

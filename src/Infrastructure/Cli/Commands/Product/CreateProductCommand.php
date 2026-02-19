@@ -17,7 +17,8 @@ class CreateProductCommand extends Command {
 
     protected function configure(): void {
         $this->setDescription('Cria um novo produto.')
-            ->addArgument('name', InputArgument::OPTIONAL, 'Nome do produto');;
+            ->addArgument('name', InputArgument::REQUIRED, 'Nome do produto')
+            ->addArgument('category_id', InputArgument::OPTIONAL, 'Id da categoria do produto');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -25,12 +26,9 @@ class CreateProductCommand extends Command {
         $io->title('Cadastro de Produtos');
 
         $name = $input->getArgument('name');
-        if (!$name) {
-            $io->section('Criar um novo produto');
-            $name = $io->ask('Nome do produto');
-        }
+        $categoryId = $input->getArgument('category_id') ?? null;
 
-        $product = $this->createProductUseCase->execute(new CreateProductInput($name));
+        $product = $this->createProductUseCase->execute(new CreateProductInput($name, $categoryId));
 
         $io->success("Produto criado com sucesso! ID: {$product->id()} Nome: {$product->name()}");
 

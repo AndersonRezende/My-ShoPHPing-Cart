@@ -15,7 +15,7 @@ readonly class CreateProductUseCase {
     
     public function execute(CreateProductInput $input): Product {
         $id = $this->idGenerator->generate();
-        $product = new Product($id, $input->name);
+        $product = new Product($id, $input->name, $input->categoryId);
         $this->productRepository->save($product);
         return $product;
     }

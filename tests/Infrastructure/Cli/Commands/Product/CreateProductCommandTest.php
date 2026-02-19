@@ -16,7 +16,7 @@ class CreateProductCommandTest extends TestCase {
 
     public function testExecuteListProductsCommand_ShouldListProducts_WhenThereAreProducts(): void {
         $createProductUseCase = $this->createMock(CreateProductUseCase::class);
-        $product = new Product('1', 'Product 1');
+        $product = new Product('1', 'Product 1', '1');
         $createProductUseCase->expects($this->once())
             ->method('execute')
             ->willReturn($product);
@@ -25,34 +25,13 @@ class CreateProductCommandTest extends TestCase {
         $application->addCommand($createProductCommand);
         $command = $application->find('msp:create-product');
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['name' => $product->name()]);
+        $commandTester->execute(['name' => $product->name(), 'category_id' => $product->categoryId()]);
 
         $output = $commandTester->getDisplay();
         $statusCode = $commandTester->getStatusCode();
 
         $this->assertEquals(Command::SUCCESS, $statusCode);
         $this->assertStringContainsString("Produto criado com sucesso! ID: {$product->id()} Nome: {$product->name()}", $output);
-    }
-
-    public function testExecute_ShouldAskForName_WhenNameIsNotProvided(): void {
-        $useCase = $this->createMock(CreateProductUseCase::class);
-        $useCase->expects($this->once())
-            ->method('execute')
-            ->with($this->callback(function($input) {
-                return $input->name === 'Novo Nome Interativo';
-            }))
-            ->willReturn(new Product('1', 'Novo Nome Interativo'));
-        $command = new CreateProductCommand($useCase);
-        $application = new Application();
-        $application->addCommand($command);
-        $commandTester = new CommandTester($application->find('msp:create-product'));
-        $commandTester->setInputs(['Novo Nome Interativo']);
-        $commandTester->execute([]);
-
-        $output = $commandTester->getDisplay();
-
-        $this->assertStringContainsString('Nome do produto', $output);
-        $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
     }
 
     public function testExecuteListProductsCommand_ShouldOnlyShowHeader_WhenThereIsNoProduct(): void {

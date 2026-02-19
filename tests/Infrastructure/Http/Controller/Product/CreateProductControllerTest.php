@@ -18,18 +18,15 @@ class CreateProductControllerTest extends TestCase {
         $createProductUseCase = $this->createMock(CreateProductUseCase::class);
         $createProductUseCase->expects($this->once())
             ->method('execute')
-            ->willReturn(new Product('1', 'Arroz'));
-
+            ->willReturn(new Product('1', 'Arroz', '1'));
         $controller = new CreateProductController($createProductUseCase);
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')
-            ->willReturn(json_encode(['name' => 'Arroz']));
-
+            ->willReturn(json_encode(['name' => 'Arroz', 'category_id' => '1']));
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects($this->once())
             ->method('getBody')
             ->willReturn($stream);
-        
         $response = new Response();
 
         $newResponse = $controller($request, $response);
@@ -41,16 +38,15 @@ class CreateProductControllerTest extends TestCase {
         $this->assertIsArray($data);
         $this->assertEquals('1', $data['id']);
         $this->assertEquals('Arroz', $data['name']);
+        $this->assertEquals('1', $data['category_id']);
     }
 
     #[AllowMockObjectsWithoutExpectations]
     public function testShouldReturnBadRequestWhenNameIsMissing(): void {
         $createProductUseCase = $this->createMock(CreateProductUseCase::class);
         $controller = new CreateProductController($createProductUseCase);
-
         $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn(json_encode([])); // JSON vazio
-
+        $stream->method('__toString')->willReturn(json_encode([]));
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
 

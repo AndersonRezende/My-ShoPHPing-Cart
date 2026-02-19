@@ -16,10 +16,11 @@ class CreateProductUseCaseTest extends DatabaseTestCase {
         $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');
         $createProductUseCase = new CreateProductUseCase($productRepository, $uuidGenerator);
 
-        $product = $createProductUseCase->execute(new CreateProductInput('Pasta'));
+        $product = $createProductUseCase->execute(new CreateProductInput('Pasta', '1'));
 
         $this->assertNotNull($product->id());
         $this->assertEquals('1', $product->id());
         $this->assertEquals('Pasta', $product->name());
+        $this->assertEquals('1', $product->categoryId());
     }
 }
