@@ -2,9 +2,11 @@
 
 namespace MyShoppingCart\Tests\Application\UseCase\User;
 
+use InvalidArgumentException;
 use MyShoppingCart\Application\DTO\RegisterUserInput;
 use MyShoppingCart\Application\UseCase\User\RegisterUserUseCase;
 use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\UserRepository;
 use MyShoppingCart\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -15,7 +17,7 @@ class RegisterUserUseCaseTest extends TestCase {
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository->expects($this->once())
             ->method('findByEmail')
-            ->willReturn(null);
+            ->willThrowException(new ResourceNotFoundException('User not found with email anderson@example.com.'));
         $userRepository->expects($this->once())
             ->method('save');
         $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
@@ -32,8 +34,8 @@ class RegisterUserUseCaseTest extends TestCase {
 
     #[AllowMockObjectsWithoutExpectations]
     public function testRegisterUserWithExistingEmail(): void {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("User with this email already exists");
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("This Email anderson@example.com is already in use.");
 
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository->expects($this->once())

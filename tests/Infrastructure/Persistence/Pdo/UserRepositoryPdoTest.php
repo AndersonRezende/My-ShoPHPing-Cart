@@ -85,6 +85,9 @@ class UserRepositoryPdoTest extends DatabaseTestCase {
     }
 
     public function testShouldReturnNullWhenUserDoesNotExistAndFindByEmail(): void {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('User not found with email teste@email.com.');
+
         $repository = new UserRepositoryPdo($this->connection);
 
         $user = $repository->findByEmail(new Email('teste@email.com'));

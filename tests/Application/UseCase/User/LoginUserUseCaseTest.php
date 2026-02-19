@@ -2,9 +2,11 @@
 
 namespace MyShoppingCart\Tests\Application\UseCase\User;
 
+use DomainException;
 use MyShoppingCart\Application\DTO\LoginUserInput;
 use MyShoppingCart\Application\UseCase\User\LoginUserUseCase;
 use MyShoppingCart\Domain\Entity\User;
+use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\Repository\UserRepository;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
@@ -31,16 +33,37 @@ class LoginUserUseCaseTest extends TestCase {
         $this->assertSame($user, $loggedInUser);
     }
 
-    public function testLoginUserWithInvalidCredentials(): void {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Invalid email or password");
+    public function testLoginUserWithInvalidEmailShouldThrowException(): void {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid email or password');
 
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository->expects($this->once())
             ->method('findByEmail')
-            ->willReturn(null);
+            ->willThrowException(new ResourceNotFoundException('User not found with email anderson@example.com.'));
 
         $loginUserInput = new LoginUserInput('anderson@example.com', 'password123');
+        $useCase = new LoginUserUseCase($userRepository);
+        $useCase->execute($loginUserInput);
+    }
+
+    public function testLoginUserWithInvalidPasswordShouldThrowException(): void {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid email or password');
+
+        $user = new User(
+            '123',
+            'Anderson',
+            new Email('anderson@example.com'),
+            Password::hash('password123')
+        );
+
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())
+            ->method('findByEmail')
+            ->willReturn($user);
+
+        $loginUserInput = new LoginUserInput('anderson@example.com', 'password');
         $useCase = new LoginUserUseCase($userRepository);
         $useCase->execute($loginUserInput);
     }

@@ -44,13 +44,14 @@ readonly class UserRepositoryPdo implements UserRepository {
         return $this->hydrateUser($data);
     }
 
+    /** @throws ResourceNotFoundException */
     public function findByEmail(Email $email): ?User {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute(['email' => $email->value()]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$data) {
-            return null;
+            throw new ResourceNotFoundException("User not found with email {$email}.");
         }
 
         return $this->hydrateUser($data);
