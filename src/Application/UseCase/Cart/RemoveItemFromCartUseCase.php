@@ -10,6 +10,7 @@ readonly class RemoveItemFromCartUseCase {
     
     public function __construct(private CartRepository $repository) {}
 
+    /** @throws ResourceNotFoundException */
     public function execute(RemoveItemFromCartInput $input): void {
         $cart = $this->repository->findById($input->cartId);
 

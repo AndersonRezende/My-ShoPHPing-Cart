@@ -57,7 +57,7 @@ class CheckoutCartUseCaseTest extends TestCase {
         $cartRepository->expects($this->once())
             ->method('findById')
             ->with('nonexistent-cart-id')
-            ->willReturn(null);
+            ->willThrowException(new ResourceNotFoundException('Cart not found'));
         $checkoutCartUseCase = new CheckoutCartUseCase($cartRepository);
 
         $checkoutCartUseCase->execute(new CheckoutCartInput('nonexistent-cart-id', 'user-id'));

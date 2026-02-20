@@ -15,9 +15,6 @@ readonly class ShowCartUseCase {
     /** @throws ResourceNotFoundException|DomainException */
     public function execute(ShowCartInput $showCartInput): Cart {
         $cart = $this->repository->findById($showCartInput->cartId);
-        if ($cart === null) {
-            throw new ResourceNotFoundException("Cart not found");
-        }
 
         if (!$cart->isUserAllowedToAccess($showCartInput->userId)) {
             throw new DomainException('User is not allowed to access this cart');

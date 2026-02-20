@@ -24,7 +24,7 @@ class ShowCartUseCaseTest extends TestCase {
         $cartRepository->expects($this->once())
             ->method('findById')
             ->with('nonexistent-cart-id')
-            ->willReturn(null);
+            ->willThrowException(new ResourceNotFoundException('Cart not found'));
         $showCartUseCase = new ShowCartUseCase($cartRepository);
 
         $showCartUseCase->execute(new ShowCartInput('nonexistent-cart-id'));
