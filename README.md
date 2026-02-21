@@ -14,3 +14,8 @@ A shopping cart implementation built with PHP following Clean Architecture princ
 - SOLID principles
 - Unit tested
 - Modular and maintainable codebase
+
+## Next stpes
+- Docker
+- Web UI
+- Mobile UI
