@@ -24,6 +24,9 @@ class CreateCartControllerTest extends TestCase {
         $stream->method('__toString')->willReturn(json_encode(['userId' => '1']));
         $controller = new CreateCartController($useCase);
         $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->once())
+            ->method('getAttribute')
+            ->willReturn('1');
         $request->method('getBody')->willReturn($stream);
         
         $response = $controller($request, new Response());
