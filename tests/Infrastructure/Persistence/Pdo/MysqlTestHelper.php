@@ -8,7 +8,7 @@ use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 
-class SqliteTestHelper {
+class MysqlTestHelper {
 
     private static ?PDO $connection = null;
 
@@ -26,14 +26,34 @@ class SqliteTestHelper {
             }
         });
 
+        $testEnvConfig = $configArray['environments']['mysql_testing'];
+        self::ensureDatabaseExists($testEnvConfig);
+
         $config = new Config($configArray);
         $manager = new Manager($config, new StringInput(''), new NullOutput());
-        $manager->migrate('testing');
 
-        $pdo = $manager->getEnvironment('testing')->getAdapter()->getConnection();
+        $manager->rollback('mysql_testing', 0);
+        $manager->migrate('mysql_testing');
+
+        $pdo = $manager->getEnvironment('mysql_testing')->getAdapter()->getConnection();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         self::$connection = $pdo;
         return self::$connection;
+    }
+
+    private static function ensureDatabaseExists(array $dbConfig): void
+    {
+        try {
+            $pdo = new PDO(
+                "mysql:host={$dbConfig['host']};port={$dbConfig['port']}",
+                $dbConfig['user'],
+                $dbConfig['pass']
+            );
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbConfig['name']}` CHARACTER SET {$dbConfig['charset']}");
+        } catch (\PDOException $e) {
+            throw new \RuntimeException("Could not create test database: " . $e->getMessage(), 0, $e);
+        }
     }
 }

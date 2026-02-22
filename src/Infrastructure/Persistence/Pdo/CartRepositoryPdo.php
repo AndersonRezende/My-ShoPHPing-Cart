@@ -54,7 +54,7 @@ final readonly class CartRepositoryPdo implements CartRepository {
         $stmt = $this->pdo->prepare(
             'INSERT INTO carts (id, status)
              VALUES (:id, :status)
-             ON CONFLICT(id) DO UPDATE SET status = :status'
+             ON DUPLICATE KEY UPDATE status = :status'
         );
         $stmt->execute(['id' => $cart->id(), 'status' => $cart->status()->value]);
     }
@@ -77,7 +77,7 @@ final readonly class CartRepositoryPdo implements CartRepository {
             'INSERT INTO cart_items 
             (id, cart_id, product_id, quantity, unit_price)
             VALUES (:id, :cart_id, :product_id, :quantity, :unit_price)
-            ON CONFLICT(cart_id, product_id) DO UPDATE SET 
+            ON DUPLICATE KEY UPDATE 
                 quantity = :quantity,
                 unit_price = :unit_price'
         );

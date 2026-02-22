@@ -11,6 +11,7 @@ use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 class CreateProductUseCaseTest extends DatabaseTestCase {
 
     public function testExecuteCreateProduct(): void {
+        $this->connection->exec("INSERT INTO categories (id, name) VALUES ('1', 'Test Category')");
         $productRepository = new ProductRepositoryPdo($this->connection);
         $uuidGenerator = $this->createMock(IdGeneratorInterface::class);
         $uuidGenerator->expects($this->once())->method('generate')->willReturn('1');

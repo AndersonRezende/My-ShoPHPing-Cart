@@ -30,10 +30,20 @@ return
             'charset' => 'utf8',
         ],
         
-        'testing' => [
+        'sqlite_testing' => [
             'adapter' => 'sqlite',
             'name' => ':memory:',
             'memory' => true,
+        ],
+
+        'mysql_testing' => [
+            'adapter' => 'mysql',
+            'host' => $dbHost,
+            'name' => $dbName . '_test',
+            'user' => $dbUser,
+            'pass' => $dbPass,
+            'port' => $dbPort,
+            'charset' => 'utf8',
         ],
     ],
     'version_order' => 'creation'

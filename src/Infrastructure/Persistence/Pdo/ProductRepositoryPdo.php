@@ -39,7 +39,7 @@ final readonly class ProductRepositoryPdo implements ProductRepository {
     public function save(Product $product): Product {
         $stmt = $this->pdo->prepare(
             'INSERT INTO products (id, name, category_id) VALUES (:id, :name, :category_id)
-             ON CONFLICT(id) DO UPDATE SET name = :name, category_id = :category_id'
+             ON DUPLICATE KEY UPDATE name = :name, category_id = :category_id'
         );
 
         $result = $stmt->execute([
