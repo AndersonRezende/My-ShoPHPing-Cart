@@ -12,8 +12,7 @@
         "slim/twig-view": "^3.4",
         "symfony/console": "^7.2",
         "twig/twig": "^3.19",
-      "ext-pdo": "*",
-      "ext-xdebug": "*",
+        "ext-pdo": "*",
         "firebase/php-jwt": "^7.0",
         "vlucas/phpdotenv": "^5.6"
     },
@@ -32,7 +31,13 @@
     },
     "scripts": {
         "test": "XDEBUG_MODE=coverage phpunit --coverage-clover coverage.xml",
-        "test:html": "XDEBUG_MODE=coverage phpunit --coverage-html coverage-report"
+        "test:html": "XDEBUG_MODE=coverage phpunit --coverage-html coverage-report",
+        "db:migrate": "phinx migrate",
+        "db:seed": "phinx seed:run -e development",
+        "db:setup": [
+            "@db:migrate",
+            "@db:seed"
+        ]
     },
     "authors": [
         {

@@ -81,8 +81,12 @@ class ProductSeed extends AbstractSeed
 
         $table = $this->table('products');
         if ($this->hasTable('products')) {
-             $table->truncate();
+            $this->execute('DELETE FROM cart_items');
         }
         $table->insert($data)->save();
+    }
+
+    public function getDependencies(): array {
+        return [CategorySeed::class];
     }
 }

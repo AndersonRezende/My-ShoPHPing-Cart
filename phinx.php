@@ -1,5 +1,15 @@
 <?php
 
+require __DIR__ . '/config/bootstrap.php';
+
+// Ler variáveis de ambiente com fallbacks seguros
+$dbAdapter = $_ENV['DB_CONNECTION'] ?? 'mysql';
+$dbHost = $_ENV['DB_HOST'] ?? 'localhost';
+$dbName = $_ENV['DB_NAME'] ?? 'shopping_cart';
+$dbUser = $_ENV['DB_USER'] ?? 'root';
+$dbPass = $_ENV['DB_PASS'] ?? '';
+$dbPort = $_ENV['DB_PORT'] ?? '3306';
+
 return
 [
     'paths' => [
@@ -9,42 +19,31 @@ return
     'environments' => [
         'default_migration_table' => 'phinxlog',
         'default_environment' => 'development',
-        /*'production' => [
-            'adapter' => 'mysql',
-            'host' => 'localhost',
-            'name' => 'production_db',
-            'user' => 'root',
-            'pass' => '',
-            'port' => '3306',
-            'charset' => 'utf8',
-        ],
+
         'development' => [
-            'adapter' => 'mysql',
-            'host' => 'localhost',
-            'name' => 'development_db',
-            'user' => 'root',
-            'pass' => '',
-            'port' => '3306',
+            'adapter' => $dbAdapter,
+            'host' => $dbHost,
+            'name' => $dbName,
+            'user' => $dbUser,
+            'pass' => $dbPass,
+            'port' => $dbPort,
             'charset' => 'utf8',
         ],
-        'testing' => [
-            'adapter' => 'mysql',
-            'host' => 'localhost',
-            'name' => 'testing_db',
-            'user' => 'root',
-            'pass' => '',
-            'port' => '3306',
-            'charset' => 'utf8',
-        ]*/
-        'development' => [
-            'adapter' => 'sqlite',
-            'name' => __DIR__ . '/database/database.db',
-            'memory' => false,
-        ],
-        'testing' => [
+        
+        'sqlite_testing' => [
             'adapter' => 'sqlite',
             'name' => ':memory:',
             'memory' => true,
+        ],
+
+        'mysql_testing' => [
+            'adapter' => 'mysql',
+            'host' => $dbHost,
+            'name' => $dbName . '_test',
+            'user' => $dbUser,
+            'pass' => $dbPass,
+            'port' => $dbPort,
+            'charset' => 'utf8',
         ],
     ],
     'version_order' => 'creation'

@@ -3,7 +3,6 @@
 
 declare(strict_types=1);
 
-use DI\ContainerBuilder;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\AddItemToCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\ShowCartCommand;
 use MyShoppingCart\Infrastructure\Cli\Commands\Cart\CheckoutCartCommand;
@@ -19,12 +18,8 @@ use MyShoppingCart\Infrastructure\Cli\Commands\User\LoginUserCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-// 1. Configuração do Container (Compartilhado com a Web se possível)
-$containerBuilder = new ContainerBuilder();
-$containerBuilder->addDefinitions(__DIR__ . '/../config/dependencies.php');
-$container = $containerBuilder->build();
+// Bootstrap da aplicação (Autoload, Dotenv, Container)
+$container = require __DIR__ . '/../config/bootstrap.php';
 
 // 2. Aplicação Console
 $application = new Application('My Shopping Cart CLI', '1.0.0');

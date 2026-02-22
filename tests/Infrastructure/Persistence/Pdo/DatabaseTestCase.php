@@ -17,7 +17,7 @@ abstract class DatabaseTestCase extends TestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->connection = SqliteTestHelper::createConnection();
+        $this->connection = MysqlTestHelper::createConnection();
         $this->connection->beginTransaction();
     }
 }

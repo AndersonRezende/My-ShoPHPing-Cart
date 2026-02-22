@@ -7,7 +7,7 @@ use Phinx\Migration\AbstractMigration;
 final class CreateCartItemsTable extends AbstractMigration {
     public function change(): void {
         $this->table('cart_items', ['id' => false, 'primary_key' => 'id'])
-            ->addColumn('id', 'string', ['limit' => 36])
+            ->addColumn('id', 'string', ['limit' => 36, 'null' => false])
             ->addColumn('cart_id', 'string', ['limit' => 36, 'null' => false])
             ->addColumn('product_id', 'string', ['limit' => 36, 'null' => true])
             ->addColumn('quantity', 'integer')

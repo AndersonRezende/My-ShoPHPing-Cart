@@ -16,7 +16,7 @@ readonly class UserRepositoryPdo implements UserRepository {
         $stmt = $this->pdo->prepare("
             INSERT INTO users (id, name, email, password) 
             VALUES (:id, :name, :email, :password)
-            ON CONFLICT(id) DO UPDATE SET name = :name, password = :password
+            ON DUPLICATE KEY UPDATE name = :name, password = :password
         ");
         
         $result = $stmt->execute([
@@ -32,7 +32,7 @@ readonly class UserRepositoryPdo implements UserRepository {
     }
 
     /** @throws ResourceNotFoundException */
-    public function findById(string $id): ?User {
+    public function findById(string $id): User {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -45,7 +45,7 @@ readonly class UserRepositoryPdo implements UserRepository {
     }
 
     /** @throws ResourceNotFoundException */
-    public function findByEmail(Email $email): ?User {
+    public function findByEmail(Email $email): User {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute(['email' => $email->value()]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);

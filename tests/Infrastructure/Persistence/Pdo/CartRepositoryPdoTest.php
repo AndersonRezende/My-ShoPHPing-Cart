@@ -12,16 +12,15 @@ use MyShoppingCart\Domain\Enum\CartStatus;
 use MyShoppingCart\Domain\Entity\Product;
 use MyShoppingCart\Domain\Entity\CartItem;
 use MyShoppingCart\Domain\ValueObject\Money;
-use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 
 class CartRepositoryPdoTest extends DatabaseTestCase {
     
     public function testShouldThrowExceptionWhenCartWasNotFound(): void {
         $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('Cart not found');
+        $this->expectExceptionMessage('Cart not found with ID 1.');
 
         $repository = new CartRepositoryPdo($this->connection);
-        $cart = $repository->findById('1');
+        $repository->findById('1');
     }
 
     public function testShouldCreateNewCart(): void {
@@ -40,7 +39,8 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
 
     public function testShouldSaveCartWithUser(): void {
         $repository = new CartRepositoryPdo($this->connection);
-        $user = new User('1', 'Testevaldo', new Email('teste@email.com'), Password::hash('testevaldosenha'));
+        $user = new User('1', 'Testevaldo', new Email('teste@email.com'), $password = Password::hash('testevaldosenha'));
+        $this->connection->exec("INSERT INTO users (id, name, email, password) VALUES ('{$user->id()}', '{$user->name()}', '{$user->email()->value()}', '{$password->value()}')");
 
         $cart = new CartBuilder()
             ->withId('1')
@@ -49,10 +49,10 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
             ->build();
         $repository->save($cart);
 
-        $stmt = $this->connection->query('SELECT COUNT(*) as item_count FROM cart_items WHERE cart_id = 1');
+        $stmt = $this->connection->query('SELECT COUNT(*) as item_count FROM cart_users WHERE cart_id = 1 AND user_id = 1');
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $this->assertEquals(0, (int)$result['item_count']);
+        $this->assertEquals(1, (int)$result['item_count']);
     }
 
     public function testShouldSaveCartWithItems(): void {
@@ -80,8 +80,8 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
     }
 
     public function testShouldReturnCartWithItemsWhenThereAreItems(): void {
-        $this->connection->exec("INSERT INTO carts (id, status, created_at, updated_at) VALUES ('c-1', 'opened', datetime('now'), datetime('now'))");
-        $this->connection->exec("INSERT INTO products (id, name, category_id, created_at, updated_at) VALUES ('p-1', 'Product 1', null, datetime('now'), datetime('now'))");
+        $this->connection->exec("INSERT INTO carts (id, status, created_at, updated_at) VALUES ('c-1', 'opened', NOW(), NOW())");
+        $this->connection->exec("INSERT INTO products (id, name, category_id, created_at, updated_at) VALUES ('p-1', 'Product 1', null, NOW(), NOW())");
         $this->connection->exec("INSERT INTO cart_items (id, cart_id, product_id, quantity, unit_price) VALUES ('ci-1', 'c-1', 'p-1', 2, 500)");
         
         $repository = new CartRepositoryPdo($this->connection);
@@ -98,8 +98,9 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
     }
 
     public function testErrorInTransactionShouldRollback(): void {
-        $this->connection->commit();
-        $this->connection->exec('PRAGMA foreign_keys = ON;');
+        $this->connection->exec('SET FOREIGN_KEY_CHECKS=0;');
+        $this->connection->exec('TRUNCATE TABLE carts');
+        $this->connection->exec('SET FOREIGN_KEY_CHECKS=1;');
         
         $repository = new CartRepositoryPdo($this->connection);
         $cart = new CartBuilder()
@@ -113,7 +114,7 @@ class CartRepositoryPdoTest extends DatabaseTestCase {
         
         try {
             $repository->save($cart);
-            $this->fail('Should thrown a PDOException for FK violation.');
+            $this->fail('Should have thrown a PDOException for FK violation.');
         } catch (\PDOException $e) {
             $stmt = $this->connection->query('SELECT COUNT(*) FROM carts WHERE id = 1');
             $this->assertEquals(0, (int)$stmt->fetchColumn());

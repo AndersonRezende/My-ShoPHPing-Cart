@@ -1,13 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Infrastructure\Persistence\Pdo;
+namespace MyShoppingCart\Tests\Infrastructure\Persistence\Pdo;
 
 use MyShoppingCart\Domain\Entity\User;
 use MyShoppingCart\Domain\Exception\ResourceNotFoundException;
 use MyShoppingCart\Domain\ValueObject\Email;
 use MyShoppingCart\Domain\ValueObject\Password;
 use MyShoppingCart\Infrastructure\Persistence\Pdo\UserRepositoryPdo;
-use MyShoppingCart\Tests\Infrastructure\Persistence\Pdo\DatabaseTestCase;
 use PDO;
 use PDOStatement;
 use RuntimeException;
@@ -41,7 +40,7 @@ class UserRepositoryPdoTest extends DatabaseTestCase {
             $password = Password::hash('testevaldosenha'));
         $repository->save($user);
 
-        $stmt = $this->connection->query('SELECT * FROM users WHERE email = :email');
+        $stmt = $this->connection->prepare('SELECT * FROM users WHERE email = :email');
         $stmt->execute(['email' => $email->value()]);
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 

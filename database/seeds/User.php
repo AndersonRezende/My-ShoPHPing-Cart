@@ -19,11 +19,16 @@ class User extends AbstractSeed
     public function run(): void
     {
         $data = [
-            ['id' => $this->generateId(), 'name' => 'Anderson', 'email' => 'andersonrezende17@hotmail.com', 'password' => Password::hash('123456')->value()],
+            [
+                'id' => $this->generateId(),
+                'name' => 'Anderson',
+                'email' => 'andersonrezende17@hotmail.com',
+                'password' => Password::hash('123456')->value()
+            ],
         ];
 
         $users = $this->table('users');
-        $users->truncate();
+        $this->execute('DELETE FROM users');
         $users->insert($data)->save();
     }
 
