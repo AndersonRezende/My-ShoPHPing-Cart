@@ -16,6 +16,6 @@ A shopping cart implementation built with PHP following Clean Architecture princ
 - Modular and maintainable codebase
 
 ## Next stpes
-- Docker
-- Web UI
-- Mobile UI
+- Docker ✅
+- Web UI ⏳
+- Mobile UI ⏳
